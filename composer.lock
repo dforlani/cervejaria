@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "596d7ce4d59fb2909ba5c748b4816559",
+    "content-hash": "5fab93c4c3f2210b1dcdb07ae50e2c9c",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -319,35 +319,6 @@
                 "html"
             ],
             "time": "2018-02-23T01:58:20+00:00"
-        },
-        {
-            "name": "jcbrand/converse.js",
-            "version": "v4.1.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/conversejs/converse.js.git",
-                "reference": "5afb3051ccf9a578a82e313f061771541f78ef71"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/conversejs/converse.js/zipball/5afb3051ccf9a578a82e313f061771541f78ef71",
-                "reference": "5afb3051ccf9a578a82e313f061771541f78ef71",
-                "shasum": ""
-            },
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MPL-2.0"
-            ],
-            "description": "Browser based XMPP instant messaging client",
-            "homepage": "http://conversejs.org/",
-            "keywords": [
-                "chat",
-                "messaging",
-                "presence",
-                "xmpp"
-            ],
-            "time": "2019-02-22T15:49:45+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
