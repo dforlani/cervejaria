@@ -134,4 +134,14 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
+    
+     /**
+     * Displays about page.
+     *
+     * @return string
+     */
+    public function actionOi_mundo()
+    {
+        return $this->render('oi_mundo');
+    }
 }
