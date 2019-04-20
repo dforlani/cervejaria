@@ -12,14 +12,19 @@ $config = [
         '@npm' => '@vendor/npm-asset',
     ],
     'components' => [
+        'assetManager' => [
+            'bundles' => [
+                'yii\web\JqueryAsset' => [
+                    'jsOptions' => ['position' => \yii\web\View::POS_HEAD],
+                ],
+            ],
+        ],
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'enableStrictParsing' => false,
             'rules' => [
-                
-                    '<controller:[\w-]+>s' => '<controller>/index',
-            
+               // '<controller:[\w-]+>s' => '<controller>/index',
             ],
         ],
         'request' => [
