@@ -12,6 +12,14 @@ $config = [
         '@npm' => '@vendor/npm-asset',
     ],
     'components' => [
+        'authManager' => [
+           'class' => 'yii\rbac\DbManager',
+            'itemTable' => 'papel',
+            'itemChildTable' => 'papel_hierarquia',
+            'ruleTable' =>'regra',
+            'assignmentTable' => 'usuario_papel'
+            
+       ],
         'assetManager' => [
             'bundles' => [
                 'yii\web\JqueryAsset' => [
@@ -35,8 +43,10 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
-            'enableAutoLogin' => true,
+            'identityClass' => 'app\models\Usuario',
+            'enableAutoLogin' => false,
+            'enableSession' => true,
+            
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
