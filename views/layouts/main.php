@@ -38,13 +38,20 @@ AppAsset::register($this);
                 'options' => ['class' => 'navbar-nav navbar-right'],
                 'items' => [
                     ['label' => 'Home', 'url' => ['/site/index']],
-                    ['label' => 'Calendario Completo', 'url' => ['/site/calendario_full']],
-                    ['label' => 'Proposta', 'url' => ['/site/proposta']],
+                    ['label' => 'Clientes', 'url' => ['/cliente']],
+                    ['label' => 'Comandas', 'url' => ['/comanda']],
+                    ['label' => 'Entrada', 'url' => ['/entrada']],
+                    ['label' => 'Iem Venda', 'url' => ['/item-venda']],
+                    ['label' => 'Preço', 'url' => ['/preco']],
+                    ['label' => 'Produtos', 'url' => ['/produto']],
+                    ['label' => 'Vendas', 'url' => ['/venda']],
+                    
+                    
                     [
                         'label' => 'Suporte',
                         'items' => [
-                            ['label' => 'Usuários', 'url' => 'usuario'],                        
-                            ['label' => 'Papéis', 'url' => 'papel'],
+                            ['label' => 'Usuários', 'url' => ['/usuario']],                        
+                            ['label' => 'Papéis', 'url' => ['/papel']],
                         ],
                     ],
                     Yii::$app->user->isGuest ? (
