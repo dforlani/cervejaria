@@ -15,6 +15,7 @@ use Yii;
  *
  * @property Venda $fkVenda
  * @property Preco $fkPreco
+ *  @property string $dt_inclusao
  */
 class ItemVenda extends \yii\db\ActiveRecord
 {
@@ -34,6 +35,7 @@ class ItemVenda extends \yii\db\ActiveRecord
         return [
             [['fk_venda', 'fk_preco', 'quantidade'], 'required'],
             [['fk_venda', 'fk_preco'], 'integer'],
+              [['dt_inclusao'], 'safe'],
             [['quantidade', 'preco_unitario', 'preco_final'], 'number'],
             [['fk_venda'], 'exist', 'skipOnError' => true, 'targetClass' => Venda::className(), 'targetAttribute' => ['fk_venda' => 'pk_venda']],
             [['fk_preco'], 'exist', 'skipOnError' => true, 'targetClass' => Preco::className(), 'targetAttribute' => ['fk_preco' => 'pk_preco']],
@@ -51,13 +53,14 @@ class ItemVenda extends \yii\db\ActiveRecord
             'quantidade' => 'Quantidade',
             'preco_unitario' => 'Preco Unitario',
             'preco_final' => 'Preco Final',
+            'dt_inclusao' =>'Inclusão'	
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getFkVenda()
+    public function getVenda()
     {
         return $this->hasOne(Venda::className(), ['pk_venda' => 'fk_venda']);
     }
@@ -65,7 +68,7 @@ class ItemVenda extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getFkPreco()
+    public function getPreco()
     {
         return $this->hasOne(Preco::className(), ['pk_preco' => 'fk_preco']);
     }

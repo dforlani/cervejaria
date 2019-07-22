@@ -40,6 +40,22 @@ class Preco extends \yii\db\ActiveRecord
             [['fk_produto'], 'exist', 'skipOnError' => true, 'targetClass' => Produto::className(), 'targetAttribute' => ['fk_produto' => 'pk_produto']],
         ];
     }
+    
+    public static function getArrayProdutosPrecos()
+    {
+            $lista = [];
+        $precos = Preco::find()->joinWith('produto')->orderBy('nome, denominacao')->all();
+        foreach($precos as $preco){
+            $lista[$preco->pk_preco] = $preco->getNomeProdutoPlusDenominacao();
+        }
+        return $lista;
+    }
+    
+    public function getNomeProdutoPlusDenominacao(){
+        return $this->produto->nome . ' - '.$this->denominacao. ' - '.$this->quantidade . ' '. $this->produto->unidade_medida;
+    }
+    
+    
 
     /**
      * {@inheritdoc}
@@ -66,7 +82,7 @@ class Preco extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getFkProduto()
+    public function getProduto()
     {
         return $this->hasOne(Produto::className(), ['pk_produto' => 'fk_produto']);
     }

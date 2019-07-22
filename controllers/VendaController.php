@@ -12,13 +12,12 @@ use yii\filters\VerbFilter;
 /**
  * VendaController implements the CRUD actions for Venda model.
  */
-class VendaController extends Controller
-{
+class VendaController extends Controller {
+
     /**
      * {@inheritdoc}
      */
-    public function behaviors()
-    {
+    public function behaviors() {
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),
@@ -33,14 +32,13 @@ class VendaController extends Controller
      * Lists all Venda models.
      * @return mixed
      */
-    public function actionIndex()
-    {
+    public function actionIndex() {
         $searchModel = new VendaSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -50,10 +48,9 @@ class VendaController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
-    {
+    public function actionView($id) {
         return $this->render('view', [
-            'model' => $this->findModel($id),
+                    'model' => $this->findModel($id),
         ]);
     }
 
@@ -62,21 +59,74 @@ class VendaController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
-    {
+    public function actionCreate() {
         $model = new Venda();
 
-        //if($model->load(Yii::$app->request->post())){
-              var_dump($_REQUEST);
-        
-                
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->pk_venda]);
         }
 
         return $this->render('create', [
-            'model' => $model,
+                    'model' => $model,
         ]);
+    }
+
+    /**
+     * Creates a new Venda model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionVenda($id = null) {
+
+
+        if (empty($id)) {
+            $model = new Venda();
+            $modelItem = null;
+
+            $dataProviderItem = null;
+            $searchModelItem = null;
+        } else {
+            $model = $this->findModel($id);
+
+            $modelItem = new \app\models\ItemVenda();
+            $modelItem->fk_venda = $model->pk_venda;
+            $searchModelItem = new \app\models\ItemVendaSearch();
+            $dataProviderItem = $searchModelItem->search(['ItemVendaSearch' => ['fk_venda' => $model->pk_venda]]);
+        }
+
+        //salva a venda
+        if (!empty(Yii::$app->request->post('Venda'))) {
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['venda', 'id' => $model->pk_venda]);
+            }
+        }
+
+        //insere um item
+        if (!empty(Yii::$app->request->post('ItemVenda'))) {
+            if ($modelItem->load(Yii::$app->request->post()) && $modelItem->save()) {
+                $model->atualizaValorFinal();
+                return $this->redirect(['venda', 'id' => $model->pk_venda]);
+            }
+        }
+
+
+
+
+
+        return $this->render('venda', [
+                    'model' => $model,
+                    'modelItem' => $modelItem,
+                    'searchModelItem' => $searchModelItem,
+                    'dataProviderItem' => $dataProviderItem
+        ]);
+    }
+
+    public function actionBuscaProduto($id) {
+        $preco = \app\models\Preco::findOne($id);
+        if (!empty($preco))
+            return $preco->preco;
+        else
+            return '';
     }
 
     /**
@@ -86,8 +136,7 @@ class VendaController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
-    {
+    public function actionUpdate($id) {
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -95,7 +144,7 @@ class VendaController extends Controller
         }
 
         return $this->render('update', [
-            'model' => $model,
+                    'model' => $model,
         ]);
     }
 
@@ -106,11 +155,21 @@ class VendaController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
-    {
+    public function actionDelete($id) {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionDeleteItem($id) {
+        $model = $this->findModelItem($id);
+        $fkVenda = $model->fk_venda;
+        $model->delete();
+        
+        $venda = $this->findModel($fkVenda);
+           $venda->atualizaValorFinal();
+
+        return $this->redirect(['venda', 'id' => $fkVenda]);
     }
 
     /**
@@ -120,12 +179,20 @@ class VendaController extends Controller
      * @return Venda the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
-    {
+    protected function findModel($id) {
         if (($model = Venda::findOne($id)) !== null) {
             return $model;
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+    protected function findModelItem($id) {
+        if (($model = \app\models\ItemVenda::findOne($id)) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
 }

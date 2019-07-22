@@ -88,7 +88,7 @@ class ProdutoController extends Controller {
         }
 
         $searchModelPreco = new PrecoSearch();
-        $dataProviderPreco = $searchModelPreco->search(['fk_produto' => $model->pk_produto]);
+        $dataProviderPreco = $searchModelPreco->search(['PrecoSearch' =>[ 'fk_produto' => $model->pk_produto]]);
 
 
         return $this->render('update', [

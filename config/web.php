@@ -13,13 +13,12 @@ $config = [
     ],
     'components' => [
         'authManager' => [
-           'class' => 'yii\rbac\DbManager',
+            'class' => 'yii\rbac\DbManager',
             'itemTable' => 'papel',
             'itemChildTable' => 'papel_hierarquia',
-            'ruleTable' =>'regra',
+            'ruleTable' => 'regra',
             'assignmentTable' => 'usuario_papel'
-            
-       ],
+        ],
         'assetManager' => [
             'bundles' => [
                 'yii\web\JqueryAsset' => [
@@ -32,7 +31,7 @@ $config = [
             'showScriptName' => false,
             'enableStrictParsing' => false,
             'rules' => [
-               // '<controller:[\w-]+>s' => '<controller>/index',
+
             ],
         ],
         'request' => [
@@ -46,7 +45,6 @@ $config = [
             'identityClass' => 'app\models\Usuario',
             'enableAutoLogin' => false,
             'enableSession' => true,
-            
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',

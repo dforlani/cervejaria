@@ -82,6 +82,21 @@ class Venda extends \yii\db\ActiveRecord
     {
         return $this->hasMany(ItemVenda::className(), ['fk_venda' => 'pk_venda']);
     }
+    
+    public function atualizaValorFinal(){
+        $precos = $this->itemVendas;
+        $total = 0;
+        if(!empty($precos)){
+            foreach($precos as $preco){
+                $total = $total + $preco->preco_final;
+            }
+        }
+        
+        
+        $this->valor_total = $total;
+        $this->valor_final = $total - $this->desconto;
+        $this->save();
+    }
 
     /**
      * @return \yii\db\ActiveQuery
@@ -118,7 +133,7 @@ class Venda extends \yii\db\ActiveRecord
     public function beforeSave($insert) {
         $this->fk_usuario_iniciou_venda = 'dforlani';
         $this->fk_usuario_recebeu_pagamento = 'dforlani';
-        parent::beforeSave($insert);
+        return parent::beforeSave($insert);
         
     }
 }
