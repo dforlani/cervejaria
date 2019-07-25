@@ -17,7 +17,7 @@ class PrecoSearch extends Preco
     public function rules()
     {
         return [
-            [['pk_preco', 'fk_produto'], 'integer'],
+            [['pk_preco', 'fk_produto', 'codigo_barras'], 'integer'],
             [['denominacao'], 'safe'],
             [['preco', 'quantidade'], 'number'],
         ];
@@ -63,6 +63,7 @@ class PrecoSearch extends Preco
             'fk_produto' => $this->fk_produto,
             'preco' => $this->preco,
             'quantidade' => $this->quantidade,
+              'codigo_barras' => $this->codigo_barras,
         ]);
 
         $query->andFilterWhere(['like', 'denominacao', $this->denominacao]);

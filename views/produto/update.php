@@ -50,31 +50,33 @@ $this->params['breadcrumbs'][] = 'Update';
                 'class' => 'yii\grid\ActionColumn',
                 'header' => 'Ações',
                 'headerOptions' => ['style' => 'color:#337ab7'],
-                'template' => '{update}{delete}',
+                'template' => '{barcode} {update} {delete}',
                 'buttons' => [
-                    'view' => function ($url, $model) {
-                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
-                                    'title' => Yii::t('app', 'lead-view'),
-                        ]);
-                    },
+                    
                     'update' => function ($url, $model) {
                         return Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['update-preco', 'pk_preco' => $model->pk_preco], [
                                     'title' => Yii::t('app', 'lead-update'),
                         ]);
                     },
+                    'barcode' => function($url, $model) {
+                        return Html::a('<span class="glyphicon glyphicon-barcode"></span>', ['codigo-barras', 'pk_preco' => $model->pk_preco], [
+                        'title'=>'Gerar Código Barras'
+                        
+                        ]);
+                    },
 
                     'delete' => function($url, $model) {
-                        return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['delete-preco', 'pk_preco' => $model->pk_preco], [
-                                    'class' => '',
-                                    'data' => [
-                                        'confirm' => 'Tem certeza que deseja remover este preço?',
-                                        'method' => 'post',
-                                    ],
-                        ]);
-                    }
-                ],
+                    return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['delete-preco', 'pk_preco' => $model->pk_preco], [
+                    'class' => '',
+                    'data' => [
+                    'confirm' => 'Tem certeza que deseja remover este preço?',
+                    'method' => 'post',
+                    ],
+                    ]);
+                },
             ],
         ],
-    ]);
-    ?>
+    ],
+]);
+?>
 </div>

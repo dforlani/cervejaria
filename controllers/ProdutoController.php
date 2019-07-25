@@ -142,6 +142,12 @@ class ProdutoController extends Controller {
         $modelPreco->delete();
         return $this->redirect(['update', 'id' => $pk_produto]);
     }
+    
+     public function actionCodigoBarras($pk_preco) {
+        $modelPreco = $this->findModelPreco($pk_preco);
+   
+        return $this->renderPartial('preco/codigo_barras',[ 'modelPreco' => $modelPreco]);
+    }
 
     /**
      * Deletes an existing Produto model.

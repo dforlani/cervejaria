@@ -9,6 +9,7 @@ use Yii;
  *
  * @property int $pk_preco
  * @property int $fk_produto
+ * @property int $codigo_barras
  * @property string $denominacao
  * @property string $preco
  * @property double $quantidade
@@ -33,7 +34,7 @@ class Preco extends \yii\db\ActiveRecord
     {
         return [
             [['fk_produto'], 'required'],
-            [['pk_preco', 'fk_produto'], 'integer'],
+            [['pk_preco', 'fk_produto', 'codigo_barras'], 'integer'],
             [['preco', 'quantidade'], 'number'],
             [['denominacao'], 'string', 'max' => 100],
             [['pk_preco'], 'unique'],
@@ -68,6 +69,7 @@ class Preco extends \yii\db\ActiveRecord
             'denominacao' => 'Denominacao',
             'preco' => 'Preco',
             'quantidade' => 'Quantidade',
+            'codigo_barras' => 'Código de Barras'
         ];
     }
 

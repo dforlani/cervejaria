@@ -1,9 +1,11 @@
 <?php
 
+use app\models\Preco;
 use yii\helpers\Html;
+use yii\web\View;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\Preco */
+/* @var $this View */
+/* @var $model Preco */
 
 $this->title = 'Update Preco: ' . $model->pk_preco;
 $this->params['breadcrumbs'][] = ['label' => 'Precos', 'url' => ['index']];
