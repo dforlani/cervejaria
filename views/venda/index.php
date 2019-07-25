@@ -20,27 +20,45 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <?= GridView::widget([
+    <?=
+    GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'pk_venda',
-            'fk_cliente',
-            'fk_comanda',
-            'fk_usuario_iniciou_venda',
-            'fk_usuario_recebeu_pagamento',
-            //'valor_total',
-            //'desconto',
-            //'valor_final',
-            //'estado',
-            //'dt_venda',
+            // 'pk_venda',
+            [
+                'attribute' => 'cliente.nome',
+                'label' => 'Cliente'
+            ],
+            
+            //'comanda.numero',
+            //'fk_usuario_iniciou_venda',
+            // 'fk_usuario_recebeu_pagamento',
+            'valor_total:currency',
+            'desconto:currency',
+            'valor_final:currency',
+            'estado',
+            'dt_venda:date',
             //'dt_pagamento',
-
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'header' => 'Ações',
+                'headerOptions' => ['style' => 'color:#337ab7'],
+                'template' => '{update}{delete}',
+                'buttons' => [
+                    
+                    'update' => function ($url, $model) {
+                        return Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['venda', 'id' => $model->pk_venda], [
+                                    'title' => Yii::t('app', 'lead-update'),
+                        ]);
+                    },
+                   
+                ],
+            ],
         ],
-    ]); ?>
+    ]);
+    ?>
 
 
 </div>

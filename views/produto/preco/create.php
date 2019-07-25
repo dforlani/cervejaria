@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Preco */
 
-$this->title = 'Create Preco';
+$this->title = 'Novo Preço';
 $this->params['breadcrumbs'][] = ['label' => 'Precos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

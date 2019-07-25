@@ -15,23 +15,20 @@ use Yii;
  *
  * @property Venda[] $vendas
  */
-class Cliente extends \yii\db\ActiveRecord
-{
+class Cliente extends \yii\db\ActiveRecord {
+
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'cliente';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-   
             [['pk_cliente'], 'integer'],
             [['dt_nascimento'], 'safe'],
             [['nome'], 'string', 'max' => 200],
@@ -44,22 +41,26 @@ class Cliente extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'pk_cliente' => 'Pk Cliente',
             'nome' => 'Nome',
             'telefone' => 'Telefone',
-            'cpf' => 'Cpf',
-            'dt_nascimento' => 'Dt Nascimento',
+            'cpf' => 'CPF',
+            'dt_nascimento' => 'Data de Nascimento',
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getVendas()
-    {
+    public function getVendas() {
         return $this->hasMany(Venda::className(), ['fk_cliente' => 'pk_cliente']);
     }
+
+    public function beforeSave($insert) {
+        $this->dt_nascimento = Yii::$app->formatter->asDate($this->dt_nascimento, 'yyyy-MM-dd');
+        return parent::beforeSave($insert);
+    }
+
 }

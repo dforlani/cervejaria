@@ -8,7 +8,7 @@ use yii\web\View;
 /* @var $this View */
 /* @var $model Produto */
 
-$this->title = 'Update Produto: ' . $model->pk_produto;
+$this->title = 'Produto: ' . $model->pk_produto;
 $this->params['breadcrumbs'][] = ['label' => 'Produtos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->pk_produto, 'url' => ['view', 'id' => $model->pk_produto]];
 $this->params['breadcrumbs'][] = 'Update';
@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = 'Update';
 <div class="border-success">
     <h1> Preços </h1>
     <p>
-        <?= Html::a('Create Preco', ['create-preco', 'pk_produto' => $model->pk_produto], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Adcionar Preço', ['create-preco', 'pk_produto' => $model->pk_produto], ['class' => 'btn btn-warning']) ?>
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -48,7 +48,7 @@ $this->params['breadcrumbs'][] = 'Update';
             // ['class' => 'yii\grid\ActionColumn'],
             [
                 'class' => 'yii\grid\ActionColumn',
-                'header' => 'Actions',
+                'header' => 'Ações',
                 'headerOptions' => ['style' => 'color:#337ab7'],
                 'template' => '{update}{delete}',
                 'buttons' => [

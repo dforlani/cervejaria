@@ -52,4 +52,12 @@ class Comanda extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Venda::className(), ['fk_comanda' => 'pk_comanda']);
     }
+    
+//    /**
+//     * So retorna comandas que não estão relacionadas com vendas em aberto
+//     */
+//    public static function findComandasNaoAbertas(){
+//        //return Comanda::find('estado != "aberta"')->all();
+//        return Comanda::find()->where('estado != "aberta"')->joinWith('vendas')->orderBy('numero')->all();
+//    }
 }

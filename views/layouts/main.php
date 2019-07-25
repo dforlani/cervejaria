@@ -1,13 +1,14 @@
 <?php
-/* @var $this \yii\web\View */
+/* @var $this View */
 /* @var $content string */
 
-use app\widgets\Alert;
-use yii\helpers\Html;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
+use app\widgets\Alert;
+use kartik\widgets\SideNav;
+use yii\bootstrap\NavBar;
+use yii\helpers\Html;
+use yii\web\View;
+use yii\widgets\Breadcrumbs;
 
 AppAsset::register($this);
 ?>
@@ -24,73 +25,46 @@ AppAsset::register($this);
     </head>
     <body>
         <?php $this->beginBody() ?>
+        <div class="content">
+            <div class="container">                
+                <div class="row">
+                    <div class="col-md-2">
+                        <?php
+                        echo SideNav::widget([
+                            'type' => SideNav::TYPE_DEFAULT,
+                            'heading' => 'Menu',
+                            'items' => [
+                                ['label' => 'Balcão', 'url' => ['/venda/venda'],],
+                                ['label' => 'Vendas', 'url' => ['/venda']],
+                                //['label' => 'Home', 'url' => ['/site/index']],
+                                ['label' => 'Clientes', 'url' => ['/cliente']],
+                                ['label' => 'Comandas', 'url' => ['/comanda']],
+                                //['label' => 'Entrada', 'url' => ['/entrada']],
+                                // ['label' => 'Item Venda', 'url' => ['/item-venda']],
+                                // ['label' => 'Preço', 'url' => ['/preco']],
+                                ['label' => 'Produtos', 'url' => ['/produto']],
+                            ],]
+                        );
+                        ?>
 
-        <div class="wrap">
-            <?php
-            NavBar::begin([
-                'brandLabel' => Yii::$app->name,
-                'brandUrl' => Yii::$app->homeUrl,
-                'options' => [
-                    'class' => 'navbar-inverse navbar-fixed-top',
-                ],
-            ]);
-            echo Nav::widget([
-                'options' => ['class' => 'navbar-nav navbar-right'],
-                'items' => [
-                    ['label' => 'Home', 'url' => ['/site/index']],
-                    ['label' => 'Clientes', 'url' => ['/cliente']],
-                    ['label' => 'Comandas', 'url' => ['/comanda']],
-                    ['label' => 'Entrada', 'url' => ['/entrada']],
-                    ['label' => 'Iem Venda', 'url' => ['/item-venda']],
-                    ['label' => 'Preço', 'url' => ['/preco']],
-                    ['label' => 'Produtos', 'url' => ['/produto']],
-                    ['label' => 'Vendas', 'url' => ['/venda']],
-                    
-                    
-                    [
-                        'label' => 'Suporte',
-                        'items' => [
-                            ['label' => 'Usuários', 'url' => ['/usuario']],                        
-                            ['label' => 'Papéis', 'url' => ['/papel']],
-                        ],
-                    ],
-                    Yii::$app->user->isGuest ? (
-                            ['label' => 'Login', 'url' => ['/site/login']]
-                            ) : (
-                            '<li>'
-                            . Html::beginForm(['/site/logout'], 'post')
-                            . Html::submitButton(
-                                    'Logout (' . Yii::$app->user->identity->username . ')',
-                                    ['class' => 'btn btn-link logout']
-                            )
-                            . Html::endForm()
-                            . '</li>'
-                            )
-                ],
-            ]);
-            NavBar::end();
-            ?>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="panel panel-default">
 
-            <div class="container">
-                <?=
-                Breadcrumbs::widget([
-                    'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-                ])
-                ?>
-                <?= Alert::widget() ?>
-<?= $content ?>
+                            <?=
+                            Breadcrumbs::widget([
+                                'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+                            ])
+                            ?>
+                            <?= Alert::widget() ?>
+                            <?= $content ?>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
-
-        <footer class="footer">
-            <div class="container">
-                <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
-
-                <p class="pull-right"><?= Yii::powered() ?></p>
-            </div>
-        </footer>
-
-<?php $this->endBody() ?>
+        <?php $this->endBody() ?>
     </body>
 </html>
 <?php $this->endPage() ?>

@@ -81,6 +81,10 @@ class VendaController extends Controller {
 
         if (empty($id)) {
             $model = new Venda();
+            $model->estado = 'aberta';
+            $model->valor_final = 0;
+            $model->desconto = 0;
+            $model->valor_total = 0;
             $modelItem = null;
 
             $dataProviderItem = null;
@@ -90,27 +94,30 @@ class VendaController extends Controller {
 
             $modelItem = new \app\models\ItemVenda();
             $modelItem->fk_venda = $model->pk_venda;
+            $modelItem->quantidade = 1;
             $searchModelItem = new \app\models\ItemVendaSearch();
             $dataProviderItem = $searchModelItem->search(['ItemVendaSearch' => ['fk_venda' => $model->pk_venda]]);
         }
 
         //salva a venda
         if (!empty(Yii::$app->request->post('Venda'))) {
+            $novo = $model->isNewRecord;
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['venda', 'id' => $model->pk_venda]);
+               // if (!$novo)
+                //    return $this->redirect(['venda']);
+               // else
+                    return $this->redirect(['venda', 'id' => $model->pk_venda]);
             }
         }
 
         //insere um item
         if (!empty(Yii::$app->request->post('ItemVenda'))) {
+            $modelItem->preco_final = $modelItem->preco_unitario * $modelItem->quantidade;
             if ($modelItem->load(Yii::$app->request->post()) && $modelItem->save()) {
                 $model->atualizaValorFinal();
                 return $this->redirect(['venda', 'id' => $model->pk_venda]);
             }
         }
-
-
-
 
 
         return $this->render('venda', [
@@ -165,11 +172,18 @@ class VendaController extends Controller {
         $model = $this->findModelItem($id);
         $fkVenda = $model->fk_venda;
         $model->delete();
-        
+
         $venda = $this->findModel($fkVenda);
-           $venda->atualizaValorFinal();
+        $venda->atualizaValorFinal();
 
         return $this->redirect(['venda', 'id' => $fkVenda]);
+    }
+
+    public function actionComprovante($id) {
+        $model = $this->findModel($id);
+        return $this->renderPartial('comprovante', [
+                    'model' => $model,
+        ]);
     }
 
     /**

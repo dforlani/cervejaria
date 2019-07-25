@@ -48,70 +48,97 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 ?>
-<!--Itens-->
-<div class="item-venda-form">
+<div class='panel panel-primary' style="background-color:lavender; ">
+    <!--Itens-->
 
-
-    <?php $form = ActiveForm::begin(); ?>   
-    <?php
-    echo $form->field($modelItem, 'fk_preco')->widget(Select2::classname(), [
-        'data' => Preco::getArrayProdutosPrecos(),
-        'options' => ['placeholder' => 'Selecione um Produto'],
-        'pluginOptions' => [
-            'allowClear' => true
-        ],
-        'pluginEvents' => [
-            "change" => "function(e) { changeProduto(); }  ",
-        ]
-    ])->label('Produto');
-    ?>
-
-    <?= $form->field($modelItem, 'fk_venda')->hiddenInput()->label(false) ?>
-
-    <?= $form->field($modelItem, 'quantidade')->textInput() ?>
-
-    <?= $form->field($modelItem, 'preco_unitario')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($modelItem, 'preco_final')->textInput(['maxlength' => true]) ?>
-
-    <div class="form-group">
-        <?= Html::submitButton('Incluir', ['class' => 'btn btn-success']) ?>
+    <div class="panel-heading">
+        <h3 class="panel-title">Itens</h3>
     </div>
+    <div class="panel-body" style="padding: 5px">
 
-    <?php ActiveForm::end(); ?>
 
-</div>
+        <div class="item-venda-form">
 
-<?=
-GridView::widget([
-    'dataProvider' => $dataProviderItem,
-    'columns' => [
-        ['class' => 'yii\grid\SerialColumn'],
-        [
-            'label' => 'Produto',
-            'value' => 'preco.nomeProdutoPlusDenominacao',
-        ],
-        'quantidade',
-        'preco.produto.unidade_medida',
-        'preco_unitario',
-        'preco_final',
-        [
-            'class' => 'yii\grid\ActionColumn',
-            'header' => 'Actions',
-            'headerOptions' => ['style' => 'color:#337ab7'],
-            'template' => '{delete}',
-            'buttons' => [
-                'delete' => function($url, $model) {
-                    return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['delete-item', 'id' => $model->pk_item_venda], [
-                                'class' => '',
-                                'data' => [
-                                    'confirm' => 'Tem certeza que deseja remover este item?',
-                                    'method' => 'post',
-                                ],
-                    ]);
-                }
+
+            <?php $form = ActiveForm::begin(); ?>  
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-4" style="background-color:lavend er;">  
+                        <?php
+                        echo $form->field($modelItem, 'fk_preco')->widget(Select2::classname(), [
+                            'data' => Preco::getArrayProdutosPrecos(),
+                            'options' => ['placeholder' => 'Selecione um Produto'],
+                            'pluginOptions' => [
+                                'allowClear' => true
+                            ],
+                            'pluginEvents' => [
+                                "change" => "function(e) { changeProduto(); }  ",
+                            ]
+                        ])->label('Produto');
+                        ?>
+
+                        <?= $form->field($modelItem, 'fk_venda')->hiddenInput()->label(false) ?>
+
+                    </div>
+                    <div class="col-sm-2" style="background-color:lavend er;">  
+                        <?= $form->field($modelItem, 'quantidade')->textInput() ?>
+                    </div>
+                    <div class="col-sm-2" style="background-color:lav enderblush;"> 
+                        <?= $form->field($modelItem, 'preco_unitario')->textInput(['maxlength' => true, 'readonly' => true,]) ?>
+                    </div>
+                    <div class="col-sm-2" style="background-color:lave nder;">  
+                        <?= $form->field($modelItem, 'preco_final')->textInput(['maxlength' => true, 'readonly' => true,]) ?>
+                    </div>
+                    <div class="col-sm-2" style="background-color:lave nder;">  
+                        <br>
+                        <?= Html::submitButton('Incluir', ['class' => 'btn btn btn-primary']) ?>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <span class="border border-primary"></span>
+
+
+
+            <?php ActiveForm::end(); ?>
+
+        </div>
+
+
+        <?=
+        GridView::widget([
+            'dataProvider' => $dataProviderItem,
+            'columns' => [
+                ['class' => 'yii\grid\SerialColumn'],
+                [
+                    'label' => 'Produto',
+                    'value' => 'preco.nomeProdutoPlusDenominacao',
+                ],
+                'quantidade',
+                //'preco.produto.unidade_medida',
+                'preco_unitario',
+                'preco_final',
+                [
+                    'class' => 'yii\grid\ActionColumn',
+                    'header' => 'Actions',
+                    'headerOptions' => ['style' => 'color:#337ab7'],
+                    'template' => '{delete}',
+                    'buttons' => [
+                        'delete' => function($url, $model) {
+                            return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['delete-item', 'id' => $model->pk_item_venda], [
+                                        'class' => '',
+                                        'data' => [
+                                            'confirm' => 'Tem certeza que deseja remover este item?',
+                                            'method' => 'post',
+                                        ],
+                            ]);
+                        }
+                    ],
+                ],
             ],
-        ],
-    ],
-]);
-?>
+        ]);
+        ?>
+    </div>
+</div>

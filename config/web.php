@@ -4,6 +4,7 @@ $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
 $config = [
+    'language'=>'pt-BR',
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
@@ -12,6 +13,15 @@ $config = [
         '@npm' => '@vendor/npm-asset',
     ],
     'components' => [
+        'formatter' => [
+            'class' => 'yii\i18n\Formatter',
+            'thousandSeparator' => '.',
+            'decimalSeparator' => ',',
+            'currencyCode' => '',
+            'dateFormat' => 'dd/MM/yyyy',
+            'datetimeFormat' => 'd-M-Y H:i:s',
+
+        ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
             'itemTable' => 'papel',
@@ -31,7 +41,6 @@ $config = [
             'showScriptName' => false,
             'enableStrictParsing' => false,
             'rules' => [
-
             ],
         ],
         'request' => [

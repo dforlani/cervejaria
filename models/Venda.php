@@ -48,6 +48,7 @@ class Venda extends \yii\db\ActiveRecord
             [['dt_venda', 'dt_pagamento'], 'safe'],
             [['fk_usuario_iniciou_venda', 'fk_usuario_recebeu_pagamento'], 'string', 'max' => 20],
             [['pk_venda'], 'unique'],
+            [['estado'], 'default', 'value'=> 'aberta'],
             [['fk_cliente'], 'exist', 'skipOnError' => true, 'targetClass' => Cliente::className(), 'targetAttribute' => ['fk_cliente' => 'pk_cliente']],
             [['fk_comanda'], 'exist', 'skipOnError' => true, 'targetClass' => Comanda::className(), 'targetAttribute' => ['fk_comanda' => 'pk_comanda']],
             [['fk_usuario_iniciou_venda'], 'exist', 'skipOnError' => true, 'targetClass' => Usuario::className(), 'targetAttribute' => ['fk_usuario_iniciou_venda' => 'login']],
@@ -70,38 +71,47 @@ class Venda extends \yii\db\ActiveRecord
             'desconto' => 'Desconto',
             'valor_final' => 'Valor Final',
             'estado' => 'Estado',
-            'dt_venda' => 'Dt Venda',
-            'dt_pagamento' => 'Dt Pagamento',
+            'dt_venda' => 'Data Venda',
+            'dt_pagamento' => 'Data Pagamento',
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getItemVendas()
+    public function getItensVenda()
     {
         return $this->hasMany(ItemVenda::className(), ['fk_venda' => 'pk_venda']);
     }
     
     public function atualizaValorFinal(){
-        $precos = $this->itemVendas;
+        $precos = $this->itensVenda;
         $total = 0;
         if(!empty($precos)){
             foreach($precos as $preco){
                 $total = $total + $preco->preco_final;
             }
-        }
-        
+        }        
         
         $this->valor_total = $total;
         $this->valor_final = $total - $this->desconto;
         $this->save();
     }
+    
+    public static function getArrayVendasEmAberto(){
+        $vendas = Venda::findByCondition(['estado'=>'aberta'])->all();;
+        $lista = [];
+        if(!empty($vendas))
+        foreach($vendas as $venda){
+            $lista[$venda->pk_venda] = (!empty($venda->cliente)?$venda->cliente->nome:'') . ' - ' . (!empty($venda->comanda)?$venda->comanda->numero:'') ;
+        }
+        return $lista;
+    }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getFkCliente()
+    public function getCliente()
     {
         return $this->hasOne(Cliente::className(), ['pk_cliente' => 'fk_cliente']);
     }
@@ -109,7 +119,7 @@ class Venda extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getFkComanda()
+    public function getComanda()
     {
         return $this->hasOne(Comanda::className(), ['pk_comanda' => 'fk_comanda']);
     }

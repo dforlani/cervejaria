@@ -21,6 +21,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'preco')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'quantidade')->textInput() ?>
+ 
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
