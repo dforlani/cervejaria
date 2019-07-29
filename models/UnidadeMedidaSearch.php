@@ -4,12 +4,12 @@ namespace app\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Produto;
+use app\models\UnidadeMedida;
 
 /**
- * ProdutoSearch represents the model behind the search form of `app\models\Produto`.
+ * UnidadeMedidaSearch represents the model behind the search form of `app\models\UnidadeMedida`.
  */
-class ProdutoSearch extends Produto
+class UnidadeMedidaSearch extends UnidadeMedida
 {
     /**
      * {@inheritdoc}
@@ -17,9 +17,8 @@ class ProdutoSearch extends Produto
     public function rules()
     {
         return [
-            [['pk_produto'], 'integer'],
-            [['nome',], 'safe'],
-            [['estoque'], 'number'],
+            [['unidade_medida'], 'safe'],
+            [['pk_unidade_medida'], 'integer'],
         ];
     }
 
@@ -41,7 +40,7 @@ class ProdutoSearch extends Produto
      */
     public function search($params)
     {
-        $query = Produto::find();
+        $query = UnidadeMedida::find();
 
         // add conditions that should always apply here
 
@@ -59,12 +58,10 @@ class ProdutoSearch extends Produto
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'pk_produto' => $this->pk_produto,
-            'estoque' => $this->estoque,
+            'pk_unidade_medida' => $this->pk_unidade_medida,
         ]);
 
-        $query->andFilterWhere(['like', 'nome', $this->nome]);
-         //   ->andFilterWhere(['like', 'unidade_medida', $this->unidade_medida]);
+        $query->andFilterWhere(['like', 'unidade_medida', $this->unidade_medida]);
 
         return $dataProvider;
     }

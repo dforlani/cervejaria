@@ -35,7 +35,7 @@ AppAsset::register($this);
                             'heading' => 'Menu',
                             'items' => [
                                 ['label' => 'Balcão', 'url' => ['/venda/venda'],],
-                                ['label' => 'Vendas', 'url' => ['/venda']],
+                                ['label' => 'Todas as Vendas', 'url' => ['/venda']],
                                 //['label' => 'Home', 'url' => ['/site/index']],
                                 ['label' => 'Clientes', 'url' => ['/cliente']],
                                 ['label' => 'Comandas', 'url' => ['/comanda']],
@@ -43,6 +43,7 @@ AppAsset::register($this);
                                 // ['label' => 'Item Venda', 'url' => ['/item-venda']],
                                 // ['label' => 'Preço', 'url' => ['/preco']],
                                 ['label' => 'Produtos', 'url' => ['/produto']],
+                                 ['label' => 'Unidades de Medida', 'url' => ['/unidade-medida']],
                             ],]
                         );
                         ?>

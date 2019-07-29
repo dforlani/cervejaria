@@ -30,6 +30,7 @@ class Comanda extends \yii\db\ActiveRecord
         return [
             
             [['pk_comanda', 'numero'], 'integer'],
+            [['numero'], 'unique'],
             [['pk_comanda'], 'unique'],
         ];
     }
@@ -41,7 +42,7 @@ class Comanda extends \yii\db\ActiveRecord
     {
         return [
             'pk_comanda' => 'Pk Comanda',
-            'numero' => 'Numero',
+            'numero' => 'Código de Barras',
         ];
     }
 

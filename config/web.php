@@ -19,7 +19,7 @@ $config = [
             'decimalSeparator' => ',',
             'currencyCode' => '',
             'dateFormat' => 'dd/MM/yyyy',
-            'datetimeFormat' => 'd-M-Y H:i:s',
+          //  'datetimeFormat' => 'd-M-Y H:i:s',
 
         ],
         'authManager' => [

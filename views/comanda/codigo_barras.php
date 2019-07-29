@@ -1,3 +1,4 @@
+
 <!DOCTYPE HTML>
 <html lang="en-US">
     <head>
@@ -12,12 +13,12 @@
         </script>
     </head>
     <body>
-        <div style="width:200px;text-align: center"><?= $modelPreco->getNomeProdutoPlusDenominacao() ?></div>
         <div>
-
             <img id="barcode1"/>
-            <script>JsBarcode("#barcode1", <?= $modelPreco->codigo_barras ?>);</script>
+            <script>JsBarcode("#barcode1", <?= $model->numero ?>);</script>
         </div>
 
     </body>
 </html>
+
+

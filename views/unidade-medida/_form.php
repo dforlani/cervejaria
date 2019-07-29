@@ -4,17 +4,15 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Comanda */
+/* @var $model app\models\UnidadeMedida */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="comanda-form">
+<div class="unidade-medida-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
-    
-
-    <?= $form->field($model, 'numero')->textInput([ 'autofocus' => '']) ?>
+    <?= $form->field($model, 'unidade_medida')->textInput(['maxlength' => true]) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

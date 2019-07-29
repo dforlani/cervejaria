@@ -67,6 +67,12 @@ class ClienteController extends Controller
         $model = new Cliente();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+//            var_dump(Yii::$app->request->post());
+//            echo '<br>';
+//            echo '<br>';
+//            echo '<br>';
+//            var_dump($model);
+//            exit();
             return $this->redirect(['index', 'id' => $model->pk_cliente]);
         }
 

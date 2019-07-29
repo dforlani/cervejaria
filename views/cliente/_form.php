@@ -1,3 +1,6 @@
+<script>
+    //$("form input:text, form textarea").first().focus();
+    </script>
 <?php
 
 use app\models\Cliente;
@@ -15,12 +18,11 @@ use yii\jui\DatePicker;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'nome')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'nome')->textInput(['autofocus' => '', 'maxlength' => true]) ?>
 
     <?= $form->field($model, 'telefone')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'cpf')->textInput(['maxlength' => true]) ?>
-
     <?=
     $form->field($model, 'dt_nascimento')->widget(\yii\jui\DatePicker::class, [
         'dateFormat' => 'dd/MM/yyyy'

@@ -32,9 +32,11 @@ class Cliente extends \yii\db\ActiveRecord {
             [['pk_cliente'], 'integer'],
             [['dt_nascimento'], 'safe'],
             [['nome'], 'string', 'max' => 200],
+            [['nome'], 'unique'],            
             [['telefone'], 'string', 'max' => 10],
             [['cpf'], 'string', 'max' => 14],
             [['pk_cliente'], 'unique'],
+            [['dt_nascimento'], 'default']
         ];
     }
 
@@ -59,7 +61,8 @@ class Cliente extends \yii\db\ActiveRecord {
     }
 
     public function beforeSave($insert) {
-        $this->dt_nascimento = Yii::$app->formatter->asDate($this->dt_nascimento, 'yyyy-MM-dd');
+        if (!empty($this->dt_nascimento))
+            $this->dt_nascimento = Yii::$app->formatter->asDate($this->dt_nascimento, 'yyyy-dd-MM');
         return parent::beforeSave($insert);
     }
 

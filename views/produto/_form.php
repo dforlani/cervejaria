@@ -14,11 +14,23 @@ use yii\widgets\ActiveForm;
 
     
 
-    <?= $form->field($model, 'nome')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'nome')->textInput(['maxlength' => true, 'autofocus' => '']) ?>
 
     <?= $form->field($model, 'estoque')->textInput() ?>
 
-    <?= $form->field($model, 'unidade_medida')->textInput(['maxlength' => true]) ?>
+    <?php
+                        echo $form->field($modelItem, 'fk_unidade_medida')->widget(Select2::classname(), [
+                            'data' => ArrayHelper::map(UnidadeMedida::find()->all, 'pk_unidade_medida', 'unidade_medida'),
+                            'options' => ['placeholder' => 'Selecione uma Unidade de Medida'],
+                            'pluginOptions' => [
+                                'allowClear' => true
+                            ],
+//                            'pluginEvents' => [
+//                                "change" => "function(e) { changeProduto(); }  ",
+//                            ]
+                        ])->label('Unidade de Medida');
+                        ?>
+  
 
     <div class="form-group">
         <?= Html::submitButton('Salvar', ['class' => 'btn btn-success']) ?>

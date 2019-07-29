@@ -59,6 +59,11 @@ class Produto extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Entrada::className(), ['fk_produto' => 'pk_produto']);
     }
+    
+    public function getUnidadeMedida()
+    {
+         return $this->hasOne(UnidadeMedida::className(), ['pk_unidade_medida' => 'fk_unidade_medida']);
+    }
 
     /**
      * @return \yii\db\ActiveQuery
