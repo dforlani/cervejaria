@@ -11,23 +11,18 @@
 
     });
 
-    function changeVendaAberta() {
-        console.log('oi');
-    }
+
 
 
 
 </script>
 
 <?php
-
-//
-
-
 use app\models\Venda;
-use kartik\widgets\Select2;
+
 use yii\helpers\Html;
 use yii\web\View;
+use kartik\widgets\Select2;
 
 /* @var $this View */
 /* @var $model Venda */
@@ -40,11 +35,31 @@ $this->params['breadcrumbs'][] = $this->title;
 
 </div>
 <div class='panel panel-success' >
-    <?php
+
+
+    <div class="panel-heading">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6" style="background-color:laven der;">  
+                    <span class="panel-title">            <?= Html::encode($this->title) ?></span>
+                </div>               
+                <div class="col-sm-6" style="text-align: right">  
+                    <?php
+                    if (!$model->isNewRecord)
+                        echo Html::buttonInput(('Iniciar Nova Venda'), ['onClick' => "window.location='./venda'", 'class' => 'btn btn-danger'])
+                        ?>
+                </div>
+
+            </div>
+        </div>           
+    </div>
+    <div class = "container-fluid">
+        <?php
         echo '<label class="control-label">Vendas em Aberto</label>';
         echo Select2::widget([
             'name' => 'kv-type-01',
             'data' => Venda::getArrayVendasEmAberto(),
+            'value' => $model->pk_venda,
             'options' => [
                 'id' => 'pk_venda_aberta',
                 'style' => '',
@@ -55,43 +70,48 @@ $this->params['breadcrumbs'][] = $this->title;
             ]
         ]);
         ?>
-
-    <div class="panel-heading">
-        <h1 class="panel-title"><?= Html::encode($this->title) ?></h1>
-       
     </div>
-    <div class="panel-body" style="padding: 5px">
-        <div class="venda-create">
+    <?php if ($model->isNewRecord) { ?>
+        <?=
+        $this->render('_form_novo', [
+            'model' => $model,
+        ])
+        ?>
+    <?php } else { ?>
+
+        <div class="panel-body" style="padding: 5px">
+            <div class = "container-fluid">
+                <div class = "row">
+                    <div class = "col-sm-8" style = "">
+                        <?php
+                        if (!empty($modelItem))
+                            echo $this->render('item/_item', [
+                                'model' => $model,
+                                'modelItem' => $modelItem,
+                                'dataProviderItem' => $dataProviderItem,
+                                'searchModelItem' => $searchModelItem,
+                            ])
+                            ?>
+                    </div>
+                    <div class = "col-sm-4" style = "">
+                        <?=
+                        $this->render('_form', [
+                            'model' => $model,
+                        ])
+                        ?>
+                    </div>
 
 
+                </div>
+            </div>
 
-            <?=
-            $this->render('_form', [
-                'model' => $model,
-            ])
-            ?>
 
         </div>
-
-        <div class="item-insert">
-
+    <?php } ?>
 
 
-            <?php
-            if (!empty($modelItem))
-                echo $this->render('item/_item', [
-                    'model' => $model,
-                    'modelItem' => $modelItem,
-                    'dataProviderItem' => $dataProviderItem,
-                    'searchModelItem' => $searchModelItem,
-                ])
-                ?>
 
-        </div>
-    </div>
-    <div class="pager" style='margin-left: 50px'>
 
-    </div>
 </div>
 
 

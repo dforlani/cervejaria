@@ -10,66 +10,78 @@ use Yii;
  * @property int $pk_produto
  * @property string $nome
  * @property double $estoque
- * @property string $unidade_medida
+ * @property int $fk_unidade_medida
  *
  * @property Entrada[] $entradas
  * @property Preco[] $precos
  */
-class Produto extends \yii\db\ActiveRecord
-{
+class Produto extends \yii\db\ActiveRecord {
+
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'produto';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-//            [['pk_produto'], 'required'],
-//            [['pk_produto'], 'integer'],
+            [['fk_unidade_medida'], 'required'],
+            [['fk_unidade_medida'], 'integer'],
             [['estoque'], 'number'],
-            [['nome', 'unidade_medida'], 'string', 'max' => 100],
+            [['nome',], 'string', 'max' => 100],
+            [['nr_lote',], 'string', 'max' => 20],
             [['pk_produto'], 'unique'],
+            [['dt_fabricacao'], 'default'],
+            [['dt_vencimento'], 'default'],
+            [['is_vendavel'], 'required'],
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'pk_produto' => 'Pk Produto',
             'nome' => 'Nome',
-            'estoque' => 'Estoque',
-            'unidade_medida' => 'Unidade Medida',
+            'estoque' => 'Estoque Atual',
+            'fk_unidade_medida' => 'Unidade de Medida',
+            'is_vendavel' => 'É para vender?',
+            'estoque_minimo' => 'Estoque Mínimo',
+            'dt_fabricacao' => 'Data de Fabricação',
+            'dt_vencimento' => 'Data de Vencimento',
+            'nr_lote' => 'Número do Lote'
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getEntradas()
-    {
+    public function getEntradas() {
         return $this->hasMany(Entrada::className(), ['fk_produto' => 'pk_produto']);
     }
-    
-    public function getUnidadeMedida()
-    {
-         return $this->hasOne(UnidadeMedida::className(), ['pk_unidade_medida' => 'fk_unidade_medida']);
+
+    public function getUnidadeMedida() {
+        return $this->hasOne(UnidadeMedida::className(), ['pk_unidade_medida' => 'fk_unidade_medida']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPrecos()
-    {
+    public function getPrecos() {
         return $this->hasMany(Preco::className(), ['fk_produto' => 'pk_produto']);
     }
+
+    public function beforeSave($insert) {
+        if (!empty($this->dt_vencimento))
+            $this->dt_vencimento = Yii::$app->formatter->asDate($this->dt_vencimento, 'yyyy-dd-MM');
+        if (!empty($this->dt_fabricacao))
+            $this->dt_fabricacao = Yii::$app->formatter->asDate($this->dt_fabricacao, 'yyyy-dd-MM');
+        return parent::beforeSave($insert);
+    }
+
 }

@@ -67,7 +67,7 @@ class UnidadeMedidaController extends Controller
         $model = new UnidadeMedida();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
+            return $this->redirect(['view', 'id' => $model->pk_unidade_medida]);
         }
 
         return $this->render('create', [
@@ -87,7 +87,7 @@ class UnidadeMedidaController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
+            return $this->redirect(['view', 'id' => $model->pk_unidade_medida]);
         }
 
         return $this->render('update', [

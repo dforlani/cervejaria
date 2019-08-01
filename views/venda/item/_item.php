@@ -47,7 +47,11 @@ use yii\grid\GridView;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+
+
+
 ?>
+
 <div class='panel panel-primary' style="background-color:lavender; ">
     <!--Itens-->
 
@@ -116,13 +120,25 @@ use yii\widgets\ActiveForm;
                     'label' => 'Produto',
                     'value' => 'preco.nomeProdutoPlusDenominacao',
                 ],
-                'quantidade',
-                //'preco.produto.unidade_medida',
-                'preco_unitario',
-                'preco_final',
+          
+                [
+                    'attribute' => 'quantidade',
+                    'format' => 'currency',
+                    'contentOptions' => ['style' => 'text-align:right'],
+                ],
+                [
+                    'attribute' => 'preco_unitario',
+                    'format' => 'currency',
+                    'contentOptions' => ['style' => 'text-align:right'],
+                ],
+                [
+                    'attribute' => 'preco_final',
+                    'format' => 'currency',
+                    'contentOptions' => ['style' => 'text-align:right'],
+                ],
                 [
                     'class' => 'yii\grid\ActionColumn',
-                    'header' => 'Actions',
+                    'header' => 'Ações',
                     'headerOptions' => ['style' => 'color:#337ab7'],
                     'template' => '{delete}',
                     'buttons' => [

@@ -44,6 +44,26 @@ REFERENCES unidade_medida(pk_unidade_medida)
                           ON UPDATE CASCADE 
                           ON DELETE SET NULL;")->execute();
             echo('Campo chave estrangeira unidade de medida inserido ASSOCIADO A TABELA UNIDADE DE MEDIDA<BR>');
+            $posts = Yii::$app->db->createCommand(" ALTER TABLE `preco` ADD `codigo_barras` INT NULL AFTER `quantidade`;")->execute();
+            echo('Campo codigo_barras inserido na tabela preco<BR>');
+            
+            echo('Campo chave estrangeira unidade de medida inserido ASSOCIADO A TABELA UNIDADE DE MEDIDA<BR>');
+            $posts = Yii::$app->db->createCommand(" ALTER TABLE `produto` "
+                    . "ADD `dt_vencimento` DATE AFTER `estoque`, "
+                    . "ADD `dt_fabricacao` DATE  AFTER `dt_vencimento`, "
+                    . "ADD `estoque_minimo` INT  AFTER `dt_fabricacao`, "
+                    . "ADD `nr_lote` VARCHAR(20)   , "
+                    . "ADD `estoque_inicial` INT  AFTER `nr_lote`, "
+                    . "ADD `is_vendavel` BOOLEAN  ;")->execute();
+            echo('Colunas dt_vencimento, dt_fabricacao, quantidade_minima, nr_lote, quantidade_inicial incluidos na tabela produto<BR>');
+             $posts = Yii::$app->db->createCommand("  ALTER TABLE `venda` CHANGE `dt_venda` `dt_venda` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP;")->execute();
+            echo('Data da venda é TIMESTAMP automático agora<BR>');
+            $posts = Yii::$app->db->createCommand("ALTER TABLE `venda` CHANGE `dt_pagamento` `dt_pagamento` DATETIME NULL DEFAULT NULL;")->execute();
+            echo('dt_pagamento agora com hora<BR>');
+            
+           
+           
+           
 
             echo 'FIM';
             $transaction->commit();

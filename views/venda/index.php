@@ -28,7 +28,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'cliente.nome',
                 'label' => 'Cliente'
             ],
-            
             //'comanda.numero',
             //'fk_usuario_iniciou_venda',
             // 'fk_usuario_recebeu_pagamento',
@@ -36,7 +35,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'desconto:currency',
             'valor_final:currency',
             'estado',
-            'dt_venda:date',
+            'dt_venda:datetime',
+            'dt_pagamento:datetime',
             //'dt_pagamento',
             [
                 'class' => 'yii\grid\ActionColumn',
@@ -44,13 +44,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'headerOptions' => ['style' => 'color:#337ab7'],
                 'template' => '{update}{delete}',
                 'buttons' => [
-                    
                     'update' => function ($url, $model) {
                         return Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['venda', 'id' => $model->pk_venda], [
                                     'title' => Yii::t('app', 'lead-update'),
                         ]);
                     },
-                   
                 ],
             ],
         ],

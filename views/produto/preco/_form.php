@@ -16,10 +16,9 @@ use yii\web\View;
 
 
 
-    <?= $form->field($model, 'fk_produto')->hiddenInput() ?>
+    <?= $form->field($model, 'fk_produto')->hiddenInput()->label(false) ?>
 
-    <?= $form->field($model, 'denominacao')->textInput(['maxlength' => true]) ?>
-
+    <?= $form->field($model, 'denominacao')->textInput(['maxlength' => true, 'autofocus' => '']) ?>
     <?= $form->field($model, 'preco')->textInput(['maxlength' => true]) ?>
     <?= $form->field($model, 'codigo_barras')->textInput(['maxlength' => true]) ?>
 
@@ -27,7 +26,7 @@ use yii\web\View;
     $form->field($model, 'quantidade', [
         'addon' => [
             //'prepend' => ['content' => '$', 'options'=>['class'=>'alert-success']],
-            'append' => ['content' => 'em ' . $model->produto->unidade_medida, 'options' => ['style' => 'font-family: Monaco, Consolas, monospace;']],
+            'append' => ['content' => 'em ' . $model->produto->unidadeMedida->unidade_medida, 'options' => ['style' => 'font-family: Monaco, Consolas, monospace;']],
         ]
     ]);
     ?>

@@ -103,7 +103,7 @@ class Venda extends \yii\db\ActiveRecord
         $lista = [];
         if(!empty($vendas))
         foreach($vendas as $venda){
-            $lista[$venda->pk_venda] = (!empty($venda->cliente)?$venda->cliente->nome:'') . ' - ' . (!empty($venda->comanda)?$venda->comanda->numero:'') ;
+            $lista[$venda->pk_venda] = (!empty($venda->cliente)?'Cliente: '.$venda->cliente->nome:'') . ' => Comanda: ' . (!empty($venda->comanda)?$venda->comanda->numero:'') ;
         }
         return $lista;
     }

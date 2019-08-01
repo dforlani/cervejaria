@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <title></title>
-        <script src="/fabrica/web/js/JsBarcode.all.min.js"></script>
+        <script src="../js/JsBarcode.all.min.js"></script>
         <script>
             Number.prototype.zeroPadding = function () {
                 var ret = "" + this.valueOf();

@@ -65,5 +65,9 @@ class Cliente extends \yii\db\ActiveRecord {
             $this->dt_nascimento = Yii::$app->formatter->asDate($this->dt_nascimento, 'yyyy-dd-MM');
         return parent::beforeSave($insert);
     }
+    
+    public static function getClientesSemVendasAbertas(){
+        return Cliente::findBySql('select * from cliente where pk_cliente not in (select fk_cliente from venda where estado = "aberta" and fk_cliente is not null)')->all();
+    }
 
 }

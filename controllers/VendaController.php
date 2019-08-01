@@ -71,13 +71,24 @@ class VendaController extends Controller {
         ]);
     }
 
+    public function actionAlteraDesconto($id) {
+        $model = $this->findModel($id);
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $model->load(Yii::$app->request->post());
+        $model->valor_final = $model->valor_total - $model->desconto;
+        if ($model->save()) {
+            return ['output' => Yii::$app->formatter->asCurrency($model->desconto), 'valor_final'=>Yii::$app->formatter->asCurrency($model->valor_final), 'message' => ''];
+        } else {
+            return ['output' => '', 'message' => ''];
+        }
+    }
+
     /**
      * Creates a new Venda model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionVenda($id = null) {
-
 
         if (empty($id)) {
             $model = new Venda();
@@ -101,12 +112,22 @@ class VendaController extends Controller {
 
         //salva a venda
         if (!empty(Yii::$app->request->post('Venda'))) {
-            $novo = $model->isNewRecord;
+
             if ($model->load(Yii::$app->request->post()) && $model->save()) {
-               // if (!$novo)
-                //    return $this->redirect(['venda']);
-               // else
-                    return $this->redirect(['venda', 'id' => $model->pk_venda]);
+                if (isset($_POST['bt_pagar'])) {
+                    $model->estado = 'paga';
+                    date_default_timezone_set('America/Sao_Paulo');
+                    $model->dt_pagamento = date_create()->format('Y-m-d H:i:s');
+                    date('Y-m-d H:i:s');
+                    $model->save();
+                    return $this->redirect(['venda']);
+                } else
+                if (isset($_POST['bt_fiado'])) {
+                    $model->estado = 'fiado';
+                    $model->save();
+                    return $this->redirect(['venda']);
+                }
+                return $this->redirect(['venda', 'id' => $model->pk_venda]);
             }
         }
 
