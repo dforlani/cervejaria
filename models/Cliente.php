@@ -61,8 +61,9 @@ class Cliente extends \yii\db\ActiveRecord {
     }
 
     public function beforeSave($insert) {
-        if (!empty($this->dt_nascimento))
-            $this->dt_nascimento = Yii::$app->formatter->asDate($this->dt_nascimento, 'yyyy-dd-MM');
+    //        if (!empty($this->dt_nascimento))
+    //            $this->dt_nascimento = Yii::$app->formatter->asDate($this->dt_nascimento,  'php:Y-m-d');
+        //Yii::$app->formatter->asDate($dateStr, $fmt);
         return parent::beforeSave($insert);
     }
     

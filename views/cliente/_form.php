@@ -4,10 +4,10 @@
 <?php
 
 use app\models\Cliente;
+use kartik\datecontrol\DateControl;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
-use yii\jui\DatePicker;
 
 /* @var $this View */
 /* @var $model Cliente */
@@ -23,10 +23,26 @@ use yii\jui\DatePicker;
     <?= $form->field($model, 'telefone')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'cpf')->textInput(['maxlength' => true]) ?>
-    <?=
-    $form->field($model, 'dt_nascimento')->widget(\yii\jui\DatePicker::class, [
-        'dateFormat' => 'dd/MM/yyyy'
-    ])
+    <?php
+//    $form->field($model, 'dt_nascimento')->widget(\yii\jui\DatePicker::class, [
+//        'dateFormat' => 'dd/MM/yyyy'
+//    ]);
+    echo $form->field($model, 'dt_nascimento')->widget(DateControl::classname(), [
+    'type' => 'date',
+    'ajaxConversion' => true,
+    'autoWidget' => true,
+    'widgetClass' => '',
+    'displayFormat' => 'php:d/m/Y',
+    'saveFormat' => 'php:Y-m-d',
+    'saveTimezone' => 'UTC',
+    'widgetOptions' => [
+        'pluginOptions' => [
+            'autoclose' => true,
+            'format' => 'php:d/m/Y',
+        ],
+         'language' => 'pt-BR'
+    ]
+]);
     ?>
 
 

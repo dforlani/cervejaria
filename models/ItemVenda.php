@@ -17,25 +17,23 @@ use Yii;
  * @property Preco $fkPreco
  *  @property string $dt_inclusao
  */
-class ItemVenda extends \yii\db\ActiveRecord
-{
+class ItemVenda extends \yii\db\ActiveRecord {
+
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'item_venda';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['fk_venda', 'fk_preco', 'quantidade'], 'required'],
             [['fk_venda', 'fk_preco'], 'integer'],
-              [['dt_inclusao'], 'safe'],
+            [['dt_inclusao'], 'safe'],
             [['quantidade', 'preco_unitario', 'preco_final'], 'number'],
             [['fk_venda'], 'exist', 'skipOnError' => true, 'targetClass' => Venda::className(), 'targetAttribute' => ['fk_venda' => 'pk_venda']],
             [['fk_preco'], 'exist', 'skipOnError' => true, 'targetClass' => Preco::className(), 'targetAttribute' => ['fk_preco' => 'pk_preco']],
@@ -45,31 +43,45 @@ class ItemVenda extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'fk_venda' => 'Fk Venda',
             'fk_preco' => 'Fk Preco',
             'quantidade' => 'Quantidade',
             'preco_unitario' => 'Preco Unitario',
             'preco_final' => 'Preco Final',
-            'dt_inclusao' =>'Inclusão'	
+            'dt_inclusao' => 'Inclusão'
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getVenda()
-    {
+    public function getVenda() {
         return $this->hasOne(Venda::className(), ['pk_venda' => 'fk_venda']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPreco()
-    {
+    public function getPreco() {
         return $this->hasOne(Preco::className(), ['pk_preco' => 'fk_preco']);
     }
+
+
+    public function afterSave($insert, $changedAttributes) {
+        //atualiza a quantidade de produtos disponiveis atuais
+        $produto = $this->preco->produto;
+        $produto->estoque = $produto->estoque - $this->quantidade * $this->preco->quantidade;
+        $produto->save();
+        return parent::afterSave($insert, $changedAttributes);
+    }
+    
+    public function afterDelete() {
+        $produto = $this->preco->produto;
+        $produto->estoque = $produto->estoque + $this->quantidade * $this->preco->quantidade;
+        $produto->save();
+        parent::afterDelete();
+    }
+
 }

@@ -2,6 +2,7 @@
 
 use app\models\Produto;
 use app\models\UnidadeMedida;
+use kartik\datecontrol\DateControl;
 use kartik\widgets\Select2;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -49,16 +50,44 @@ use yii\widgets\ActiveForm;
         <div class="row">
             <div class="col-sm-6" style="background-color:laven der;">
                 <?=
-                $form->field($model, 'dt_fabricacao')->widget(\yii\jui\DatePicker::class, [
-                    'dateFormat' => 'dd/MM/yyyy'
-                ])
+                
+                          $form->field($model, 'dt_fabricacao')->widget(DateControl::classname(), [
+    'type' => 'date',
+    'ajaxConversion' => true,
+    'autoWidget' => true,
+    'widgetClass' => '',
+    'displayFormat' => 'php:d/m/Y',
+    'saveFormat' => 'php:Y-m-d',
+    'saveTimezone' => 'UTC',
+    'widgetOptions' => [
+        'pluginOptions' => [
+            'autoclose' => true,
+            'format' => 'php:d/m/Y',
+        ],
+         'language' => 'pt-BR'
+    ]
+]);
                 ?>
             </div>
             <div class="col-sm-6" style="background-color:laven der;">  
                 <?=
-                $form->field($model, 'dt_vencimento')->widget(\yii\jui\DatePicker::class, [
-                    'dateFormat' => 'dd/MM/yyyy'
-                ])
+                
+                                                  $form->field($model, 'dt_vencimento')->widget(DateControl::classname(), [
+    'type' => 'date',
+    'ajaxConversion' => true,
+    'autoWidget' => true,
+    'widgetClass' => '',
+    'displayFormat' => 'php:d/m/Y',
+    'saveFormat' => 'php:Y-m-d',
+    'saveTimezone' => 'UTC',
+    'widgetOptions' => [
+        'pluginOptions' => [
+            'autoclose' => true,
+            'format' => 'php:d/m/Y',
+        ],
+         'language' => 'pt-BR'
+    ]
+]);
                 ?>
             </div>
 

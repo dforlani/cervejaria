@@ -35,6 +35,7 @@ class Preco extends \yii\db\ActiveRecord {
             [['pk_preco', 'fk_produto', 'codigo_barras'], 'integer'],
             [['preco', 'quantidade'], 'number'],
             [['denominacao'], 'string', 'max' => 100],
+            [['codigo_barras'], 'number', 'min' => 1000000001],
             [['pk_preco'], 'unique'],
             [['codigo_barras'], 'unique'],
             [['fk_produto'], 'exist', 'skipOnError' => true, 'targetClass' => Produto::className(), 'targetAttribute' => ['fk_produto' => 'pk_produto']],
@@ -43,7 +44,7 @@ class Preco extends \yii\db\ActiveRecord {
 
     public static function getArrayProdutosPrecos() {
         $lista = [];
-        $precos = Preco::find()->joinWith('produto')->orderBy('nome, denominacao')->all();
+        $precos = Preco::find()->where('is_vendavel IS TRUE AND (dt_vencimento >= CURDATE() OR dt_vencimento IS NULL)')->joinWith('produto')->orderBy('nome, denominacao')->all();
         foreach ($precos as $preco) {
             $lista[$preco->pk_preco] = $preco->getNomeProdutoPlusDenominacao();
         }
@@ -51,7 +52,7 @@ class Preco extends \yii\db\ActiveRecord {
     }
 
     public function getNomeProdutoPlusDenominacao() {
-        return $this->produto->nome . ' - ' . $this->denominacao . ' - ' . $this->quantidade . ' ' . $this->produto->unidadeMedida->unidade_medida;
+        return $this->produto->nome . ' - ' . $this->denominacao . ' - ' . $this->quantidade . ' ' . $this->produto->unidadeMedida->unidade_medida . ' - ' . $this->codigo_barras;
     }
 
     /**
@@ -80,6 +81,15 @@ class Preco extends \yii\db\ActiveRecord {
      */
     public function getProduto() {
         return $this->hasOne(Produto::className(), ['pk_produto' => 'fk_produto']);
+    }
+
+    public static function getSugestaoCodigoBarras() {
+        $sg = Preco::findBySql('SELECT MAX(codigo_barras) as codigo_barras FROM `preco`')->one();
+        if (empty($sg->codigo_barras)) {
+            return 1000000001;
+        } else {
+            return $sg->codigo_barras + 1;
+        }
     }
 
 }

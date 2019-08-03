@@ -111,10 +111,13 @@ class VendaController extends Controller {
         }
 
         //salva a venda
-        if (!empty(Yii::$app->request->post('Venda'))) {
-
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                if (isset($_POST['bt_pagar'])) {
+        if ((!empty(Yii::$app->request->post('Venda')))&&($model->load(Yii::$app->request->post()))) {
+          
+//            print_r($_POST);
+//            var_dump(isset($_POST['Venda']['button']));
+//            exit();
+              if ((isset($_POST['Venda']['button'])) && $_POST['Venda']['button'] == 'pagar') {
+                    
                     $model->estado = 'paga';
                     date_default_timezone_set('America/Sao_Paulo');
                     $model->dt_pagamento = date_create()->format('Y-m-d H:i:s');
@@ -122,13 +125,30 @@ class VendaController extends Controller {
                     $model->save();
                     return $this->redirect(['venda']);
                 } else
-                if (isset($_POST['bt_fiado'])) {
+                 if ((isset($_POST['Venda']['button'])) && $_POST['Venda']['button'] == 'fiado') {
                     $model->estado = 'fiado';
                     $model->save();
                     return $this->redirect(['venda']);
+                } else if ($model->save()){
+                    return $this->redirect(['venda', 'id' => $model->pk_venda]); 
                 }
-                return $this->redirect(['venda', 'id' => $model->pk_venda]);
-            }
+
+//            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+//                if (isset($_POST['bt_pagar'])) {
+//                    $model->estado = 'paga';
+//                    date_default_timezone_set('America/Sao_Paulo');
+//                    $model->dt_pagamento = date_create()->format('Y-m-d H:i:s');
+//                    date('Y-m-d H:i:s');
+//                    $model->save();
+//                    return $this->redirect(['venda']);
+//                } else
+//                if (isset($_POST['bt_fiado'])) {
+//                    $model->estado = 'fiado';
+//                    $model->save();
+//                    return $this->redirect(['venda']);
+//                }
+//               
+//            }
         }
 
         //insere um item

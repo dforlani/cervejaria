@@ -34,7 +34,7 @@ use yii\widgets\ActiveForm;
                     <?php
                     echo $form->field($model, 'fk_comanda')->widget(Select2::classname(), [
                         'data' => \yii\helpers\ArrayHelper::map(\app\models\Comanda::getComandasSemVendasAbertas(), 'pk_comanda', 'numero'),
-                        'options' => ['placeholder' => 'Selecione um cliente'],
+                        'options' => ['placeholder' => 'Selecione uma comanda'],
                         'pluginOptions' => [
                             'allowClear' => true
                         ],

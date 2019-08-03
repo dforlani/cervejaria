@@ -13,7 +13,7 @@ use yii\widgets\ActiveForm;
     window.print();
 
 </script>
-<div style='width: 400px '>
+<div style='width: 250px;margin-left:100px'>
     <?= date('d/m/Y H:i:s', time()); ?><br>
     <div style='text-align:  center'> Cervejaria Paraíso<div>
 
@@ -21,7 +21,7 @@ use yii\widgets\ActiveForm;
     Comanda: <?= (!empty($model->comanda) ? $model->comanda->numero : '') ?><br>
    
  <hr>
-    <table>
+    <table style='font-size: 10px'>
         <thead>
             <tr>
                 <td style="margin-right: 500px">

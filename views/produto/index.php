@@ -28,8 +28,12 @@ $this->params['breadcrumbs'][] = $this->title;
 
            // 'pk_produto',
             'nome',
+            'estoque_inicial',
             'estoque',
+            'estoque_minimo',
             'unidadeMedida.unidade_medida',
+            'dt_fabricacao:date',
+            'dt_vencimento:date',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

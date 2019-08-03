@@ -31,7 +31,7 @@ class Produto extends \yii\db\ActiveRecord {
         return [
             [['fk_unidade_medida'], 'required'],
             [['fk_unidade_medida'], 'integer'],
-            [['estoque'], 'number'],
+            [['estoque', 'estoque_inicial', 'estoque_minimo'], 'number'],
             [['nome',], 'string', 'max' => 100],
             [['nr_lote',], 'string', 'max' => 20],
             [['pk_produto'], 'unique'],
@@ -77,10 +77,10 @@ class Produto extends \yii\db\ActiveRecord {
     }
 
     public function beforeSave($insert) {
-        if (!empty($this->dt_vencimento))
-            $this->dt_vencimento = Yii::$app->formatter->asDate($this->dt_vencimento, 'yyyy-dd-MM');
-        if (!empty($this->dt_fabricacao))
-            $this->dt_fabricacao = Yii::$app->formatter->asDate($this->dt_fabricacao, 'yyyy-dd-MM');
+//        if (!empty($this->dt_vencimento))
+//            $this->dt_vencimento = Yii::$app->formatter->asDate($this->dt_vencimento, 'yyyy-dd-MM');
+//        if (!empty($this->dt_fabricacao))
+//            $this->dt_fabricacao = Yii::$app->formatter->asDate($this->dt_fabricacao, 'yyyy-dd-MM');
         return parent::beforeSave($insert);
     }
 

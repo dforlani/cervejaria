@@ -10,16 +10,7 @@ use yii\widgets\ActiveForm;
 /* @var $model Venda */
 /* @var $form ActiveForm */
 ?>
-<script>
-    $(document).ready(function () {
-        $('#venda-desconto').change(function () {
-            $('#bt_comprovante').prop('disabled', true);
-            $('#bt_comprovante').prop('title', 'Só poderá ser gerado o comprovante após ter salvado');
 
-        });
-    });
-
-</script>
 <div class="venda-form">
 
 
@@ -54,7 +45,7 @@ use yii\widgets\ActiveForm;
                     'pluginEvents' => [
                         "editableSuccess" => "function(event, val, form, data) {"
                         . "$('#valor_final').text(data.valor_final); "
-                        . "}",                       
+                        . "}",
                     ]
                 ]);
                 ?>
@@ -62,18 +53,20 @@ use yii\widgets\ActiveForm;
             <div class="co l-sm-2" style="background-color:lav ender;">  
                 <?php // $form->field($model, 'valor_final')->textInput(['maxlength' => true, 'readonly' => true, 'style' => 'text-align:right',])   ?>
                 <label>Valor Final:</label>
-                <span><b><div id='valor_final'><?php echo Yii::$app->formatter->asCurrency($model->valor_final) ?></div><b></span>
-                            </div>
-                            <?php $form = ActiveForm::begin(); ?>
-                            <div class="co l-sm" style="background-color:lav ender;">  
-                                <br>
-                                <?= Html::submitButton(('Pagar'), ['class' => 'btn btn-primary', 'name' => 'bt_pagar']) ?> &nbsp;
-                                <?= Html::submitButton(('Fiado'), ['class' => 'btn btn-success', 'name' => 'bt_fiado']) ?>&nbsp;
-                                <?= Html::buttonInput(('Comprovante'), ['id' => 'bt_comprovante', 'onClick' => "window.open('comprovante?id={$model->pk_venda}', '_blank');", 'class' => 'btn btn-warning']) ?>
-                            </div>
-                            <?php ActiveForm::end(); ?>
-                            </div>
-                            </div>
+                <span><b><div id='valor_final'><?php echo Yii::$app->formatter->asCurrency($model->valor_final) ?>
+                        </div></b>
+                </span>
+            </div>
+            <?php $form = ActiveForm::begin(); ?>
+            <div class="co l-sm" style="background-color:lav ender;">  
+                <br>
+                <?= Html::submitButton(('Pagar'), ['class' => 'btn btn-primary', 'value' => 'pagar', 'name' => 'Venda[button]']) ?> &nbsp;
+                <?= Html::submitButton(('Fiado'), ['class' => 'btn btn-success', 'value' => 'fiado', 'name' => 'Venda[button]']) ?>&nbsp;
+                <?= Html::buttonInput(('Comprovante'), ['id' => 'bt_comprovante', 'onClick' => "window.open('comprovante?id={$model->pk_venda}', '_blank');", 'class' => 'btn btn-warning']) ?>
+            </div>
+            <?php ActiveForm::end(); ?>
+        </div>
+    </div>
 
 
-                            </div>
+</div>
