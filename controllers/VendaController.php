@@ -113,9 +113,7 @@ class VendaController extends Controller {
         //salva a venda
         if ((!empty(Yii::$app->request->post('Venda')))&&($model->load(Yii::$app->request->post()))) {
           
-//            print_r($_POST);
-//            var_dump(isset($_POST['Venda']['button']));
-//            exit();
+           
               if ((isset($_POST['Venda']['button'])) && $_POST['Venda']['button'] == 'pagar') {
                     
                     $model->estado = 'paga';

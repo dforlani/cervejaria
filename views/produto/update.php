@@ -50,8 +50,8 @@ $this->params['breadcrumbs'][] = 'Update';
 //            'pk_preco',
 //            'fk_produto',
             'denominacao',
-            'preco',
-            'quantidade',
+            'preco:currency',
+            'quantidade:currency',
             // ['class' => 'yii\grid\ActionColumn'],
             [
                 'class' => 'yii\grid\ActionColumn',

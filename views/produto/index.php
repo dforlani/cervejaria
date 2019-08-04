@@ -28,9 +28,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
            // 'pk_produto',
             'nome',
-            'estoque_inicial',
-            'estoque',
-            'estoque_minimo',
+            'estoque_inicial:currency',
+            'estoque:currency',
+            'estoque_minimo:currency',
             'unidadeMedida.unidade_medida',
             'dt_fabricacao:date',
             'dt_vencimento:date',

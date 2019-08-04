@@ -62,8 +62,8 @@ class Preco extends \yii\db\ActiveRecord {
         return [
             'pk_preco' => 'Pk Preco',
             'fk_produto' => 'Fk Produto',
-            'denominacao' => 'Denominacao',
-            'preco' => 'Preco',
+            'denominacao' => 'Denominaçãoo',
+            'preco' => 'Preço',
             'quantidade' => 'Quantidade',
             'codigo_barras' => 'Código de Barras'
         ];

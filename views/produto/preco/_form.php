@@ -4,18 +4,19 @@ use app\models\Preco;
 use kartik\widgets\ActiveForm;
 use yii\helpers\Html;
 use yii\web\View;
+use kartik\number\NumberControl;
 
 /* @var $this View */
 /* @var $model Preco */
 /* @var $form ActiveForm */
 ?>
 <script>
-    $(document).ready(function(){
-        $('#sugestao').click(function(){
-            $('#preco-codigo_barras').val( $('#sugestao').attr('value'));
+    $(document).ready(function () {
+        $('#sugestao').click(function () {
+            $('#preco-codigo_barras').val($('#sugestao').attr('value'));
         });
     });
-    </script>
+</script>
 <div class="preco-form">
 
     <?php $form = ActiveForm::begin(); ?>
@@ -25,19 +26,40 @@ use yii\web\View;
     <?= $form->field($model, 'fk_produto')->hiddenInput()->label(false) ?>
 
     <?= $form->field($model, 'denominacao')->textInput(['maxlength' => true, 'autofocus' => '']) ?>
-    <?= $form->field($model, 'preco')->textInput(['maxlength' => true]) ?>
-    <?= $form->field($model, 'codigo_barras')->textInput(['maxlength' => true]) ?>
-       <button type="button" id="sugestao" value='<?= Preco::getSugestaoCodigoBarras() ?>'>   Usar código de barras sugerido:&nbsp; <?= Preco::getSugestaoCodigoBarras() ?></button>
-       <br><br>
-    <?=
-    $form->field($model, 'quantidade', [
-        'addon' => [
-            //'prepend' => ['content' => '$', 'options'=>['class'=>'alert-success']],
-            'append' => ['content' => 'em ' . $model->produto->unidadeMedida->unidade_medida, 'options' => ['style' => 'font-family: Monaco, Consolas, monospace;']],
-        ]
-    ]);
-    ?>
- 
+
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-4" style="background-color:laven der;">  
+                <?php
+              
+                echo $form->field($model, 'preco')->widget(NumberControl::classname(), [
+                    'maskedInputOptions' => [
+                        'prefix' => 'R$ ',
+                        'suffix' => '',
+                        'allowMinus' => false
+                    ],
+                ]);
+                ?>
+            </div>
+            <div class="col-sm-4" style="background-color:lavende rblush;"> 
+                <?= $form->field($model, 'codigo_barras')->textInput(['maxlength' => true]) ?>
+                <button type="button" id="sugestao" value='<?= Preco::getSugestaoCodigoBarras() ?>'>   Usar código de barras sugerido:&nbsp; <?= Preco::getSugestaoCodigoBarras() ?></button>
+            </div>
+            <div class="col-sm-4" style="background-color:lav ender;">  
+                <?php
+                echo $form->field($model, 'quantidade')->widget(NumberControl::classname(), [
+                    'maskedInputOptions' => [
+                        'prefix' => ' ',
+                        'suffix' => '  ' . $model->produto->unidadeMedida->unidade_medida,
+                        'allowMinus' => false
+                    ],]);
+                ?>
+            </div>
+
+        </div>
+    </div>
 
 
     <div class="form-group">

@@ -24,7 +24,9 @@
         "yiisoft/yii2-jui": "^2.0",
         "kartik-v/yii2-widget-activeform": "@dev",
         "kartik-v/yii2-editable": "dev-master",
-        "kartik-v/yii2-datecontrol": "dev-master"
+        "kartik-v/yii2-datecontrol": "dev-master",
+        "kartik-v/yii2-number": "dev-master",
+        "kartik-v/yii2-money": "^1.2"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

@@ -132,4 +132,32 @@ REFERENCES unidade_medida(pk_unidade_medida)
         }
     }
 
+       public function actionUpdate2() {
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            $posts = Yii::$app->db->createCommand(' ALTER TABLE `produto` CHANGE `estoque_minimo` `estoque_minimo` FLOAT(11) NULL DEFAULT NULL;')->execute();
+            ECHO($posts . ' linhas inseridas<br>');
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+            echo $e->getMessage().'<br>';
+        } catch (\Throwable $e) {
+            $transaction->rollBack();
+            echo $e->getMessage().'<br>';
+        }
+        
+         try {
+            $posts = Yii::$app->db->createCommand('  ALTER TABLE `produto` CHANGE `estoque_inicial` `estoque_inicial` FLOAT(11) NULL DEFAULT NULL;')->execute();
+            ECHO($posts . ' linhas inseridas<br>');
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+            echo $e->getMessage().'<br>';
+        } catch (\Throwable $e) {
+            $transaction->rollBack();
+            echo $e->getMessage().'<br>';
+        }
+        
+    }
+   
+      
+        
 }
