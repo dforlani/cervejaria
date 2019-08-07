@@ -18,26 +18,61 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Novo Produto', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php // echo $this->render('_search', ['model' => $searchModel]);   ?>
 
-    <?= GridView::widget([
+    <?=
+    GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'rowOptions' => function ($model, $index, $widget, $grid) {
+
+            if ($model->estoque_inicial - $model->estoque_vendido <= $model->estoque_minimo) {
+                return ['class' => 'danger'];
+            } else {
+                return [];
+            }
+        },
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-           // 'pk_produto',
+            // 'pk_produto',
             'nome',
-            'estoque_inicial:currency',
-            'estoque:currency',
-            'estoque_minimo:currency',
+            [
+                'attribute' => 'estoque_inicial',
+                'format' => 'currency',
+                'contentOptions' => ['style' => 'text-align:right'],
+            ],
+            [
+                'attribute' => 'estoque_vendido',
+                'format' => 'currency',
+                'contentOptions' => ['style' => 'text-align:right'],
+            ],
+            [
+                'label' => 'Estoque Atual',
+                'format' => 'currency',
+                'contentOptions' => ['style' => 'text-align:right'],
+                'value' => function($model) {
+                    return $model->estoque_inicial - $model->estoque_vendido;
+                }
+            ]
+            ,
+            [
+                'attribute' => 'estoque_minimo',
+                'format' => 'currency',
+                'contentOptions' => ['style' => 'text-align:right'],
+            ],
             'unidadeMedida.unidade_medida',
             'dt_fabricacao:date',
             'dt_vencimento:date',
-
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'header' => 'Ações',
+                'headerOptions' => ['style' => 'color:#337ab7'],
+                'template' => '{update} {delete}',
+               
+            ],
         ],
-    ]); ?>
+    ]);
+    ?>
 
 
 </div>

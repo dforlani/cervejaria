@@ -19,7 +19,7 @@ class ProdutoSearch extends Produto
         return [
             [['pk_produto'], 'integer'],
             [['nome',], 'safe'],
-            [['estoque'], 'number'],
+            [['estoque_vendido'], 'number'],
         ];
     }
 
@@ -60,11 +60,10 @@ class ProdutoSearch extends Produto
         // grid filtering conditions
         $query->andFilterWhere([
             'pk_produto' => $this->pk_produto,
-            'estoque' => $this->estoque,
+            'estoque_vendido' => $this->estoque_vendido,
         ]);
 
-        $query->andFilterWhere(['like', 'nome', $this->nome]);
-         //   ->andFilterWhere(['like', 'unidade_medida', $this->unidade_medida]);
+        $query->andFilterWhere(['like', 'nome', $this->nome]);   
 
         return $dataProvider;
     }

@@ -61,9 +61,8 @@ use yii\widgets\ActiveForm;
                 Editable::end();
                 ?>
             </div>
-            <div class="co l-sm-2" style="background-color:lav ender;font-size: 25px">  
-                <br>
-                <?php // $form->field($model, 'valor_final')->textInput(['maxlength' => true, 'readonly' => true, 'style' => 'text-align:right',])     ?>
+            <div class="co l-sm-2" style="background-color:lav ender;font-size: 23px">  
+                <br>            
                 <label>Valor Final:</label>
              <b><span id='valor_final' ><?php echo Yii::$app->formatter->asCurrency($model->valor_final) ?>
                         </span></b>
@@ -74,6 +73,7 @@ use yii\widgets\ActiveForm;
                 <br>
                 <?= Html::submitButton(('Pagar'), ['class' => 'btn btn-primary', 'value' => 'pagar', 'name' => 'Venda[button]']) ?> &nbsp;
                 <?= Html::submitButton(('Fiado'), ['class' => 'btn btn-success', 'value' => 'fiado', 'name' => 'Venda[button]']) ?>&nbsp;
+                <br><br>
                 <?= Html::buttonInput(('Comprovante'), ['id' => 'bt_comprovante', 'onClick' => "window.open('comprovante?id={$model->pk_venda}', '_blank');", 'class' => 'btn btn-warning']) ?>
             </div>
             <?php ActiveForm::end(); ?>

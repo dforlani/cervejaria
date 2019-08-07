@@ -131,22 +131,7 @@ class VendaController extends Controller {
                     return $this->redirect(['venda', 'id' => $model->pk_venda]); 
                 }
 
-//            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-//                if (isset($_POST['bt_pagar'])) {
-//                    $model->estado = 'paga';
-//                    date_default_timezone_set('America/Sao_Paulo');
-//                    $model->dt_pagamento = date_create()->format('Y-m-d H:i:s');
-//                    date('Y-m-d H:i:s');
-//                    $model->save();
-//                    return $this->redirect(['venda']);
-//                } else
-//                if (isset($_POST['bt_fiado'])) {
-//                    $model->estado = 'fiado';
-//                    $model->save();
-//                    return $this->redirect(['venda']);
-//                }
-//               
-//            }
+
         }
 
         //insere um item
@@ -168,9 +153,12 @@ class VendaController extends Controller {
     }
 
     public function actionBuscaProduto($id) {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $preco = \app\models\Preco::findOne($id);
-        if (!empty($preco))
-            return $preco->preco;
+        if (!empty($preco)){
+            return ['preco'=>$preco->preco, 'estoque_atual'=>($preco->produto->estoque_inicial - $preco->produto->estoque_vendido).' '.$preco->produto->unidadeMedida->unidade_medida];
+            
+        }
         else
             return '';
     }

@@ -158,6 +158,20 @@ REFERENCES unidade_medida(pk_unidade_medida)
         
     }
    
-      
+    public function actionUpdate3() {
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            $posts = Yii::$app->db->createCommand('   ALTER TABLE `produto` CHANGE `estoque` `estoque_vendido` FLOAT NULL DEFAULT "0";')->execute();
+            ECHO(' Alterado para ter coluna estoque_vendido<br>');
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+            echo $e->getMessage().'<br>';
+        } catch (\Throwable $e) {
+            $transaction->rollBack();
+            echo $e->getMessage().'<br>';
+        }        
+    }
+    
+    
         
 }

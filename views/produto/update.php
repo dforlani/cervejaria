@@ -34,55 +34,55 @@ $this->params['breadcrumbs'][] = 'Update';
     </div>
     <div class="panel-body" style="padding: 5px">
         <div class="venda-create">
- <p>
-        <?= Html::a('Adcionar Preço', ['create-preco', 'pk_produto' => $model->pk_produto], ['class' => 'btn btn-warning']) ?>
-    </p>
+            <p>
+                <?= Html::a('Adcionar Forma de Venda', ['create-preco', 'pk_produto' => $model->pk_produto], ['class' => 'btn btn-warning']) ?>
+            </p>
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+            <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
 
-    <?=
-    GridView::widget([
-        'dataProvider' => $dataProviderPreco,
-        'filterModel' => $searchModelPreco,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            <?=
+            GridView::widget([
+                'dataProvider' => $dataProviderPreco,
+                'filterModel' => $searchModelPreco,
+                'columns' => [
+                    ['class' => 'yii\grid\SerialColumn'],
 //            'pk_preco',
 //            'fk_produto',
-            'denominacao',
-            'preco:currency',
-            'quantidade:currency',
-            // ['class' => 'yii\grid\ActionColumn'],
-            [
-                'class' => 'yii\grid\ActionColumn',
-                'header' => 'Ações',
-                'headerOptions' => ['style' => 'color:#337ab7'],
-                'template' => '{barcode} {update} {delete}',
-                'buttons' => [
-                    'update' => function ($url, $model) {
-                        return Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['update-preco', 'pk_preco' => $model->pk_preco], [
-                                    'title' => Yii::t('app', 'lead-update'),
-                        ]);
-                    },
-                    'barcode' => function($url, $model) {
-                        return Html::a('<span class="glyphicon glyphicon-barcode"></span>', ['codigo-barras', 'pk_preco' => $model->pk_preco], [
-                                    'title' => 'Gerar Código Barras'
-                        ]);
-                    },
-                    'delete' => function($url, $model) {
-                        return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['delete-preco', 'pk_preco' => $model->pk_preco], [
-                                    'class' => '',
-                                    'data' => [
-                                        'confirm' => 'Tem certeza que deseja remover este preço?',
-                                        'method' => 'post',
-                                    ],
-                        ]);
-                    },
+                    'denominacao',
+                    'preco:currency',
+                    'quantidade:currency',
+                    // ['class' => 'yii\grid\ActionColumn'],
+                    [
+                        'class' => 'yii\grid\ActionColumn',
+                        'header' => 'Ações',
+                        'headerOptions' => ['style' => 'color:#337ab7'],
+                        'template' => '{barcode} {update} {delete}',
+                        'buttons' => [
+                            'update' => function ($url, $model) {
+                                return Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['update-preco', 'pk_preco' => $model->pk_preco], [
+                                            'title' => Yii::t('app', 'lead-update'),
+                                ]);
+                            },
+                            'barcode' => function($url, $model) {
+                                return Html::a('<span class="glyphicon glyphicon-barcode"></span>', ['codigo-barras', 'pk_preco' => $model->pk_preco], [
+                                            'title' => 'Gerar Código Barras'
+                                ]);
+                            },
+                            'delete' => function($url, $model) {
+                                return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['delete-preco', 'pk_preco' => $model->pk_preco], [
+                                            'class' => '',
+                                            'data' => [
+                                                'confirm' => 'Tem certeza que deseja remover este preço?',
+                                                'method' => 'post',
+                                            ],
+                                ]);
+                            },
+                        ],
+                    ],
                 ],
-            ],
-        ],
-    ]);
-    ?>
+            ]);
+            ?>
         </div>
     </div>
 </div>

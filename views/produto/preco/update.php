@@ -7,7 +7,7 @@ use yii\web\View;
 /* @var $this View */
 /* @var $model Preco */
 
-$this->title = 'Update Preco: ' . $model->pk_preco;
+$this->title = 'Atualizar Forma de Venda ' ;
 $this->params['breadcrumbs'][] = ['label' => 'Precos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->pk_preco, 'url' => ['view', 'id' => $model->pk_preco]];
 $this->params['breadcrumbs'][] = 'Update';

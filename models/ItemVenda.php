@@ -72,14 +72,14 @@ class ItemVenda extends \yii\db\ActiveRecord {
     public function afterSave($insert, $changedAttributes) {
         //atualiza a quantidade de produtos disponiveis atuais
         $produto = $this->preco->produto;
-        $produto->estoque = $produto->estoque - $this->quantidade * $this->preco->quantidade;
+        $produto->estoque_vendido = $produto->estoque_vendido + $this->quantidade * $this->preco->quantidade;
         $produto->save();
         return parent::afterSave($insert, $changedAttributes);
     }
     
     public function afterDelete() {
         $produto = $this->preco->produto;
-        $produto->estoque = $produto->estoque + $this->quantidade * $this->preco->quantidade;
+        $produto->estoque_vendido = $produto->estoque_vendido - $this->quantidade * $this->preco->quantidade;
         $produto->save();
         parent::afterDelete();
     }

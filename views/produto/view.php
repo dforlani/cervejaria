@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'pk_produto',
             'nome',
-            'estoque',
+            'estoque_vendido',
             'unidade_medida',
         ],
     ]) ?>

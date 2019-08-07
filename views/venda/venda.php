@@ -82,7 +82,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="panel-body" style="padding: 5px">
             <div class = "container-fluid">
                 <div class = "row">
-                    <div class = "col-sm-8" style = "">
+                    <div class = "col-sm-9" style = "">
                         <?php
                         if (!empty($modelItem))
                             echo $this->render('item/_item', [
@@ -93,7 +93,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             ])
                             ?>
                     </div>
-                    <div class = "col-sm-4" style = "">
+                    <div class = "col-sm-3" style = "">
                         <?=
                         $this->render('_form', [
                             'model' => $model,

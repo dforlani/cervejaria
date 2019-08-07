@@ -9,12 +9,12 @@
     });
 
     function calculaValorFinal() {
-          if (($('#itemvenda-quantidade').val() != '') && ($('#itemvenda-preco_unitario').val() != '')) {
+        if (($('#itemvenda-quantidade').val() != '') && ($('#itemvenda-preco_unitario').val() != '')) {
             $('#itemvenda-preco_final-disp').val(parseFloat($('#itemvenda-quantidade').val()) * parseFloat($('#itemvenda-preco_unitario').val()));
             $('#itemvenda-preco_final-disp').blur();
         } else {
             $('#itemvenda-preco_final-disp').val('');
-     
+
         }
     }
     /**
@@ -30,13 +30,15 @@
                 data: {id: $('#itemvenda-fk_preco').val()}
             })
                     .done(function (msg) {
-                        $('#itemvenda-preco_unitario-disp').val(msg);
+                        $('#itemvenda-preco_unitario-disp').val(msg.preco);
                         $('#itemvenda-preco_unitario-disp').blur()
+                        $('#estoque_atual').text('Estoq Atual: '+msg.estoque_atual);
                         calculaValorFinal();
                     });
         } else {
             $('#itemvenda-preco_final-disp').val('');
-            $('#itemvenda-preco_unitario-disp').val('')
+            $('#itemvenda-preco_unitario-disp').val('');
+            $('#estoque_atual').text('')
 
         }
     }
@@ -84,6 +86,7 @@ use yii\widgets\ActiveForm;
                         ?>
 
                         <?= $form->field($modelItem, 'fk_venda')->hiddenInput()->label(false) ?>
+                        <span id='estoque_atual' class='danger'></span>
 
                     </div>
                     <div class="col-sm-2" style="background-color:lavend er;">  
@@ -111,6 +114,7 @@ use yii\widgets\ActiveForm;
                         ?>
                     </div>
                     <div class="col-sm-2" style="background-color:lave nder;">  
+                        <br>
                         <?=
                         $form->field($modelItem, 'preco_final')->widget(NumberControl::classname(), [
                             'maskedInputOptions' => [
@@ -123,8 +127,8 @@ use yii\widgets\ActiveForm;
                         ?>
                     </div>
                     <div class="col-sm-2" style="background-color:lave nder;">  
-                        <br>
-<?= Html::submitButton('Incluir', ['class' => 'btn btn btn-primary']) ?>
+                        <br><br>
+                        <?= Html::submitButton('Incluir', ['class' => 'btn btn btn-primary']) ?>
                     </div>
                 </div>
             </div>
@@ -135,54 +139,55 @@ use yii\widgets\ActiveForm;
 
 
 
-<?php ActiveForm::end(); ?>
+            <?php ActiveForm::end(); ?>
 
         </div>
 
 
-<?=
-GridView::widget([
-    'dataProvider' => $dataProviderItem,
-    'columns' => [
-        ['class' => 'yii\grid\SerialColumn'],
-        [
-            'label' => 'Produto',
-            'value' => 'preco.nomeProdutoPlusDenominacao',
-        ],
-        [
-            'attribute' => 'quantidade',
-            'format' => 'currency',
-            'contentOptions' => ['style' => 'text-align:right'],
-        ],
-        [
-            'attribute' => 'preco_unitario',
-            'format' => 'currency',
-            'contentOptions' => ['style' => 'text-align:right'],
-        ],
-        [
-            'attribute' => 'preco_final',
-            'format' => 'currency',
-            'contentOptions' => ['style' => 'text-align:right'],
-        ],
-        [
-            'class' => 'yii\grid\ActionColumn',
-            'header' => 'Ações',
-            'headerOptions' => ['style' => 'color:#337ab7'],
-            'template' => '{delete}',
-            'buttons' => [
-                'delete' => function($url, $model) {
-                    return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['delete-item', 'id' => $model->pk_item_venda], [
-                                'class' => '',
-                                'data' => [
-                                    'confirm' => 'Tem certeza que deseja remover este item?',
-                                    'method' => 'post',
-                                ],
-                    ]);
-                }
+        <?=
+        GridView::widget([
+            'dataProvider' => $dataProviderItem,
+            'layout'=>'{items}{pager}{summary}',
+            'columns' => [
+              //  ['class' => 'yii\grid\SerialColumn'],
+                [
+                    'label' => 'Produto',
+                    'value' => 'preco.nomeProdutoPlusDenominacao',
+                ],
+                [
+                    'attribute' => 'quantidade',
+                    'format' => 'currency',
+                    'contentOptions' => ['style' => 'text-align:right'],
+                ],
+                [
+                    'attribute' => 'preco_unitario',
+                    'format' => 'currency',
+                    'contentOptions' => ['style' => 'text-align:right'],
+                ],
+                [
+                    'attribute' => 'preco_final',
+                    'format' => 'currency',
+                    'contentOptions' => ['style' => 'text-align:right'],
+                ],
+                [
+                    'class' => 'yii\grid\ActionColumn',
+                    'header' => 'Ações',
+                    'headerOptions' => ['style' => 'color:#337ab7'],
+                    'template' => '{delete}',
+                    'buttons' => [
+                        'delete' => function($url, $model) {
+                            return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['delete-item', 'id' => $model->pk_item_venda], [
+                                        'class' => '',
+                                        'data' => [
+                                            'confirm' => 'Tem certeza que deseja remover este item?',
+                                            'method' => 'post',
+                                        ],
+                            ]);
+                        }
+                    ],
+                ],
             ],
-        ],
-    ],
-]);
-?>
+        ]);
+        ?>
     </div>
 </div>

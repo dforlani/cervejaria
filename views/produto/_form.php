@@ -38,7 +38,7 @@ use yii\widgets\ActiveForm;
             </div>
             <div class="col-sm-3" style="background-color:lavende rblush;"> 
                  <?=
-                $form->field($model, 'estoque')->widget(NumberControl::classname(), [
+                $form->field($model, 'estoque_vendido')->widget(NumberControl::classname(), [
                     'maskedInputOptions' => [
                         'prefix' => ' ',
                         'suffix' => '',
@@ -46,6 +46,11 @@ use yii\widgets\ActiveForm;
                     ],
                 ]);
                 ?>
+              
+            </div>
+            <div class="col-sm-3" style="background-color:lavende rblush;"> 
+                <label>Estoque Atual</label>
+                <input type="text" readonly class='form-control' style="text-align: right;" value="<?= Yii::$app->formatter->asCurrency($model->estoque_inicial - $model->estoque_vendido)?>">                                     
               
             </div>
             <div class="col-sm-3" style="background-color:lav ender;">  
@@ -68,9 +73,6 @@ use yii\widgets\ActiveForm;
                     'pluginOptions' => [
                         'allowClear' => true
                     ],
-//                            'pluginEvents' => [
-//                                "change" => "function(e) { changeProduto(); }  ",
-//                            ]
                 ])->label('Unidade de Medida');
                 ?>
             </div>

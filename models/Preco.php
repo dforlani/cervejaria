@@ -52,7 +52,7 @@ class Preco extends \yii\db\ActiveRecord {
     }
 
     public function getNomeProdutoPlusDenominacao() {
-        return $this->produto->nome . ' - ' . $this->denominacao . ' - ' . $this->quantidade . ' ' . $this->produto->unidadeMedida->unidade_medida . ' - ' . $this->codigo_barras;
+        return $this->produto->nome . ' - ' . $this->denominacao . ' - '. $this->codigo_barras;
     }
 
     /**
