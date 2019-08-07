@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1cb119e178f5af45f6e037416f90a8ad",
+    "content-hash": "5c32679f1c418243e772ef78e68389a2",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -340,6 +340,52 @@
                 "html"
             ],
             "time": "2018-02-23T01:58:20+00:00"
+        },
+        {
+            "name": "himiklab/yii2-gridview-ajaxed-widget",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/himiklab/yii2-gridview-ajaxed-widget.git",
+                "reference": "47c48665299aead39026e198b4242cc6b0c223eb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/himiklab/yii2-gridview-ajaxed-widget/zipball/47c48665299aead39026e198b4242cc6b0c223eb",
+                "reference": "47c48665299aead39026e198b4242cc6b0c223eb",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "*",
+                "yiisoft/yii2-bootstrap": "*"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "himiklab\\yii2\\ajaxedgrid\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "HimikLab",
+                    "homepage": "https://github.com/himiklab"
+                }
+            ],
+            "description": "Improved Yii2 GridView widget with support ajax, pjax and modal (Bootstrap)",
+            "keywords": [
+                "ajax",
+                "bootstrap",
+                "grid",
+                "gridview",
+                "modal",
+                "pjax",
+                "yii2"
+            ],
+            "time": "2019-04-26T18:40:28+00:00"
         },
         {
             "name": "kartik-v/bootstrap-fileinput",
@@ -1915,6 +1961,50 @@
                 "yii2"
             ],
             "time": "2018-11-05T12:31:44+00:00"
+        },
+        {
+            "name": "loveorigami/yii2-modal-ajax",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/loveorigami/yii2-modal-ajax.git",
+                "reference": "8bc23b8ad16390d42b37ab155bc030902b881fcd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/loveorigami/yii2-modal-ajax/zipball/8bc23b8ad16390d42b37ab155bc030902b881fcd",
+                "reference": "8bc23b8ad16390d42b37ab155bc030902b881fcd",
+                "shasum": ""
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "lo\\widgets\\modal\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Karnbrock Gmbh",
+                    "homepage": "http://karnbrock.biz"
+                },
+                {
+                    "name": "Lukyanov Andrey",
+                    "homepage": "http://loveorigami.info"
+                }
+            ],
+            "description": "A wrapper around Yii2 Bootstrap Modal for using an ActiveForm via AJAX inside",
+            "homepage": "https://github.com/loveorigami/yii2-modal-ajax",
+            "keywords": [
+                "ajax-modal",
+                "bootstrap",
+                "modal",
+                "yii2"
+            ],
+            "time": "2019-06-10T06:44:42+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -5196,7 +5286,8 @@
         "kartik-v/yii2-widget-activeform": 20,
         "kartik-v/yii2-editable": 20,
         "kartik-v/yii2-datecontrol": 20,
-        "kartik-v/yii2-number": 20
+        "kartik-v/yii2-number": 20,
+        "loveorigami/yii2-modal-ajax": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

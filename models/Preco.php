@@ -31,7 +31,7 @@ class Preco extends \yii\db\ActiveRecord {
      */
     public function rules() {
         return [
-            [['fk_produto'], 'required'],
+            [['fk_produto', ], 'required'],
             [['pk_preco', 'fk_produto', 'codigo_barras'], 'integer'],
             [['preco', 'quantidade'], 'number'],
             [['denominacao'], 'string', 'max' => 100],
@@ -62,7 +62,7 @@ class Preco extends \yii\db\ActiveRecord {
         return [
             'pk_preco' => 'Pk Preco',
             'fk_produto' => 'Fk Produto',
-            'denominacao' => 'Denominaçãoo',
+            'denominacao' => 'Denominação',
             'preco' => 'Preço',
             'quantidade' => 'Quantidade',
             'codigo_barras' => 'Código de Barras'
