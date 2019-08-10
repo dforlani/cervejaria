@@ -88,7 +88,7 @@ class ProdutoController extends Controller {
         }
 
         $searchModelPreco = new PrecoSearch();
-        $dataProviderPreco = $searchModelPreco->search(['PrecoSearch' =>[ 'fk_produto' => $model->pk_produto]]);
+        $dataProviderPreco = $searchModelPreco->search(['PrecoSearch' => ['fk_produto' => $model->pk_produto]]);
 
 
         return $this->render('update', [
@@ -103,7 +103,7 @@ class ProdutoController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreatePreco($pk_produto) {
+    public function actionCreatePrecobkp($pk_produto) {
         $model = new Preco();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -116,6 +116,60 @@ class ProdutoController extends Controller {
         ]);
     }
 
+    public function actionCreatePreco($pk_produto) {
+        $model = new Preco();
+
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->save()) {
+                if (Yii::$app->request->isAjax) {
+                    // JSON response is expected in case of successful save
+                    Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                    return ['success' => true];
+                }
+                return $this->redirect(['update', 'id' => $pk_produto]);
+            }
+        }
+
+        $model->fk_produto = $pk_produto;
+        if (Yii::$app->request->isAjax) {
+            return $this->renderAjax('preco/create', [
+                        'model' => $model,
+            ]);
+        } else {
+            return $this->render('preco/create', [
+                        'model' => $model,
+            ]);
+        }
+    }
+
+    public function actionUpdatePreco($pk_preco = null) {
+
+        $model = $this->findModelPreco($pk_preco);
+
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->save()) {
+                
+                if (Yii::$app->request->isAjax) {
+                    // JSON response is expected in case of successful save
+                    Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                    return ['success' => true];
+                }
+                return $this->redirect(['update', 'id' => $model->fk_produto]);
+            }
+        }
+
+        
+        if (Yii::$app->request->isAjax) {
+            return $this->renderAjax('preco/update', [
+                        'model' => $model,
+            ]);
+        } else {
+            return $this->render('preco/update', [
+                        'model' => $model,
+            ]);
+        }
+    }
+
     /**
      * Updates an existing Preco model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -123,7 +177,7 @@ class ProdutoController extends Controller {
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdatePreco($pk_preco = null) {
+    public function actionUpdatePrecobkp($pk_preco = null) {
 
         $model = $this->findModelPreco($pk_preco);
 
@@ -142,11 +196,11 @@ class ProdutoController extends Controller {
         $modelPreco->delete();
         return $this->redirect(['update', 'id' => $pk_produto]);
     }
-    
-     public function actionCodigoBarras($pk_preco) {
+
+    public function actionCodigoBarras($pk_preco) {
         $modelPreco = $this->findModelPreco($pk_preco);
-   
-        return $this->renderPartial('preco/codigo_barras',[ 'modelPreco' => $modelPreco]);
+
+        return $this->renderPartial('preco/codigo_barras', ['modelPreco' => $modelPreco]);
     }
 
     /**

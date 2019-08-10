@@ -52,7 +52,7 @@ use kartik\number\NumberControl;
                 echo $form->field($model, 'quantidade')->widget(NumberControl::classname(), [
                     'maskedInputOptions' => [
                         'prefix' => ' ',
-                        'suffix' => '  ' . (!empty($model->produto->unidadeMedida)?$model->produto->unidadeMedida->unidade_medida:'Sem Unidade de Medida'),
+                        'suffix' => '  ' . $model->produto->unidadeMedida->unidade_medida,
                         'allowMinus' => false
                     ],]);
                 ?>
