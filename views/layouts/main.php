@@ -4,8 +4,8 @@
 
 use app\assets\AppAsset;
 use app\widgets\Alert;
+use kartik\widgets\AlertBlock;
 use kartik\widgets\SideNav;
-use yii\bootstrap\NavBar;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\Breadcrumbs;
@@ -43,7 +43,7 @@ AppAsset::register($this);
                                 // ['label' => 'Item Venda', 'url' => ['/item-venda']],
                                 // ['label' => 'Preço', 'url' => ['/preco']],
                                 ['label' => 'Produtos', 'url' => ['/produto']],
-                                 ['label' => 'Unidades de Medida', 'url' => ['/unidade-medida']],
+                                ['label' => 'Unidades de Medida', 'url' => ['/unidade-medida']],
                             ],]
                         );
                         ?>
@@ -57,7 +57,14 @@ AppAsset::register($this);
                                 'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
                             ])
                             ?>
-                            <?= Alert::widget() ?>
+                            <?=
+                            AlertBlock::widget([
+                                'useSessionFlash' => true,
+                                'type' => AlertBlock::TYPE_ALERT,
+                                'delay' => false,
+                            ]);
+                            ?>
+                            <?php // Alert::widget() ?>
                             <?= $content ?>
                         </div>
                     </div>

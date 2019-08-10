@@ -48,7 +48,10 @@ use kartik\number\NumberControl;
                 <button type="button" id="sugestao" value='<?= Preco::getSugestaoCodigoBarras() ?>'>   Usar código de barras sugerido:&nbsp; <?= Preco::getSugestaoCodigoBarras() ?></button>
             </div>
             <div class="col-sm-4" style="background-color:lav ender;">  
+           
+              
                 <?php
+               
                 echo $form->field($model, 'quantidade')->widget(NumberControl::classname(), [
                     'maskedInputOptions' => [
                         'prefix' => ' ',
