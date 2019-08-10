@@ -53,7 +53,7 @@ class Produto extends \yii\db\ActiveRecord {
             'fk_unidade_medida' => 'Unidade de Medida',
             'is_vendavel' => 'É para vender?',
             'estoque_minimo' => 'Estoq. Mínimo',
-            'dt_fabricacao' => 'Fabricação',
+            'dt_fabricacao' => 'Envase',
             'dt_vencimento' => 'Vencimento',
             'nr_lote' => 'Número do Lote'
         ];
