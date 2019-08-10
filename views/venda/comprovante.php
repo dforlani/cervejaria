@@ -13,18 +13,18 @@ use yii\widgets\ActiveForm;
     window.print();
 
 </script>
-<div style='width: 250px;margin-left:100px'>
+<div style='width: 150px; margin-left: 20px; font-size:10px'>
     <?= date('d/m/Y H:i:s', time()); ?><br>
-    <div style='text-align:  center'> Cervejaria Paraíso<div>
+    <div style='text-align:center; font-size:14px'> Cervejaria Paraíso<div>
 
     Cliente: <?= (!empty($model->cliente) ? $model->cliente->nome : '') ?><br>
     Comanda: <?= (!empty($model->comanda) ? $model->comanda->numero : '') ?><br>
    
  <hr>
-    <table style='font-size: 10px'>
+    <table style='font-size:11px'> 
         <thead>
             <tr>
-                <td style="margin-right: 500px">
+                <td style="margin-right:10px; margin-left:10px">
                     Item
                 </td>
                 <td>
