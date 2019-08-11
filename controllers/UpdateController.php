@@ -172,6 +172,10 @@ REFERENCES unidade_medida(pk_unidade_medida)
         }        
     }
     
+    public function actionAtualizar(){
+        echo exec('git pull');
+        echo 'oi';
+    }
     
         
 }

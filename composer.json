@@ -28,7 +28,8 @@
         "kartik-v/yii2-number": "dev-master",
         "kartik-v/yii2-money": "^1.2",
         "himiklab/yii2-gridview-ajaxed-widget": "*",
-        "loveorigami/yii2-modal-ajax": "@dev"
+        "loveorigami/yii2-modal-ajax": "@dev",
+        "kartik-v/yii2-mpdf": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

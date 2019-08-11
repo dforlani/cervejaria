@@ -44,6 +44,7 @@ AppAsset::register($this);
                                 // ['label' => 'Preço', 'url' => ['/preco']],
                                 ['label' => 'Produtos', 'url' => ['/produto']],
                                 ['label' => 'Unidades de Medida', 'url' => ['/unidade-medida']],
+                                ['label' => 'Atualizar', 'url' => ['/update/atualizar']],
                             ],]
                         );
                         ?>

@@ -2,14 +2,16 @@
 
 namespace app\controllers;
 
-use Yii;
-use app\models\Produto;
-use app\models\ProdutoSearch;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 use app\models\Preco;
 use app\models\PrecoSearch;
+use app\models\Produto;
+use app\models\ProdutoSearch;
+use kartik\mpdf\Pdf;
+use Yii;
+use yii\filters\VerbFilter;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 /**
  * ProdutoController implements the CRUD actions for Produto model.
@@ -73,6 +75,44 @@ class ProdutoController extends Controller {
         ]);
     }
 
+    public function actionGerarPdf() {
+        $precos = Preco::find()->where('is_vendavel IS TRUE AND (dt_vencimento >= CURDATE() OR dt_vencimento IS NULL)')->joinWith('produto')->orderBy('nome, denominacao')->all();
+        $codigos = array();
+        foreach ($precos as $modelPreco) {
+            $codigos[] = $this->renderPartial('preco/codigo_barras', ['modelPreco' => $modelPreco]);
+        }
+        $content = $this->renderPartial('preco/pdf_codigos_barra', ['codigos' => $codigos]);
+        //echo $content;
+        //exit();
+        $pdf = new Pdf([
+            // set to use core fonts only
+            'mode' => Pdf::MODE_CORE,
+            // A4 paper format
+            'format' => Pdf::FORMAT_A4,
+            // portrait orientation
+            'orientation' => Pdf::ORIENT_PORTRAIT,
+            // stream to browser inline
+            'destination' => Pdf::DEST_BROWSER,
+            // your html content input
+            'content' => $content,
+            // format content from your own css file if needed or use the
+            // enhanced bootstrap css built by Krajee for mPDF formatting 
+            'cssFile' => '@vendor/kartik-v/yii2-mpdf/src/assets/kv-mpdf-bootstrap.min.css',
+            // any css to be embedded if required
+            'cssInline' => '.kv-heading-1{font-size:18px}',
+            // set mPDF properties on the fly
+            'options' => ['title' => 'Krajee Report Title'],
+            // call mPDF methods on the fly
+            'methods' => [
+                'SetHeader' => ['Krajee Report Header'],
+                'SetFooter' => ['{PAGENO}'],
+            ]
+        ]);
+
+        // return the pdf output as per the destination setting
+        return $pdf->render();
+    }
+
     /**
      * Updates an existing Produto model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -82,7 +122,7 @@ class ProdutoController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->findModel($id);
-       
+
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);
@@ -124,7 +164,7 @@ class ProdutoController extends Controller {
             if ($model->save()) {
                 if (Yii::$app->request->isAjax) {
                     // JSON response is expected in case of successful save
-                    Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                    Yii::$app->response->format = Response::FORMAT_JSON;
                     return ['success' => true];
                 }
                 return $this->redirect(['update', 'id' => $pk_produto]);
@@ -149,17 +189,17 @@ class ProdutoController extends Controller {
 
         if ($model->load(Yii::$app->request->post())) {
             if ($model->save()) {
-                
+
                 if (Yii::$app->request->isAjax) {
                     // JSON response is expected in case of successful save
-                    Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                    Yii::$app->response->format = Response::FORMAT_JSON;
                     return ['success' => true];
                 }
                 return $this->redirect(['update', 'id' => $model->fk_produto]);
             }
         }
 
-        
+
         if (Yii::$app->request->isAjax) {
             return $this->renderAjax('preco/update', [
                         'model' => $model,
