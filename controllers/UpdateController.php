@@ -2,12 +2,11 @@
 
 namespace app\controllers;
 
+use app\models\Configuracao;
+use Throwable;
 use Yii;
-use app\models\Preco;
-use app\models\PrecoSearch;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Controller;
 
 /**
  * PrecoController implements the CRUD actions for Preco model.
@@ -35,40 +34,40 @@ class UpdateController extends Controller {
             ECHO($posts . ' linhas inseridas<br>');
         } catch (\Exception $e) {
             $transaction->rollBack();
-            echo $e->getMessage().'<br>';
-        } catch (\Throwable $e) {
+            echo $e->getMessage() . '<br>';
+        } catch (Throwable $e) {
             $transaction->rollBack();
-            echo $e->getMessage().'<br>';
+            echo $e->getMessage() . '<br>';
         }
         try {
             $posts = Yii::$app->db->createCommand("CREATE TABLE `fabrica`.`unidade_medida` ( `unidade_medida` VARCHAR(30) NOT NULL , `pk_unidade_medida` INT NOT NULL AUTO_INCREMENT , PRIMARY KEY (`pk_unidade_medida`)) ENGINE = InnoDB;")->execute();
             echo('Tabela unidade de medida inserida com sucesso<br>');
         } catch (\Exception $e) {
             $transaction->rollBack();
-            echo $e->getMessage().'<br>';
-        } catch (\Throwable $e) {
+            echo $e->getMessage() . '<br>';
+        } catch (Throwable $e) {
             $transaction->rollBack();
-            echo $e->getMessage().'<br>';
+            echo $e->getMessage() . '<br>';
         }
         try {
             $posts = Yii::$app->db->createCommand("ALTER TABLE `produto` DROP `unidade_medida`;")->execute();
             echo('Campo unidade de medida da tabela produto removido<br>');
         } catch (\Exception $e) {
             $transaction->rollBack();
-            echo $e->getMessage().'<br>';
-        } catch (\Throwable $e) {
+            echo $e->getMessage() . '<br>';
+        } catch (Throwable $e) {
             $transaction->rollBack();
-            echo $e->getMessage().'<br>';
+            echo $e->getMessage() . '<br>';
         }
         try {
             $posts = Yii::$app->db->createCommand("ALTER TABLE `produto` ADD COLUMN `fk_unidade_medida` INT NULL;")->execute();
             echo('Campo chave estrangeira unidade de medida inserido tabela produto removido<br>');
         } catch (\Exception $e) {
             $transaction->rollBack();
-            echo $e->getMessage().'<br>';
-        } catch (\Throwable $e) {
+            echo $e->getMessage() . '<br>';
+        } catch (Throwable $e) {
             $transaction->rollBack();
-            echo $e->getMessage().'<br>';
+            echo $e->getMessage() . '<br>';
         }
         try {
             $posts = Yii::$app->db->createCommand("ALTER TABLE `produto` ADD FOREIGN KEY (`fk_unidade_medida`) 
@@ -78,20 +77,20 @@ REFERENCES unidade_medida(pk_unidade_medida)
             echo('Campo chave estran4geira unidade de medida inserido ASSOCIADO A TABELA UNIDADE DE MEDIDA<BR>');
         } catch (\Exception $e) {
             $transaction->rollBack();
-            echo $e->getMessage().'<br>';
-        } catch (\Throwable $e) {
+            echo $e->getMessage() . '<br>';
+        } catch (Throwable $e) {
             $transaction->rollBack();
-            echo $e->getMessage().'<br>';
+            echo $e->getMessage() . '<br>';
         }
         try {
             $posts = Yii::$app->db->createCommand(" ALTER TABLE `preco` ADD `codigo_barras` INT NULL AFTER `quantidade`;")->execute();
             echo('Campo codigo_barras inserido na tabela preco<BR>');
         } catch (\Exception $e) {
             $transaction->rollBack();
-            echo $e->getMessage().'<br>';
-        } catch (\Throwable $e) {
+            echo $e->getMessage() . '<br>';
+        } catch (Throwable $e) {
             $transaction->rollBack();
-            echo $e->getMessage().'<br>';
+            echo $e->getMessage() . '<br>';
         }
 
         try {
@@ -105,59 +104,58 @@ REFERENCES unidade_medida(pk_unidade_medida)
             echo('Colunas dt_vencimento, dt_fabricacao, quantidade_minima, nr_lote, quantidade_inicial incluidos na tabela produto<BR>');
         } catch (\Exception $e) {
             $transaction->rollBack();
-            echo $e->getMessage().'<br>';
-        } catch (\Throwable $e) {
+            echo $e->getMessage() . '<br>';
+        } catch (Throwable $e) {
             $transaction->rollBack();
-            echo $e->getMessage().'<br>';
+            echo $e->getMessage() . '<br>';
         }
         try {
             $posts = Yii::$app->db->createCommand("  ALTER TABLE `venda` CHANGE `dt_venda` `dt_venda` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP;")->execute();
             echo('Data da venda é TIMESTAMP automático agora<BR>');
         } catch (\Exception $e) {
             $transaction->rollBack();
-            echo $e->getMessage().'<br>';
-        } catch (\Throwable $e) {
+            echo $e->getMessage() . '<br>';
+        } catch (Throwable $e) {
             $transaction->rollBack();
-            echo $e->getMessage().'<br>';
+            echo $e->getMessage() . '<br>';
         }
         try {
             $posts = Yii::$app->db->createCommand("ALTER TABLE `venda` CHANGE `dt_pagamento` `dt_pagamento` DATETIME NULL DEFAULT NULL;")->execute();
             echo('dt_pagamento agora com hora<BR>');
         } catch (\Exception $e) {
             $transaction->rollBack();
-            echo $e->getMessage().'<br>';
-        } catch (\Throwable $e) {
+            echo $e->getMessage() . '<br>';
+        } catch (Throwable $e) {
             $transaction->rollBack();
-            echo $e->getMessage().'<br>';
+            echo $e->getMessage() . '<br>';
         }
     }
 
-       public function actionUpdate2() {
+    public function actionUpdate2() {
         $transaction = Yii::$app->db->beginTransaction();
         try {
             $posts = Yii::$app->db->createCommand(' ALTER TABLE `produto` CHANGE `estoque_minimo` `estoque_minimo` FLOAT(11) NULL DEFAULT NULL;')->execute();
             ECHO($posts . ' linhas inseridas<br>');
         } catch (\Exception $e) {
             $transaction->rollBack();
-            echo $e->getMessage().'<br>';
-        } catch (\Throwable $e) {
+            echo $e->getMessage() . '<br>';
+        } catch (Throwable $e) {
             $transaction->rollBack();
-            echo $e->getMessage().'<br>';
+            echo $e->getMessage() . '<br>';
         }
-        
-         try {
+
+        try {
             $posts = Yii::$app->db->createCommand('  ALTER TABLE `produto` CHANGE `estoque_inicial` `estoque_inicial` FLOAT(11) NULL DEFAULT NULL;')->execute();
             ECHO($posts . ' linhas inseridas<br>');
         } catch (\Exception $e) {
             $transaction->rollBack();
-            echo $e->getMessage().'<br>';
-        } catch (\Throwable $e) {
+            echo $e->getMessage() . '<br>';
+        } catch (Throwable $e) {
             $transaction->rollBack();
-            echo $e->getMessage().'<br>';
+            echo $e->getMessage() . '<br>';
         }
-        
     }
-   
+
     public function actionUpdate3() {
         $transaction = Yii::$app->db->beginTransaction();
         try {
@@ -165,17 +163,77 @@ REFERENCES unidade_medida(pk_unidade_medida)
             ECHO(' Alterado para ter coluna estoque_vendido<br>');
         } catch (\Exception $e) {
             $transaction->rollBack();
-            echo $e->getMessage().'<br>';
-        } catch (\Throwable $e) {
+            echo $e->getMessage() . '<br>';
+        } catch (Throwable $e) {
             $transaction->rollBack();
-            echo $e->getMessage().'<br>';
-        }        
+            echo $e->getMessage() . '<br>';
+        }
     }
-    
-    public function actionAtualizar(){
-        echo exec('git pull');
-        echo 'oi2';
+
+    public function actionAtualizar() {
+        echo chdir('..') . "<br>"; //retorna para o diretório raiz
+        echo "Executando em: " . getcwd() . "<br>";
+        echo System('git reset --hard') . "<br>";
+        echo "<br>Passou pelo: git reset --hard<br>";
+        echo System('git pull') . "<br>";
+        echo "<br>Passou pelo: git pull<br>";
+        echo System('composer install') . "<br>";
+        echo "<br>Passou pelo: composer install<br>";
+        echo "<br>Conferindo se existem updates no banco<br>";
     }
-    
+
+    /**
+     * Cria a tabela de configurações
+     */
+    function actionAtualizarBanco() {
+        $existe = Yii::$app->db->createCommand('SHOW TABLES LIKE "configuracao";')->execute();
+        if (!$existe) {
+
+
+            try {
+                echo '<br>Tabela de configuracao não existe. Criando:';
+                $posts = Yii::$app->db->createCommand(""
+                                . "CREATE TABLE `fabrica`.`configuracao` ( "
+                                . "`pk_configuracao` INT NOT NULL AUTO_INCREMENT , "
+                                . "`tipo` VARCHAR(30) NOT NULL , "
+                                . "`valor`  VARCHAR(30) NOT NULL , "
+                                . "PRIMARY KEY (`pk_configuracao`)) ENGINE = InnoDB;")->execute();
+                echo('<br>Tabela de configuração criada<br>');
+            } catch (\Exception $e) {
+
+                echo $e->getMessage() . '<br>';
+            } catch (Throwable $e) {
+
+                echo $e->getMessage() . '<br>';
+            }
+        }
+
+        $this->atualizaBanco("ALTER TABLE `preco` CHANGE `codigo_barras` `codigo_barras` BIGINT(11) NULL DEFAULT NULL;", "preco_big_int", "Preço BIGINT");
         
+        echo 'Atualização do banco encerrada<br>';
+    }
+
+    public function atualizaBanco($comando, $nome_configuracao, $mensagem) {
+        //busca de a tualização do banco já foi inserida
+        $conf = Configuracao::findOne(['tipo' => $nome_configuracao]);
+        if (empty($conf)) {
+            try {
+                $posts = Yii::$app->db->createCommand($comando)->execute();
+                echo("<br>$mensagem<br>");
+                $conf = new Configuracao();
+                $conf->tipo = $nome_configuracao;
+                $conf->valor = "Atualização banco";
+                $conf->save();
+            } catch (\Exception $e) {
+
+                echo $e->getMessage() . '<br>';
+            } catch (Throwable $e) {
+
+                echo $e->getMessage() . '<br>';
+            }
+        }else{
+            echo 'Atualização já realizada anteriormente<br>';
+        }
+    }
+
 }
