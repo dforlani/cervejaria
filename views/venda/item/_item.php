@@ -32,7 +32,7 @@
                     .done(function (msg) {
                         $('#itemvenda-preco_unitario-disp').val(msg.preco);
                         $('#itemvenda-preco_unitario-disp').blur()
-                        $('#estoque_atual').text('Estoq Atual: '+msg.estoque_atual);
+                        $('#estoque_atual').text('Estoq Atual: ' + msg.estoque_atual);
                         calculaValorFinal();
                     });
         } else {
@@ -70,7 +70,7 @@ use yii\widgets\ActiveForm;
             <?php $form = ActiveForm::begin(); ?>  
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-sm-4" style="background-color:lavend er;">  
+                    <div class="col" style="background-color:lavend er;">  
                         <br>
                         <?php
                         echo $form->field($modelItem, 'fk_preco')->widget(Select2::classname(), [
@@ -89,6 +89,9 @@ use yii\widgets\ActiveForm;
                         <span id='estoque_atual' class='danger'></span>
 
                     </div>
+                </div>
+                <div class="row">
+
                     <div class="col-sm-2" style="background-color:lavend er;">  
                         <br>
                         <?=
@@ -147,9 +150,9 @@ use yii\widgets\ActiveForm;
         <?=
         GridView::widget([
             'dataProvider' => $dataProviderItem,
-            'layout'=>'{items}{pager}{summary}',
+            'layout' => '{items}{pager}{summary}',
             'columns' => [
-              //  ['class' => 'yii\grid\SerialColumn'],
+                //  ['class' => 'yii\grid\SerialColumn'],
                 [
                     'label' => 'Produto',
                     'value' => 'preco.nomeProdutoPlusDenominacao',

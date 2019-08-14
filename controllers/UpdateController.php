@@ -179,7 +179,7 @@ REFERENCES unidade_medida(pk_unidade_medida)
         echo "<br>Passou pelo: git pull<br>";
         echo System('composer install') . "<br>";
         echo "<br>Passou pelo: composer install<br>";
-        echo "<br>Conferindo se existem updates no banco<br>";
+        echo "<br><br><b>Não se esqueça de utilizar o UPDATE BANCO</b><br>";
     }
 
     /**
@@ -208,8 +208,14 @@ REFERENCES unidade_medida(pk_unidade_medida)
             }
         }
 
-        $this->atualizaBanco("ALTER TABLE `preco` CHANGE `codigo_barras` `codigo_barras` BIGINT(11) NULL DEFAULT NULL;", "preco_big_int", "Preço BIGINT");
-        
+        $this->atualizaBanco("ALTER TABLE `preco` CHANGE `codigo_barras` `codigo_barras` CHAR(12) NULL DEFAULT NULL;", "preco_char", "Codigo Barras CHAR 12");
+        $this->atualizaBanco("update preco set codigo_barras =  LPAD(codigo_barras,12,'0') where codigo_barras is not null;", "preco_complete", "Completando com 0 no código de barras");
+
+        $this->atualizaBanco("ALTER TABLE `comanda` CHANGE `numero` `numero` CHAR(13) NULL DEFAULT NULL;", "comanda_char_13", "Comanda com CHAR 13");
+        $this->atualizaBanco("update comanda set numero =  LPAD(numero,12,'0') where numero is not null;", "comanda_complete", "Completando com 0 nas comandas");
+
+
+
         echo 'Atualização do banco encerrada<br>';
     }
 
@@ -231,7 +237,7 @@ REFERENCES unidade_medida(pk_unidade_medida)
 
                 echo $e->getMessage() . '<br>';
             }
-        }else{
+        } else {
             echo 'Atualização já realizada anteriormente<br>';
         }
     }

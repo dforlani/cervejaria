@@ -14,8 +14,10 @@
     </head>
     <body>
         <div>
-            <img id="barcode1"/>
-            <script>JsBarcode("#barcode1", <?= $model->numero ?>);</script>
+            <img id="barcode<?= $model->getComandaComDigitoVerificador() ?>"/>
+            <script>JsBarcode("#barcode<?= $model->getComandaComDigitoVerificador() ?>")
+                        .EAN13("<?= $model->getComandaComDigitoVerificador() ?>", {fontSize: 30, textMargin: 0})
+                        .render();</script>
         </div>
 
     </body>
