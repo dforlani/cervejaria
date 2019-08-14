@@ -75,7 +75,7 @@ class UpdateController extends Controller {
 REFERENCES unidade_medida(pk_unidade_medida)
                           ON UPDATE CASCADE 
                           ON DELETE SET NULL;")->execute();
-            echo('Campo chave estrangeira unidade de medida inserido ASSOCIADO A TABELA UNIDADE DE MEDIDA<BR>');
+            echo('Campo chave estran4geira unidade de medida inserido ASSOCIADO A TABELA UNIDADE DE MEDIDA<BR>');
         } catch (\Exception $e) {
             $transaction->rollBack();
             echo $e->getMessage().'<br>';
