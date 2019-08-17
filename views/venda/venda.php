@@ -8,6 +8,18 @@
                 $('#venda-valor_final').val($('#venda-valor_total').val());
             }
         });
+        
+        $(document).bind('keydown', 'alt+l', function(){
+            $('#venda-fk_cliente').select2('open');
+        });
+        
+        $(document).bind('keydown', 'alt+o', function(){
+            $('#venda-fk_comanda').select2('open');
+        });
+        
+         $(document).bind('keydown', 'alt+v', function(){
+            $('#pk_venda_aberta').select2('open');
+        });
 
     });
 
@@ -16,6 +28,11 @@
 
 
 </script>
+<?php 
+$this->registerJsFile(
+    '@web/js/jquery.hotkeys.js' 
+);
+?>
 
 <?php
 use app\models\Venda;
@@ -45,9 +62,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>               
                 <div class="col-sm-6" style="text-align: right">  
                     <?php
-                    if (!$model->isNewRecord)
-                        echo Html::buttonInput(('Iniciar Nova Venda'), [  'accesskey'=>"i", 'onClick' => "window.location='./venda'", 'class' => 'btn btn-danger'])
+                    if (!$model->isNewRecord){
+                        //echo Html::buttonInput((''), [  'accesskey'=>"i", 'onClick' => , 'class' => 'btn btn-danger'])
                         ?>
+                    <div type="button" id="bt_comprovante" class="btn btn-danger" value="" accesskey="i" onclick="window.location='./venda'"><u>I</u>niciar Nova Venda</div>
+                    <?php }?>
                 </div>
 
             </div>
@@ -65,7 +84,7 @@ $this->params['breadcrumbs'][] = $this->title;
     
     <div class = "container-fluid">
         <?php
-        echo '<label class="control-label">Vendas em Aberto</label>';
+        echo '<label class="control-label"><u>V</u>endas em Aberto</label>';
         echo Select2::widget([
             'name' => 'kv-type-01',
             'data' => Venda::getArrayVendasEmAberto(),

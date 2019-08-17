@@ -42,7 +42,7 @@ use yii\widgets\ActiveForm;
                         'allowClear' => true
                     ],
                         // 'options' => []
-                ])->label('Cliente');
+                ])->label('C<u>l</u>iente');
                 ?>
             </div>
             <div class="col-sm-4" style=""> 
@@ -53,7 +53,7 @@ use yii\widgets\ActiveForm;
                     'pluginOptions' => [
                         'allowClear' => true
                     ],
-                ])->label('Comanda');
+                ])->label('C<u>o</u>manda');
                 ?>
             </div>
             <div class="col-sm-4" style=""> 
