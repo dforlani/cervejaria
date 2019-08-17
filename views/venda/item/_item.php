@@ -1,3 +1,14 @@
+<?php
+
+use app\models\Preco;
+use kartik\number\NumberControl;
+use kartik\widgets\Select2;
+use yii\grid\GridView;
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
+use yii\web\View;
+?>
+
 <script>
 
     $(document).ready(function () {
@@ -33,6 +44,7 @@
                         $('#itemvenda-preco_unitario-disp').val(msg.preco);
                         $('#itemvenda-preco_unitario-disp').blur()
                         $('#estoque_atual').text('Estoq Atual: ' + msg.estoque_atual);
+                      $('#btn_incluir').focus();
                         calculaValorFinal();
                     });
         } else {
@@ -45,15 +57,7 @@
 </script>
 
 
-<?php
 
-use app\models\Preco;
-use kartik\number\NumberControl;
-use kartik\widgets\Select2;
-use yii\grid\GridView;
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
-?>
 
 <div class='panel panel-primary' style="background-color:lavender; ">
     <!--Itens-->
@@ -112,7 +116,7 @@ use yii\widgets\ActiveForm;
                                 'suffix' => '',
                                 'allowMinus' => false,
                             ],
-                            'displayOptions' => ['readonly' => true]
+                            'displayOptions' => ['readonly' => true, 'tabindex'=>"-1" ]
                         ]);
                         ?>
                     </div>
@@ -125,13 +129,13 @@ use yii\widgets\ActiveForm;
                                 'suffix' => '',
                                 'allowMinus' => false,
                             ],
-                            'displayOptions' => ['readonly' => true]
+                            'displayOptions' => ['readonly' => true, 'tabindex'=>"-1" ]
                         ]);
                         ?>
                     </div>
                     <div class="col-sm-2" style="background-color:lave nder;">  
                         <br><br>
-                        <?= Html::submitButton('Incluir', ['class' => 'btn btn btn-primary']) ?>
+                        <?= Html::submitButton('Incluir', ['id'=>'btn_incluir', 'class' => 'btn btn btn-primary']) ?>
                     </div>
                 </div>
             </div>
@@ -194,3 +198,10 @@ use yii\widgets\ActiveForm;
         ?>
     </div>
 </div>
+
+<?php
+$this->registerJs(
+        "$(document).ready(function(){
+       $('#itemvenda-fk_preco').select2('open');
+    });", View::POS_READY, 'my-buttdon-handler'
+);?>

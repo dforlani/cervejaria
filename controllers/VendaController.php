@@ -42,6 +42,12 @@ class VendaController extends Controller {
         ]);
     }
 
+    public function actionFolha() {
+        $vendas = Venda::find()->where(['estado' => 'aberta'])->orderBy('nome')->joinWith(['cliente'])->all();
+
+        return $this->render('folha', ['vendas'=>$vendas]);
+    }
+
     /**
      * Displays a single Venda model.
      * @param integer $id
@@ -77,7 +83,7 @@ class VendaController extends Controller {
         $model->load(Yii::$app->request->post());
         $model->valor_final = $model->valor_total - $model->desconto;
         if ($model->save()) {
-            return ['output' => Yii::$app->formatter->asCurrency($model->desconto), 'valor_final'=>Yii::$app->formatter->asCurrency($model->valor_final), 'message' => ''];
+            return ['output' => Yii::$app->formatter->asCurrency($model->desconto), 'valor_final' => Yii::$app->formatter->asCurrency($model->valor_final), 'message' => ''];
         } else {
             return ['output' => '', 'message' => ''];
         }
@@ -111,27 +117,25 @@ class VendaController extends Controller {
         }
 
         //salva a venda
-        if ((!empty(Yii::$app->request->post('Venda')))&&($model->load(Yii::$app->request->post()))) {
-          
-           
-              if ((isset($_POST['Venda']['button'])) && $_POST['Venda']['button'] == 'pagar') {
-                    
-                    $model->estado = 'paga';
-                    date_default_timezone_set('America/Sao_Paulo');
-                    $model->dt_pagamento = date_create()->format('Y-m-d H:i:s');
-                    date('Y-m-d H:i:s');
-                    $model->save();
-                    return $this->redirect(['venda']);
-                } else
-                 if ((isset($_POST['Venda']['button'])) && $_POST['Venda']['button'] == 'fiado') {
-                    $model->estado = 'fiado';
-                    $model->save();
-                    return $this->redirect(['venda']);
-                } else if ($model->save()){
-                    return $this->redirect(['venda', 'id' => $model->pk_venda]); 
-                }
+        if ((!empty(Yii::$app->request->post('Venda'))) && ($model->load(Yii::$app->request->post()))) {
 
 
+            if ((isset($_POST['Venda']['button'])) && $_POST['Venda']['button'] == 'pagar') {
+
+                $model->estado = 'paga';
+                date_default_timezone_set('America/Sao_Paulo');
+                $model->dt_pagamento = date_create()->format('Y-m-d H:i:s');
+                date('Y-m-d H:i:s');
+                $model->save();
+                return $this->redirect(['venda']);
+            } else
+            if ((isset($_POST['Venda']['button'])) && $_POST['Venda']['button'] == 'fiado') {
+                $model->estado = 'fiado';
+                $model->save();
+                return $this->redirect(['venda']);
+            } else if ($model->save()) {
+                return $this->redirect(['venda', 'id' => $model->pk_venda]);
+            }
         }
 
         //insere um item
@@ -155,11 +159,9 @@ class VendaController extends Controller {
     public function actionBuscaProduto($id) {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $preco = \app\models\Preco::findOne($id);
-        if (!empty($preco)){
-            return ['preco'=>$preco->preco, 'estoque_atual'=>($preco->produto->estoque_inicial - $preco->produto->estoque_vendido).' '.$preco->produto->unidadeMedida->unidade_medida];
-            
-        }
-        else
+        if (!empty($preco)) {
+            return ['preco' => $preco->preco, 'estoque_atual' => ($preco->produto->estoque_inicial - $preco->produto->estoque_vendido) . ' ' . $preco->produto->unidadeMedida->unidade_medida];
+        } else
             return '';
     }
 

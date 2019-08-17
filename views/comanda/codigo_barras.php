@@ -13,14 +13,21 @@
         </script>
     </head>
     <body>
-        <div>
+        <div style="width:300px;text-align: center;font-size: 18px">
+            CERVEJARIA PARAÍSO<br><br>
             <img id="barcode<?= $model->getComandaComDigitoVerificador() ?>"/>
             <script>JsBarcode("#barcode<?= $model->getComandaComDigitoVerificador() ?>")
                         .EAN13("<?= $model->getComandaComDigitoVerificador() ?>", {fontSize: 30, textMargin: 0})
                         .render();</script>
+            <barcode code="<?= $model->getComandaComDigitoVerificador() ?>" type="EAN13" size='1.4' height="0.5" text="0" />
         </div>
+
+
 
     </body>
 </html>
+
+
+
 
 

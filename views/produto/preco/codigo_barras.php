@@ -22,7 +22,7 @@
             <script>JsBarcode("#barcode<?= $modelPreco->getCodigoBarrasComDigitoVerificador() ?>")                        
                         .EAN13("<?= $modelPreco->getCodigoBarrasComDigitoVerificador() ?>", {fontSize: 30, textMargin: 0})
                         .render();</script>
-            <barcode code="<?= $modelPreco->getCodigoBarrasComDigitoVerificador() ?>" type="EAN13" size='2' height="1" text="0" />
+            <barcode code="<?= $modelPreco->getCodigoBarrasComDigitoVerificador() ?>" type="EAN13" size='1.4' height="0.5" text="0" />
         </div>
 
     </body>

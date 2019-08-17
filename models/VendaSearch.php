@@ -9,13 +9,12 @@ use app\models\Venda;
 /**
  * VendaSearch represents the model behind the search form of `app\models\Venda`.
  */
-class VendaSearch extends Venda
-{
+class VendaSearch extends Venda {
+
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['pk_venda', 'fk_cliente', 'fk_comanda'], 'integer'],
             [['fk_usuario_iniciou_venda', 'fk_usuario_recebeu_pagamento', 'estado', 'dt_venda', 'dt_pagamento'], 'safe'],
@@ -26,8 +25,7 @@ class VendaSearch extends Venda
     /**
      * {@inheritdoc}
      */
-    public function scenarios()
-    {
+    public function scenarios() {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
@@ -39,14 +37,15 @@ class VendaSearch extends Venda
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
-    {
+    public function search($params) {
         $query = Venda::find();
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+             'sort'=> ['defaultOrder' => ['estado'=>SORT_ASC]]
+            
         ]);
 
         $this->load($params);
@@ -70,9 +69,10 @@ class VendaSearch extends Venda
         ]);
 
         $query->andFilterWhere(['like', 'fk_usuario_iniciou_venda', $this->fk_usuario_iniciou_venda])
-            ->andFilterWhere(['like', 'fk_usuario_recebeu_pagamento', $this->fk_usuario_recebeu_pagamento])
-            ->andFilterWhere(['like', 'estado', $this->estado]);
+                ->andFilterWhere(['like', 'fk_usuario_recebeu_pagamento', $this->fk_usuario_recebeu_pagamento])
+                ->andFilterWhere(['like', 'estado', $this->estado]);
 
         return $dataProvider;
     }
+
 }

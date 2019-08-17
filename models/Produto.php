@@ -11,6 +11,7 @@ use Yii;
  * @property string $nome
  * @property double $estoque_vendido
  * @property int $fk_unidade_medida
+ * @property int $is_vendavel
  *
  * @property Entrada[] $entradas
  * @property Preco[] $precos

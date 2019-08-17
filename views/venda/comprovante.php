@@ -44,20 +44,31 @@ use yii\widgets\ActiveForm;
             <?php
             $itens = $model->itensVenda;
             if (!empty($itens)) {
+                //gera os totais
+                $totais = [];
                 foreach ($itens as $item) {
+                    $totais[$item->fk_preco]['nome'] = $item->preco->getNomeProdutoPlusDenominacaoSemBarras();
+                    $totais[$item->fk_preco]['quantidade'] = (isset($totais[$item->fk_preco]['quantidade']) ? $totais[$item->fk_preco]['quantidade'] + $item->quantidade : $item->quantidade);
+                     $totais[$item->fk_preco]['preco_unitario'] = $item->preco_unitario;
+                     $totais[$item->fk_preco]['preco_final'] = (isset($totais[$item->fk_preco]['preco_final'])? $totais[$item->fk_preco]['preco_final'] + $item->preco_final: $item->preco_final);
+                }
+                
+                
+                
+                foreach ($totais as $item) {
                     ?> 
                     <tr>
                          <td style="margin-right: 50px">
-                            <?= $item->preco->getNomeProdutoPlusDenominacao() ?>
+                            <?= $item['nome'] ?>
                         </td>
                         <td style='text-align: right'>
-                            <?= Yii::$app->formatter->asCurrency($item->quantidade) ?>
+                            <?= Yii::$app->formatter->asCurrency($item['quantidade']) ?>
                         </td>
                         <td style='text-align: right'>
-                            <?= Yii::$app->formatter->asCurrency($item->preco_unitario) ?>
+                            <?= Yii::$app->formatter->asCurrency($item['preco_unitario']) ?>
                         </td>
                          <td style='text-align: right'>
-                            <?= Yii::$app->formatter->asCurrency($item->preco_final) ?>
+                            <?= Yii::$app->formatter->asCurrency($item['preco_final']) ?>
                         </td>
                     </tr>
                     <?php

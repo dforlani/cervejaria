@@ -46,13 +46,23 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="col-sm-6" style="text-align: right">  
                     <?php
                     if (!$model->isNewRecord)
-                        echo Html::buttonInput(('Iniciar Nova Venda'), ['onClick' => "window.location='./venda'", 'class' => 'btn btn-danger'])
+                        echo Html::buttonInput(('Iniciar Nova Venda'), [  'accesskey'=>"i", 'onClick' => "window.location='./venda'", 'class' => 'btn btn-danger'])
                         ?>
                 </div>
 
             </div>
         </div>           
     </div>
+     <?php if ($model->isNewRecord) { ?>
+        <?=
+        $this->render('_form_novo', [
+            'model' => $model,
+        ])
+        ?>
+     <br>
+   
+     <?php }?>
+    
     <div class = "container-fluid">
         <?php
         echo '<label class="control-label">Vendas em Aberto</label>';
@@ -71,13 +81,9 @@ $this->params['breadcrumbs'][] = $this->title;
         ]);
         ?>
     </div>
-    <?php if ($model->isNewRecord) { ?>
-        <?=
-        $this->render('_form_novo', [
-            'model' => $model,
-        ])
-        ?>
-    <?php } else { ?>
+   
+    <?php if (!$model->isNewRecord) {?>     
+    
 
         <div class="panel-body" style="padding: 5px">
             <div class = "container-fluid">

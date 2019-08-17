@@ -99,11 +99,11 @@ class Venda extends \yii\db\ActiveRecord
     }
     
     public static function getArrayVendasEmAberto(){
-        $vendas = Venda::findByCondition(['estado'=>'aberta'])->all();;
+        $vendas = Venda::findByCondition(['estado'=>'aberta'])->orderBy('nome')->joinWith('cliente')->all();
         $lista = [];
         if(!empty($vendas))
         foreach($vendas as $venda){
-            $lista[$venda->pk_venda] = (!empty($venda->cliente)?'Cliente: '.$venda->cliente->nome:'') . ' => Comanda: ' . (!empty($venda->comanda)?$venda->comanda->numero:'') ;
+            $lista[$venda->pk_venda] = (!empty($venda->cliente)?''.$venda->cliente->nome:'') . ' => ' . (!empty($venda->comanda)?$venda->comanda->getComandaComDigitoVerificador():'') ;
         }
         return $lista;
     }

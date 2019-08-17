@@ -19,21 +19,17 @@ use yii\widgets\ActiveForm;
 
 <div class="venda-form">
 
-
-
-
-
-
     <div class="container-fluid">
         <div class="row" >
             <div class="co  l-sm-2" style="background-color:laven der;font-size: 20px">  
-                <label>Valor Total:</label>
+                <label style="font-size: 23px">  <?=(!empty($model->cliente)?$model->cliente->nome:'') ?></label><br><br>
+                <span>Valor Total:</span>
                 <span><?php echo Yii::$app->formatter->asCurrency($model->valor_total) ?></span>
 
 
             </div>
             <div class="co l-sm-2" style="background-color:lavende rblush;font-size: 20px"> 
-                <label>Desconto:</label>
+                <span>Desconto:</span>
                 <?php
                 $editable = Editable::begin([
                             'inputType' => Editable::INPUT_HIDDEN,
@@ -67,14 +63,15 @@ use yii\widgets\ActiveForm;
              <b><span id='valor_final' ><?php echo Yii::$app->formatter->asCurrency($model->valor_final) ?>
                         </span></b>
                 
-            </div>
+            </div >
             <?php $form = ActiveForm::begin(); ?>
             <div class="co l-sm" style="background-color:lav ender;">  
                 <br>
-                <?= Html::submitButton(('Pagar'), ['class' => 'btn btn-primary', 'value' => 'pagar', 'name' => 'Venda[button]']) ?> &nbsp;
-                <?= Html::submitButton(('Fiado'), ['class' => 'btn btn-success', 'value' => 'fiado', 'name' => 'Venda[button]']) ?>&nbsp;
+                <?= Html::submitButton(('<u>P</u>agar'), ['class' => 'btn btn-primary',  'accesskey'=>"p" , 'value' => 'pagar', 'name' => 'Venda[button]']) ?> &nbsp;
+                <?= Html::submitButton(('<u>F</u>iado'), ['class' => 'btn btn-success', 'accesskey'=>"f", 'value' => 'fiado', 'name' => 'Venda[button]']) ?>&nbsp;
                 <br><br>
-                <?= Html::buttonInput(('Comprovante'), ['id' => 'bt_comprovante', 'onClick' => "window.open('comprovante?id={$model->pk_venda}', '_blank');", 'class' => 'btn btn-warning']) ?>
+                <div type="button" id="bt_comprovante" class="btn btn-warning" value="" accesskey="c" onclick="window.open('comprovante?id=<?=$model->pk_venda?>', '_blank');"><u>C</u>omprovante</div>
+                
             </div>
             <?php ActiveForm::end(); ?>
         </div>

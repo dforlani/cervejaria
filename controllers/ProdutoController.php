@@ -65,9 +65,11 @@ class ProdutoController extends Controller {
      */
     public function actionCreate() {
         $model = new Produto();
+        $model->is_vendavel = true;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
+            Yii::$app->session->setFlash('warning', "Produto inserido, cadastre as formas de venda.");
+            $this->redirect(['update', 'id' => $model->pk_produto]);
         }
 
         return $this->render('create', [
@@ -76,8 +78,9 @@ class ProdutoController extends Controller {
     }
 
     public function actionGerarPdf() {
-        $precos = Preco::find()->where('is_vendavel IS TRUE AND (dt_vencimento >= CURDATE() OR dt_vencimento IS NULL)')->joinWith('produto')->orderBy('nome, denominacao')->all();
+        $precos = Preco::find()->where('is_vendavel IS TRUE AND (dt_vencimento >= CURDATE() OR dt_vencimento IS NULL) AND codigo_barras IS NOT NULL ')->joinWith('produto')->orderBy('nome, denominacao')->all();
         $codigos = array();
+        
         foreach ($precos as $modelPreco) {
             $codigos[] = $this->renderPartial('preco/codigo_barras', ['modelPreco' => $modelPreco]);
         }
@@ -101,11 +104,11 @@ class ProdutoController extends Controller {
             // any css to be embedded if required
             'cssInline' => '.kv-heading-1{font-size:18px}',
             // set mPDF properties on the fly
-           // 'options' => ['title' => 'Krajee Report Title'],
+            // 'options' => ['title' => 'Krajee Report Title'],
             // call mPDF methods on the fly
             'methods' => [
-               // 'SetHeader' => ['Krajee Report Header'],
-               // 'SetFooter' => ['{PAGENO}'],
+            // 'SetHeader' => ['Krajee Report Header'],
+            // 'SetFooter' => ['{PAGENO}'],
             ]
         ]);
 
@@ -121,6 +124,7 @@ class ProdutoController extends Controller {
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id) {
+        
         $model = $this->findModel($id);
 
 
