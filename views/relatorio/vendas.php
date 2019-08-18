@@ -18,36 +18,36 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <form>
-    <div class="row">
-        <div class="col-md-3">
-            <?php
-            echo '<label class="control-label">Por dia</label>';
-            echo SwitchInput::widget(['name' => 'por_dia', 'value' => $por_dia]);
-            ?>
-        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <?php
+                echo '<label class="control-label">Por dia</label>';
+                echo SwitchInput::widget(['name' => 'por_dia', 'value' => $por_dia]);
+                ?>
+            </div>
 
-        <div class="col-md-3">
-            <?php
-            echo '<label class="control-label">Por Mês</label>';
-            echo SwitchInput::widget(['name' => 'por_mes', 'value' => $por_mes]);
-            ?>
-        </div>
+            <div class="col-md-3">
+                <?php
+                echo '<label class="control-label">Por Mês</label>';
+                echo SwitchInput::widget(['name' => 'por_mes', 'value' => $por_mes]);
+                ?>
+            </div>
 
-        <div class="col-md-3">
-            <?php
-            echo '<label class="control-label">Por Produto</label>';
-            echo SwitchInput::widget(['name' => 'por_produto', 'value' => $por_produto]);
-            ?>
+            <div class="col-md-3">
+                <?php
+                echo '<label class="control-label">Por Produto</label>';
+                echo SwitchInput::widget(['name' => 'por_produto', 'value' => $por_produto]);
+                ?>
 
-        </div>
+            </div>
 
-        <div class="col-md-3">
-            <?php
-            echo '<label class="control-label">Apenas Vendas Pagas</label>';
-            echo SwitchInput::widget(['name' => 'apenas_vendas_pagas', 'value' => $apenas_vendas_pagas]);
-            ?>
+            <div class="col-md-3">
+                <?php
+                echo '<label class="control-label">Apenas Vendas Pagas</label>';
+                echo SwitchInput::widget(['name' => 'apenas_vendas_pagas', 'value' => $apenas_vendas_pagas]);
+                ?>
+            </div>
         </div>
-    </div>
 
         <?= Html::submitButton('<u>G</u>erar', ['accesskey' => 'g', 'class' => 'btn btn-success']) ?>
     </form><br>
