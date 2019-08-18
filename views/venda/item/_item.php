@@ -44,7 +44,7 @@ use yii\web\View;
                         $('#itemvenda-preco_unitario-disp').val(msg.preco);
                         $('#itemvenda-preco_unitario-disp').blur()
                         $('#estoque_atual').text('Estoq Atual: ' + msg.estoque_atual);
-                      $('#btn_incluir').focus();
+                        $('#btn_incluir').focus();
                         calculaValorFinal();
                     });
         } else {
@@ -116,7 +116,7 @@ use yii\web\View;
                                 'suffix' => '',
                                 'allowMinus' => false,
                             ],
-                            'displayOptions' => ['readonly' => true, 'tabindex'=>"-1" ]
+                            'displayOptions' => ['readonly' => true, 'tabindex' => "-1"]
                         ]);
                         ?>
                     </div>
@@ -129,13 +129,13 @@ use yii\web\View;
                                 'suffix' => '',
                                 'allowMinus' => false,
                             ],
-                            'displayOptions' => ['readonly' => true, 'tabindex'=>"-1" ]
+                            'displayOptions' => ['readonly' => true, 'tabindex' => "-1"]
                         ]);
                         ?>
                     </div>
                     <div class="col-sm-2" style="background-color:lave nder;">  
                         <br><br>
-                        <?= Html::submitButton('Incluir', ['id'=>'btn_incluir', 'class' => 'btn btn btn-primary']) ?>
+                        <?= Html::submitButton('Incluir', ['id' => 'btn_incluir', 'class' => 'btn btn btn-primary']) ?>
                     </div>
                 </div>
             </div>
@@ -177,6 +177,12 @@ use yii\web\View;
                     'contentOptions' => ['style' => 'text-align:right'],
                 ],
                 [
+                    'attribute' => 'dt_inclusao',
+                    'format' => 'time',
+                    'label' => 'Hora',
+                    'contentOptions' => ['style' => 'text-align:right'],
+                ],
+                [
                     'class' => 'yii\grid\ActionColumn',
                     'header' => 'Ações',
                     'headerOptions' => ['style' => 'color:#337ab7'],
@@ -204,4 +210,5 @@ $this->registerJs(
         "$(document).ready(function(){
        $('#itemvenda-fk_preco').select2('open');
     });", View::POS_READY, 'my-buttdon-handler'
-);?>
+);
+?>

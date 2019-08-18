@@ -4,7 +4,7 @@ use kartik\datecontrol\Module;
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
-
+date_default_timezone_set('America/Sao_Paulo');
 $config = [
     'language' => 'pt-BR',
     'id' => 'basic',
@@ -25,6 +25,7 @@ $config = [
             'currencyCode' => '',
             'dateFormat' => 'dd/MM/yyyy',
             'datetimeFormat' => 'dd/MM/yyyy H:i:s',
+            'timeFormat' => 'H:i:s',
         ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager',

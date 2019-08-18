@@ -2,9 +2,10 @@
 
 namespace app\models;
 
+use app\models\Venda;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Venda;
+use yii\data\ArrayDataProvider;
 
 /**
  * VendaSearch represents the model behind the search form of `app\models\Venda`.
@@ -44,8 +45,7 @@ class VendaSearch extends Venda {
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-             'sort'=> ['defaultOrder' => ['estado'=>SORT_ASC]]
-            
+            'sort' => ['defaultOrder' => ['estado' => SORT_ASC]]
         ]);
 
         $this->load($params);
@@ -71,6 +71,57 @@ class VendaSearch extends Venda {
         $query->andFilterWhere(['like', 'fk_usuario_iniciou_venda', $this->fk_usuario_iniciou_venda])
                 ->andFilterWhere(['like', 'fk_usuario_recebeu_pagamento', $this->fk_usuario_recebeu_pagamento])
                 ->andFilterWhere(['like', 'estado', $this->estado]);
+
+        return $dataProvider;
+    }
+
+    public function searchRelatorio($por_dia, $por_mes, $por_produto, $apenas_vendas_pagas) {
+        $query = Venda::find();
+        $groupBy = [];
+        $select = [];
+
+        if ($por_dia) {
+            $groupBy[] = 'DAY(dt_venda)';
+            $groupBy[] = 'MONTH(dt_venda)';
+            $groupBy[] = 'YEAR(dt_venda)';
+            $select[] = 'dt_venda';
+            $select[] = 'SUM(valor_final) as valor_somatorio';
+        } elseif ($por_mes) {
+            $groupBy[] = 'MONTH(dt_venda)';
+            $groupBy[] = 'YEAR(dt_venda)';
+            $select[] = 'DATE_FORMAT(`dt_venda`, "%m/%Y" ) AS  dt_venda';
+            $select[] = 'SUM(valor_final) as valor_somatorio';
+        }
+
+        if ($por_produto) {
+            $groupBy[] = 'fk_produto';
+            $query->joinWith(['itensVenda' => function (\yii\db\ActiveQuery $query) {
+                    $query->joinWith(['preco' => function (\yii\db\ActiveQuery $query) {
+                            $query->joinWith(['produto' => function (\yii\db\ActiveQuery $query) {
+                                    $query->joinWith('unidadeMedida');
+                                }]);
+                        }]);
+                }]);
+            $select[] = 'nome';
+            $select[] = 'SUM(item_venda.quantidade) as quantidade';
+            $select[] = 'unidade_medida';
+        }
+        
+        if($apenas_vendas_pagas){
+             $query->andFilterWhere(['like', 'estado', 'paga']);
+        }
+
+        $query->select($select);
+        $query->groupBy($groupBy);
+        $query->orderBy('dt_venda');
+
+//        print_r($query->all());
+//        exit();
+
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $query->all(),
+        ]);
+
 
         return $dataProvider;
     }

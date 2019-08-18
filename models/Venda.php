@@ -27,6 +27,11 @@ use Yii;
  */
 class Venda extends \yii\db\ActiveRecord
 {
+    
+     public $valor_somatorio;
+     public $nome;
+     public $quantidade;
+     public $unidade_medida;
     /**
      * {@inheritdoc}
      */
