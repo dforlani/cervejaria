@@ -44,7 +44,7 @@ class Preco extends \yii\db\ActiveRecord {
 
     public static function getArrayProdutosPrecos() {
         $lista = [];
-        $precos = Preco::find()->where('is_vendavel IS TRUE AND (dt_vencimento >= CURDATE() OR dt_vencimento IS NULL)')->joinWith('produto')->orderBy('nome, denominacao')->all();
+        $precos = Preco::find()->where('is_vendavel IS TRUE')->joinWith('produto')->orderBy('nome, denominacao')->all();
         foreach ($precos as $preco) {
             $lista[$preco->pk_preco] = $preco->getNomeProdutoPlusDenominacao();
         }
@@ -113,7 +113,7 @@ class Preco extends \yii\db\ActiveRecord {
         $resultado = $resultado + 1;
         $resultado = $resultado * 10;
         $resultado = $resultado - $soma;
-       // return $resultado;
+
         if($resultado >= 10)
             $resultado = 0;
       

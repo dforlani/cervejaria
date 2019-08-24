@@ -35,11 +35,32 @@ class Produto extends \yii\db\ActiveRecord {
             [['estoque_vendido', 'estoque_inicial', 'estoque_minimo', 'custo_compra_producao'], 'number'],
             [['nome',], 'string', 'max' => 100],
             [['nr_lote',], 'string', 'max' => 20],
-            [['pk_produto'], 'unique'],             
+            [['pk_produto'], 'unique'],
             [['dt_fabricacao'], 'default'],
             [['dt_vencimento'], 'default'],
             [['is_vendavel'], 'required'],
+            [['dt_fabricacao', 'dt_vencimento'], 'validateData'],
+
         ];
+    }
+
+    public function validateData($attribute, $params) {
+        //cria uma data 10 anos no passado para comparação
+        $date = new \DateTime();
+        date_sub($date, date_interval_create_from_date_string('10 years'));
+        $minAgeDate = date_format($date, 'Y-m-d');
+        
+        //cria uma data 10 anos no futuro para comparação
+        $date = new \DateTime();
+        date_add($date, date_interval_create_from_date_string('10 years'));
+        $maxAgeDate = date_format($date, 'Y-m-d');
+        
+        if ($this->$attribute < $minAgeDate) {
+            $this->addError($attribute, 'A data é muito antiga.');
+        } elseif ($this->$attribute > $maxAgeDate) {
+
+            $this->addError($attribute, 'A data está muito no futuro.');
+        }
     }
 
     /**
@@ -49,7 +70,7 @@ class Produto extends \yii\db\ActiveRecord {
         return [
             'pk_produto' => 'Pk Produto',
             'nome' => 'Nome',
-            'estoque_inicial'=>'Estoq. Inicial',
+            'estoque_inicial' => 'Estoq. Inicial',
             'estoque_vendido' => 'Estoq. Vendido',
             'fk_unidade_medida' => 'Unidade de Medida',
             'is_vendavel' => 'É para vender?',
@@ -80,10 +101,6 @@ class Produto extends \yii\db\ActiveRecord {
     }
 
     public function beforeSave($insert) {
-//        if (!empty($this->dt_vencimento))
-//            $this->dt_vencimento = Yii::$app->formatter->asDate($this->dt_vencimento, 'yyyy-dd-MM');
-//        if (!empty($this->dt_fabricacao))
-//            $this->dt_fabricacao = Yii::$app->formatter->asDate($this->dt_fabricacao, 'yyyy-dd-MM');
         return parent::beforeSave($insert);
     }
 
