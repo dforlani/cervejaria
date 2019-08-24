@@ -57,7 +57,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="panel-heading">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-sm-6" style="background-color:laven der;">  
+                <div class="col-sm-6" >  
                     <span class="panel-title">            <?= Html::encode($this->title) ?></span>
                 </div>               
                 <div class="col-sm-6" style="text-align: right">  

@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Venda;
 use app\models\VendaSearch;
 use kartik\widgets\SwitchInput;
 use yii\data\ActiveDataProvider;
@@ -54,21 +55,58 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php
     $colunas = [];
+
+
     if ($por_dia) {
-        $colunas[] = 'dt_venda:date';
-        $colunas[] = 'valor_somatorio:currency';
+        $colunas[] = [
+            'attribute' => 'dt_venda',
+            'format' => 'date',
+            'footer' => 'Total'
+        ];
+
+        //$colunas[] = 'pagamentos:currency';
     } elseif ($por_mes) {
-        $colunas[] = 'dt_venda';
-        $colunas[] = 'valor_somatorio:currency';
+        $colunas[] = [
+            'attribute' => 'dt_venda',
+           
+            'footer' => 'Total'
+        ];
+
+        //$colunas[] = 'pagamentos:currency';
     }
 
     if ($por_produto) {
         $colunas[] = 'nome';
-        $colunas[] = 'quantidade';
-        $colunas[] = 'unidade_medida';
+        $colunas[] = [
+            'attribute' => 'quantidade',
+            'format' => 'currency',
+            'contentOptions' => ['style' => 'text-align:right'],
+            'footer' => Yii::$app->formatter->asCurrency(Venda::getTotal($dataProvider->models, 'quantidade')),
+        ];
+
+        $colunas[] = [
+            'attribute' => 'unidade_medida',
+            'footer' => ''
+        ];
     }
 
+    $colunas[] = [
+        'attribute' => 'pagamentos',
+        'format' => 'currency',
+        'contentOptions' => ['style' => 'text-align:right'],
+        'footer' => Yii::$app->formatter->asCurrency(Venda::getTotal($dataProvider->models, 'pagamentos')),
+    ];
+    $colunas[] = [
+        'attribute' => 'pagamentos_liquido',
+        'format' => 'currency',
+        'contentOptions' => ['style' => 'text-align:right'],
+        'footer' => Yii::$app->formatter->asCurrency(Venda::getTotal($dataProvider->models, 'pagamentos_liquido')),
+    ];
+
+
     echo GridView::widget([
+        'showFooter' => true,
+        'footerRowOptions'=>['style'=>'font-weight:bold;text-align:right;text-decoration: underline;'],
         'dataProvider' => $dataProvider,
         //'filterModel' => $searchModel,
         'columns' => $colunas

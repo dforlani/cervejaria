@@ -31,7 +31,7 @@ use kartik\number\NumberControl;
 
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-4" style="background-color:laven der;">  
+            <div class="col-sm-4" >  
                 <?php
               
                 echo $form->field($model, 'preco')->widget(NumberControl::classname(), [
@@ -47,7 +47,7 @@ use kartik\number\NumberControl;
                 <?= $form->field($model, 'codigo_barras')->textInput(['maxlength' => true]) ?>
                 <button type="button" id="sugestao" value='<?= Preco::getSugestaoCodigoBarras() ?>'>   Usar código de barras sugerido:&nbsp; <?= Preco::getSugestaoCodigoBarras() ?></button>
             </div>
-            <div class="col-sm-4" style="background-color:lav ender;">  
+            <div class="col-sm-4" >  
            
               
                 <?php

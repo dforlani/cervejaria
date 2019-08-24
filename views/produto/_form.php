@@ -15,6 +15,14 @@ use yii\widgets\ActiveForm;
 /* @var $form ActiveForm */
 ?>
 
+<script>
+//    $(document).ready(function () {
+//        $('#produto-fk_unidade_medida').change(function () {
+//           // alert($('#produto-fk_unidade_medida').val());
+//        });
+//
+//    });
+</script>
 <div class="produto-form">
 
     <?php $form = ActiveForm::begin(); ?>
@@ -24,7 +32,7 @@ use yii\widgets\ActiveForm;
         <?= $form->field($model, 'nome')->textInput(['maxlength' => true, 'autofocus' => '']) ?>
 
         <div class="row">
-            <div class="col-sm-3" style="background-color:laven der;"> 
+            <div class="col-sm-3" > 
                 <?=
                 $form->field($model, 'estoque_inicial')->widget(NumberControl::classname(), [
                     'maskedInputOptions' => [
@@ -37,7 +45,7 @@ use yii\widgets\ActiveForm;
 
             </div>
             <div class="col-sm-3" style="background-color:lavende rblush;"> 
-                 <?=
+                <?=
                 $form->field($model, 'estoque_vendido')->widget(NumberControl::classname(), [
                     'maskedInputOptions' => [
                         'prefix' => ' ',
@@ -46,15 +54,15 @@ use yii\widgets\ActiveForm;
                     ],
                 ]);
                 ?>
-              
+
             </div>
             <div class="col-sm-3" style="background-color:lavende rblush;"> 
                 <label>Estoque Atual</label>
-                <input type="text" readonly class='form-control' style="text-align: right;" value="<?php is_numeric($model->estoque_inicial) && is_numeric($model->estoque_vendido)? Yii::$app->formatter->asCurrency($model->estoque_inicial - $model->estoque_vendido):0?>">                                     
-    
+                <input type="text" readonly class='form-control' style="text-align: right;" value="<?php is_numeric($model->estoque_inicial) && is_numeric($model->estoque_vendido) ? Yii::$app->formatter->asCurrency($model->estoque_inicial - $model->estoque_vendido) : 0 ?>">                                     
+
             </div>
-            <div class="col-sm-3" style="background-color:lav ender;">  
-                 <?=
+            <div class="col-sm-3" >  
+                <?=
                 $form->field($model, 'estoque_minimo')->widget(NumberControl::classname(), [
                     'maskedInputOptions' => [
                         'prefix' => ' ',
@@ -63,9 +71,10 @@ use yii\widgets\ActiveForm;
                     ],
                 ]);
                 ?>
-              
+
             </div>
-            <div class="col-sm-3" style="background-color:lav ender;">  
+            <div class="col-sm-3" >  
+                <br>
                 <?php
                 echo $form->field($model, 'fk_unidade_medida')->widget(Select2::classname(), [
                     'data' => ArrayHelper::map(UnidadeMedida::find()->all(), 'pk_unidade_medida', 'unidade_medida'),
@@ -73,12 +82,36 @@ use yii\widgets\ActiveForm;
                     'pluginOptions' => [
                         'allowClear' => true
                     ],
+                    'pluginEvents' => [                                         
+                            "select2:select" =>  "function() {
+                                 $('#hlp_custo_compra_producao').text($('#select2-produto-fk_unidade_medida-container').text().substring(1));
+                                 }",
+                         "select2:unselect" => "function() {
+                                 $('#hlp_custo_compra_producao').text('');
+                                 }",
+
+                        ]
                 ])->label('Unidade de Medida');
                 ?>
             </div>
+            <div class="col-sm-3" >  
+                <?php
+                echo $form->field($model, 'custo_compra_producao')->widget(NumberControl::classname(), [
+                    'maskedInputOptions' => [
+                        'prefix' => 'R$ ',
+                        'suffix' => '',
+                        'allowMinus' => false,
+                        
+                    ],
+                ]);
+                ?>
+                <span style="color:blue;">Insira aqui o custo do <b><span style="color:blue;font-weight:bold" id='hlp_custo_compra_producao'> <?= (@$model->unidadeMedida->unidade_medida)?> </span> </b>            
+                </span>
+
+            </div>
         </div>
         <div class="row">
-            <div class="col-sm-6" style="background-color:laven der;">
+            <div class="col-sm-6" >
                 <?=
                 $form->field($model, 'dt_fabricacao')->widget(DateControl::classname(), [
                     'type' => 'date',
@@ -98,7 +131,7 @@ use yii\widgets\ActiveForm;
                 ]);
                 ?>
             </div>
-            <div class="col-sm-6" style="background-color:laven der;">  
+            <div class="col-sm-6" >  
                 <?=
                 $form->field($model, 'dt_vencimento')->widget(DateControl::classname(), [
                     'type' => 'date',

@@ -65,7 +65,7 @@ use yii\widgets\ActiveForm;
                 
             </div >
             <?php $form = ActiveForm::begin(); ?>
-            <div class="co l-sm" style="background-color:lav ender;">  
+            <div class="co l-sm" >  
                 <br>
                 <?= Html::submitButton(('<u>P</u>agar'), ['class' => 'btn btn-primary',  'accesskey'=>"p" , 'value' => 'pagar', 'name' => 'Venda[button]']) ?> &nbsp;
                 <?= Html::submitButton(('<u>F</u>iado'), ['class' => 'btn btn-success', 'accesskey'=>"f", 'value' => 'fiado', 'name' => 'Venda[button]']) ?>&nbsp;

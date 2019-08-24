@@ -2,7 +2,8 @@
 
 namespace app\models;
 
-use Yii;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "venda".
@@ -25,35 +26,33 @@ use Yii;
  * @property Usuario $fkUsuarioIniciouVenda
  * @property Usuario $fkUsuarioRecebeuPagamento
  */
-class Venda extends \yii\db\ActiveRecord
-{
-    
-     public $valor_somatorio;
-     public $nome;
-     public $quantidade;
-     public $unidade_medida;
+class Venda extends ActiveRecord {
+
+    public $pagamentos;
+    public $pagamentos_liquido;
+    public $nome;
+    public $quantidade;
+    public $unidade_medida;
+
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'venda';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-       
             [['pk_venda', 'fk_cliente', 'fk_comanda'], 'integer'],
             [['valor_total', 'desconto', 'valor_final'], 'number'],
             [['estado'], 'string'],
             [['dt_venda', 'dt_pagamento'], 'safe'],
             [['fk_usuario_iniciou_venda', 'fk_usuario_recebeu_pagamento'], 'string', 'max' => 20],
             [['pk_venda'], 'unique'],
-            [['estado'], 'default', 'value'=> 'aberta'],
+            [['estado'], 'default', 'value' => 'aberta'],
             [['fk_cliente'], 'exist', 'skipOnError' => true, 'targetClass' => Cliente::className(), 'targetAttribute' => ['fk_cliente' => 'pk_cliente']],
             [['fk_comanda'], 'exist', 'skipOnError' => true, 'targetClass' => Comanda::className(), 'targetAttribute' => ['fk_comanda' => 'pk_comanda']],
             [['fk_usuario_iniciou_venda'], 'exist', 'skipOnError' => true, 'targetClass' => Usuario::className(), 'targetAttribute' => ['fk_usuario_iniciou_venda' => 'login']],
@@ -64,8 +63,7 @@ class Venda extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'pk_venda' => 'Pk Venda',
             'fk_cliente' => 'Fk Cliente',
@@ -82,73 +80,77 @@ class Venda extends \yii\db\ActiveRecord
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getItensVenda()
-    {
+    public function getItensVenda() {
         return $this->hasMany(ItemVenda::className(), ['fk_venda' => 'pk_venda']);
     }
-    
-    public function atualizaValorFinal(){
+
+    public function atualizaValorFinal() {
         $precos = $this->itensVenda;
         $total = 0;
-        if(!empty($precos)){
-            foreach($precos as $preco){
+        if (!empty($precos)) {
+            foreach ($precos as $preco) {
                 $total = $total + $preco->preco_final;
             }
-        }        
-        
+        }
+
         $this->valor_total = $total;
         $this->valor_final = $total - $this->desconto;
         $this->save();
     }
-    
-    public static function getArrayVendasEmAberto(){
-        $vendas = Venda::findByCondition(['estado'=>'aberta'])->orderBy('nome')->joinWith('cliente')->all();
+
+    public static function getArrayVendasEmAberto() {
+        $vendas = Venda::findByCondition(['estado' => 'aberta'])->orderBy('nome')->joinWith('cliente')->all();
         $lista = [];
-        if(!empty($vendas))
-        foreach($vendas as $venda){
-            $lista[$venda->pk_venda] = (!empty($venda->cliente)?''.$venda->cliente->nome:'') . ' => ' . (!empty($venda->comanda)?$venda->comanda->getComandaComDigitoVerificador():'') ;
-        }
+        if (!empty($vendas))
+            foreach ($vendas as $venda) {
+                $lista[$venda->pk_venda] = (!empty($venda->cliente) ? '' . $venda->cliente->nome : '') . ' => ' . (!empty($venda->comanda) ? $venda->comanda->getComandaComDigitoVerificador() : '');
+            }
         return $lista;
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getCliente()
-    {
+    public function getCliente() {
         return $this->hasOne(Cliente::className(), ['pk_cliente' => 'fk_cliente']);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getComanda()
-    {
+    public function getComanda() {
         return $this->hasOne(Comanda::className(), ['pk_comanda' => 'fk_comanda']);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getFkUsuarioIniciouVenda()
-    {
+    public function getFkUsuarioIniciouVenda() {
         return $this->hasOne(Usuario::className(), ['login' => 'fk_usuario_iniciou_venda']);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getFkUsuarioRecebeuPagamento()
-    {
+    public function getFkUsuarioRecebeuPagamento() {
         return $this->hasOne(Usuario::className(), ['login' => 'fk_usuario_recebeu_pagamento']);
     }
-    
+
     public function beforeSave($insert) {
         $this->fk_usuario_iniciou_venda = 'dforlani';
         $this->fk_usuario_recebeu_pagamento = 'dforlani';
         return parent::beforeSave($insert);
-        
     }
+
+    public static function getTotal($provider, $fieldName) {
+        $total = 0;
+
+        foreach ($provider as $item) {
+            $total += $item[$fieldName];
+        }
+
+        return $total;    }
+
 }

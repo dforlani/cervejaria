@@ -214,6 +214,9 @@ REFERENCES unidade_medida(pk_unidade_medida)
         $this->atualizaBanco("ALTER TABLE `comanda` CHANGE `numero` `numero` CHAR(13) NULL DEFAULT NULL;", "comanda_char_13", "Comanda com CHAR 13");
         $this->atualizaBanco("update comanda set numero =  LPAD(numero,12,'0') where numero is not null;", "comanda_complete", "Completando com 0 nas comandas");
 
+         $this->atualizaBanco("ALTER TABLE `produto` ADD `custo_compra_producao` DECIMAL(10,2) NULL ;", "alter_produto_add_custo_compra_producao", "Inserido coluna custo de produção");
+        
+        
 
 
         echo 'Atualização do banco encerrada<br>';

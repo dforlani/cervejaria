@@ -12,7 +12,7 @@ use Yii;
  * @property double $estoque_vendido
  * @property int $fk_unidade_medida
  * @property int $is_vendavel
- *
+ * @property string $custo_compra_producao
  * @property Entrada[] $entradas
  * @property Preco[] $precos
  */
@@ -32,10 +32,10 @@ class Produto extends \yii\db\ActiveRecord {
         return [
             [['fk_unidade_medida'], 'required'],
             [['fk_unidade_medida'], 'integer'],
-            [['estoque_vendido', 'estoque_inicial', 'estoque_minimo'], 'number'],
+            [['estoque_vendido', 'estoque_inicial', 'estoque_minimo', 'custo_compra_producao'], 'number'],
             [['nome',], 'string', 'max' => 100],
             [['nr_lote',], 'string', 'max' => 20],
-            [['pk_produto'], 'unique'],
+            [['pk_produto'], 'unique'],             
             [['dt_fabricacao'], 'default'],
             [['dt_vencimento'], 'default'],
             [['is_vendavel'], 'required'],
@@ -56,7 +56,8 @@ class Produto extends \yii\db\ActiveRecord {
             'estoque_minimo' => 'Estoq. Mínimo',
             'dt_fabricacao' => 'Envase',
             'dt_vencimento' => 'Vencimento',
-            'nr_lote' => 'Número do Lote'
+            'nr_lote' => 'Número do Lote',
+            'custo_compra_producao' => 'Custo de Produção/Compra da Unidade de Medida'
         ];
     }
 

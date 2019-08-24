@@ -85,38 +85,38 @@ class VendaSearch extends Venda {
             $groupBy[] = 'MONTH(dt_venda)';
             $groupBy[] = 'YEAR(dt_venda)';
             $select[] = 'dt_venda';
-            $select[] = 'SUM(valor_final) as valor_somatorio';
+            $select[] = 'SUM(valor_final) as pagamentos';
         } elseif ($por_mes) {
             $groupBy[] = 'MONTH(dt_venda)';
             $groupBy[] = 'YEAR(dt_venda)';
             $select[] = 'DATE_FORMAT(`dt_venda`, "%m/%Y" ) AS  dt_venda';
-            $select[] = 'SUM(valor_final) as valor_somatorio';
+            $select[] = 'SUM(valor_final) as pagamentos';
         }
-
+        $query->joinWith(['itensVenda' => function (\yii\db\ActiveQuery $query) {
+                $query->joinWith(['preco' => function (\yii\db\ActiveQuery $query) {
+                        $query->joinWith(['produto' => function (\yii\db\ActiveQuery $query) {
+                                $query->joinWith('unidadeMedida');
+                            }]);
+                    }]);
+            }]);
         if ($por_produto) {
             $groupBy[] = 'fk_produto';
-            $query->joinWith(['itensVenda' => function (\yii\db\ActiveQuery $query) {
-                    $query->joinWith(['preco' => function (\yii\db\ActiveQuery $query) {
-                            $query->joinWith(['produto' => function (\yii\db\ActiveQuery $query) {
-                                    $query->joinWith('unidadeMedida');
-                                }]);
-                        }]);
-                }]);
+
             $select[] = 'nome';
-            $select[] = 'SUM(item_venda.quantidade) as quantidade';
+            $select[] = 'SUM(item_venda.quantidade * preco.quantidade) as quantidade';
+
             $select[] = 'unidade_medida';
         }
-        
-        if($apenas_vendas_pagas){
-             $query->andFilterWhere(['like', 'estado', 'paga']);
+        $select[] = 'SUM(item_venda.preco_final) as pagamentos';
+        $select[] = 'SUM(item_venda.preco_final - preco.quantidade*produto.custo_compra_producao*item_venda.quantidade) as pagamentos_liquido';
+
+        if ($apenas_vendas_pagas) {
+            $query->andFilterWhere(['like', 'estado', 'paga']);
         }
 
         $query->select($select);
         $query->groupBy($groupBy);
         $query->orderBy('dt_venda');
-
-//        print_r($query->all());
-//        exit();
 
         $dataProvider = new ArrayDataProvider([
             'allModels' => $query->all(),
