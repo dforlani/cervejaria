@@ -57,7 +57,7 @@ class Produto extends \yii\db\ActiveRecord {
             'dt_fabricacao' => 'Envase',
             'dt_vencimento' => 'Vencimento',
             'nr_lote' => 'Número do Lote',
-            'custo_compra_producao' => 'Custo de Produção/Compra da Unidade de Medida'
+            'custo_compra_producao' => 'Preço de Custo da Unidade de Medida'
         ];
     }
 

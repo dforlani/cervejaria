@@ -105,7 +105,7 @@ use yii\widgets\ActiveForm;
                     ],
                 ]);
                 ?>
-                <span style="color:blue;">Insira aqui o custo do <b><span style="color:blue;font-weight:bold" id='hlp_custo_compra_producao'> <?= (@$model->unidadeMedida->unidade_medida)?> </span> </b>            
+                <span style="color:blue;font-size:12px">Insira aqui o Preço de Custo do <b><span style="color:blue;font-weight:bold" id='hlp_custo_compra_producao'> <?= (@$model->unidadeMedida->unidade_medida)?></b>. Vai ser utilizado para calcular o preço líquido.  </span>             
                 </span>
 
             </div>
