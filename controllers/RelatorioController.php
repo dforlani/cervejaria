@@ -15,6 +15,7 @@ use yii\filters\VerbFilter;
 class RelatorioController extends Controller {
 
     public function actionVendas() {
+
         $por_dia = isset($_GET['por_dia']) ? $_GET['por_dia'] : false;
         $por_mes = isset($_GET['por_mes']) ? $_GET['por_mes'] : false;
         $por_produto = isset($_GET['por_produto']) ? $_GET['por_produto'] : false;

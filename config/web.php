@@ -4,8 +4,10 @@ use kartik\datecontrol\Module;
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
-date_default_timezone_set('America/Sao_Paulo');
+//date_default_timezone_set('America/Sao_Paulo');
+
 $config = [
+    //'timeZone' => null,
     'language' => 'pt-BR',
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
@@ -15,17 +17,19 @@ $config = [
         '@npm' => '@vendor/npm-asset',
     ],
     'components' => [
+        
         'datecontrol' => [
             'class' => '\kartik\datecontrol\Module'
         ],
         'formatter' => [
-            'class' => 'yii\i18n\Formatter',
+            'class' => 'app\components\MeuFormatador',
             'thousandSeparator' => '.',
             'decimalSeparator' => ',',
             'currencyCode' => '',
             'dateFormat' => 'dd/MM/yyyy',
-            'datetimeFormat' => 'dd/MM/yyyy H:i:s',
+           'datetimeFormat' => 'dd/MM/yyyy H:i:s',
             'timeFormat' => 'H:i:s',
+        // 'timeZone' => 'America/Sao_Paulo',
         ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager',

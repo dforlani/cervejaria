@@ -14,6 +14,10 @@ use yii\web\View;
 
 $this->title = 'Relatórios de Vendas';
 $this->params['breadcrumbs'][] = $this->title;
+
+//phpinfo();
+//var_dump(date(''));
+//        
 ?>
 <div class="venda-index">
 
@@ -60,15 +64,34 @@ $this->params['breadcrumbs'][] = $this->title;
     if ($por_dia) {
         $colunas[] = [
             'attribute' => 'dt_venda',
-            'format' => 'date',
+            'format' => 'datetime',
             'footer' => 'Total'
         ];
+        $colunas[] = [
+            'attribute' => 'dt_venda',
+            //'format' => 'datetime',
+            'footer' => 'Total'
+        ];
+        $colunas[] = [
+            'attribute' => 'dt_venda',
+            //'format' => 'datetime',
+            'footer' => 'Total',
+            'value' => function($model) {
+                $d = new DateTime($model->dt_venda);
+
+// Output the microseconds.
+            //     $d->format('u'); // 012345
+// Output the date with microseconds.
+                return $d->format('d/m/Y G:i:s');
+            }
+        ];
+
+
 
         //$colunas[] = 'pagamentos:currency';
     } elseif ($por_mes) {
         $colunas[] = [
             'attribute' => 'dt_venda',
-           
             'footer' => 'Total'
         ];
 
@@ -106,7 +129,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     echo GridView::widget([
         'showFooter' => true,
-        'footerRowOptions'=>['style'=>'font-weight:bold;text-align:right;text-decoration: underline;'],
+        'footerRowOptions' => ['style' => 'font-weight:bold;text-align:right;text-decoration: underline;'],
         'dataProvider' => $dataProvider,
         //'filterModel' => $searchModel,
         'columns' => $colunas
