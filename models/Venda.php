@@ -30,9 +30,11 @@ class Venda extends ActiveRecord {
 
     public $pagamentos;
     public $pagamentos_liquido;
-    public $nome;
+   // public $nome;
     public $quantidade;
     public $unidade_medida;
+    public $cliente;
+    public $produto;
 
     /**
      * {@inheritdoc}

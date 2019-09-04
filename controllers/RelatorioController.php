@@ -16,13 +16,22 @@ class RelatorioController extends Controller {
 
     public function actionVendas() {
 
+
         $por_dia = isset($_GET['por_dia']) ? $_GET['por_dia'] : false;
         $por_mes = isset($_GET['por_mes']) ? $_GET['por_mes'] : false;
         $por_produto = isset($_GET['por_produto']) ? $_GET['por_produto'] : false;
         $apenas_vendas_pagas = isset($_GET['apenas_vendas_pagas']) ? $_GET['apenas_vendas_pagas'] : false;
+        $por_cliente = isset($_GET['por_cliente']) ? $_GET['por_cliente'] : false;
+        $data_inicial = isset($_GET['data_inicial']) ? $_GET['data_inicial'] : '01/' . date('m/Y');//primeiro dia do mês atual
+        $data_final = isset($_GET['data_final']) ? $_GET['data_final'] : date('t/m/Y');//último dia do mês atual
+
 
         $searchModel = new VendaSearch();
-        $dataProvider = $searchModel->searchRelatorio($por_dia, $por_mes, $por_produto, $apenas_vendas_pagas);
+      
+        $searchModel->load(Yii::$app->request->get());
+
+        $dataProvider = $searchModel->searchRelatorio($por_dia, $por_mes, $por_produto, $apenas_vendas_pagas, $por_cliente, $data_inicial, $data_final);
+
 
         return $this->render('vendas', [
                     'searchModel' => $searchModel,
@@ -30,7 +39,10 @@ class RelatorioController extends Controller {
                     'por_dia' => $por_dia,
                     'por_mes' => $por_mes,
                     'por_produto' => $por_produto,
-                    'apenas_vendas_pagas' => $apenas_vendas_pagas
+                    'por_cliente' => $por_cliente,
+                    'apenas_vendas_pagas' => $apenas_vendas_pagas,
+                    'data_inicial' => $data_inicial,
+                    'data_final' => $data_final
         ]);
     }
 

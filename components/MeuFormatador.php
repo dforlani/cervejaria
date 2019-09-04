@@ -10,6 +10,9 @@ use yii\base\InvalidConfigException;
 use yii\helpers\FormatConverter;
 use yii\i18n\Formatter;
 
+/**
+ * Esta classe foi criada para burlar um erro de conversão de datas do Yii2
+ */
 class MeuFormatador extends Formatter {
 
     private $_intlLoaded = false;
@@ -20,6 +23,14 @@ class MeuFormatador extends Formatter {
         }
 
         return $this->formatDateTimeValue($value, $format, 'datetime');
+    }
+
+    public function asDate($value, $format = null) {
+        if ($format === null) {
+            $format = $this->dateFormat;
+        }
+
+        return $this->formatDateTimeValue($value, $format, 'date');
     }
 
     private function formatDateTimeValue($value, $format, $type) {
@@ -70,6 +81,7 @@ class MeuFormatador extends Formatter {
         } else {
             $format = FormatConverter::convertDateIcuToPhp($format, $type, $this->locale);
         }
+        //erro de conversão de datas do Yii2
 //        if ($timeZone != null) {
 //            if ($timestamp instanceof \DateTimeImmutable) {
 //                $timestamp = $timestamp->setTimezone(new DateTimeZone($timeZone));
@@ -79,7 +91,7 @@ class MeuFormatador extends Formatter {
 //        }
 
 
-        return $timestamp->format($format) ;
+        return $timestamp->format($format);
     }
 
 }
