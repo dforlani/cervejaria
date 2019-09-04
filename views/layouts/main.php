@@ -34,12 +34,13 @@ AppAsset::register($this);
                             'type' => SideNav::TYPE_DEFAULT,
                             'heading' => 'Menu',
                             'items' => [
-                                ['label' => '', 'template'=>'<a href="{url}"  accesskey="b">{icon}<u>B</u>alcão{label}</a>', 'url' => ['/venda/venda'],],
-                                ['label' => '', 'template'=>'<a href="{url}"  accesskey="h">{icon}Fol<u>h</u>a de Vendas{label}</a>', 'url' => ['/venda/folha'],],
+                                ['label' => '', 'template' => '<a href="{url}"  accesskey="b">{icon}<u>B</u>alcão{label}</a>', 'url' => ['/venda/venda'],],
+                                ['label' => '', 'template' => '<a href="{url}"  accesskey="h">{icon}Fol<u>h</u>a de Vendas{label}</a>', 'url' => ['/venda/folha'],],
+                                ['label' => 'Caixa', 'url' => ['/caixa']],
                                 [],
                                 ['label' => 'Todas as Vendas', 'url' => ['/venda']],
                                 //['label' => 'Home', 'url' => ['/site/index']],
-                                ['label' => '', 'template'=>'<a href="{url}"  accesskey="t">{icon}Clien<u>t</u>es{label}</a>', 'url' => ['/cliente']],
+                                ['label' => '', 'template' => '<a href="{url}"  accesskey="t">{icon}Clien<u>t</u>es{label}</a>', 'url' => ['/cliente']],
                                 ['label' => 'Comandas', 'url' => ['/comanda']],
                                 //['label' => 'Entrada', 'url' => ['/entrada']],
                                 // ['label' => 'Item Venda', 'url' => ['/item-venda']],
@@ -47,10 +48,10 @@ AppAsset::register($this);
                                 ['label' => 'Produtos', 'url' => ['/produto']],
                                 ['label' => 'Unidades de Medida', 'url' => ['/unidade-medida']],
                                 [],
-                                 ['label' => 'Relatórios', 'items'=>[['label'=>'Vendas', 'url' => ['/relatorio/vendas']]]],
+                                ['label' => 'Relatórios', 'items' => [['label' => 'Vendas', 'url' => ['/relatorio/vendas']]]],
                                 [],
-                                ['label' => '1) Atualizar', 'url' => ['/update/atualizar']],
-                                ['label' => '2) Atualizar Banco', 'url' => ['/update/atualizar-banco']],
+                                ['label' => '1) Atualizar', 'template' => '<a href="{url}"  target="_blank">{icon}{label}</a>', 'url' => ['/update/atualizar']],
+                                ['label' => '2) Atualizar Banco', 'template' => '<a href="{url}"  target="_blank">{icon}{label}</a>', 'url' => ['/update/atualizar-banco']],
                             ],]
                         );
                         ?>

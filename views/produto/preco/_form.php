@@ -27,7 +27,7 @@ use kartik\number\NumberControl;
 //
     function calculaCusto() {
         if ((Number($('#preco-quantidade').val()))) {
-            $('#hlp_preco_custo').text(($('#preco-quantidade').val() * custo_compra_producao).toLocaleString("pt-BR", { style: "currency" , currency:"BRL"}));
+            $('#hlp_preco_custo').text(($('#preco-quantidade').val() * custo_compra_producao).toLocaleString("pt-BR", {style: "currency", currency: "BRL"}));
         } else {
             $('#hlp_preco_custo').text('');
         }
@@ -59,7 +59,7 @@ use kartik\number\NumberControl;
                 ]);
                 ?>
             </div>
-            <div class="col-sm-4" style="background-color:lavende rblush;"> 
+            <div class="col-sm-4" style=";"> 
                 <?= $form->field($model, 'codigo_barras')->textInput(['maxlength' => true]) ?>
                 <button type="button" id="sugestao" value='<?= Preco::getSugestaoCodigoBarras() ?>'>   Usar código de barras sugerido:&nbsp; <?= Preco::getSugestaoCodigoBarras() ?></button>
             </div>

@@ -30,7 +30,7 @@ class Venda extends ActiveRecord {
 
     public $pagamentos;
     public $pagamentos_liquido;
-   // public $nome;
+    // public $nome;
     public $quantidade;
     public $unidade_medida;
     public $cliente;
@@ -146,13 +146,6 @@ class Venda extends ActiveRecord {
         return parent::beforeSave($insert);
     }
 
-    public static function getTotal($provider, $fieldName) {
-        $total = 0;
 
-        foreach ($provider as $item) {
-            $total += $item[$fieldName];
-        }
-
-        return $total;    }
 
 }

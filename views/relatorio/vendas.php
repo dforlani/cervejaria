@@ -1,6 +1,6 @@
 <?php
 
-use app\models\Venda;
+use app\components\Somatorio;
 use app\models\VendaSearch;
 use kartik\field\FieldRange;
 use kartik\widgets\SwitchInput;
@@ -126,7 +126,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute' => 'quantidade',
             'format' => 'currency',
             'contentOptions' => ['style' => 'text-align:right'],
-            'footer' => Yii::$app->formatter->asCurrency(Venda::getTotal($dataProvider->models, 'quantidade')),
+            'footer' => Yii::$app->formatter->asCurrency(Somatorio::getTotal($dataProvider->models, 'quantidade')),
         ];
 
         $colunas[] = [
@@ -146,13 +146,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'attribute' => 'pagamentos',
         'format' => 'currency',
         'contentOptions' => ['style' => 'text-align:right'],
-        'footer' => Yii::$app->formatter->asCurrency(Venda::getTotal($dataProvider->models, 'pagamentos')),
+        'footer' => Yii::$app->formatter->asCurrency(Somatorio::getTotal($dataProvider->models, 'pagamentos')),
     ];
     $colunas[] = [
         'attribute' => 'pagamentos_liquido',
         'format' => 'currency',
         'contentOptions' => ['style' => 'text-align:right'],
-        'footer' => Yii::$app->formatter->asCurrency(Venda::getTotal($dataProvider->models, 'pagamentos_liquido')),
+        'footer' => Yii::$app->formatter->asCurrency(Somatorio::getTotal($dataProvider->models, 'pagamentos_liquido')),
     ];
 
 

@@ -1,12 +1,12 @@
 
 <script>
-    $(document).ready(function(){
-        $('.kv-editable-link').focus(function(){
-           $('#venda-desconto-disp').attr('autofocus','autofocus');
+    $(document).ready(function () {
+        $('.kv-editable-link').focus(function () {
+            $('#venda-desconto-disp').attr('autofocus', 'autofocus');
         });
     });
-    </script>
-    
+</script>
+
 <?php
 
 use app\models\Venda;
@@ -21,14 +21,14 @@ use yii\widgets\ActiveForm;
 
     <div class="container-fluid">
         <div class="row" >
-            <div class="co  l-sm-2" style="background-color:laven der;font-size: 20px">  
-                <label style="font-size: 23px">  <?=(!empty($model->cliente)?$model->cliente->nome:'') ?></label><br><br>
+            <div class="co  l-sm-2" style=";font-size: 20px">  
+                <label style="font-size: 23px">  <?= (!empty($model->cliente) ? $model->cliente->nome : '') ?></label><br><br>
                 <span>Valor Total:</span>
                 <span><?php echo Yii::$app->formatter->asCurrency($model->valor_total) ?></span>
 
 
             </div>
-            <div class="co l-sm-2" style="background-color:lavende rblush;font-size: 20px"> 
+            <div class="co l-sm-2" style=";font-size: 20px"> 
                 <span>Desconto:</span>
                 <?php
                 $editable = Editable::begin([
@@ -60,18 +60,18 @@ use yii\widgets\ActiveForm;
             <div class="co l-sm-2" style="background-color:lav ender;font-size: 23px">  
                 <br>            
                 <label>Valor Final:</label>
-             <b><span id='valor_final' ><?php echo Yii::$app->formatter->asCurrency($model->valor_final) ?>
-                        </span></b>
-                
+                <b><span id='valor_final' ><?php echo Yii::$app->formatter->asCurrency($model->valor_final) ?>
+                    </span></b>
+
             </div >
             <?php $form = ActiveForm::begin(); ?>
             <div class="co l-sm" >  
                 <br>
-                <?= Html::submitButton(('<u>P</u>agar'), ['class' => 'btn btn-primary',  'accesskey'=>"p" , 'value' => 'pagar', 'name' => 'Venda[button]']) ?> &nbsp;
-                <?= Html::submitButton(('<u>F</u>iado'), ['class' => 'btn btn-success', 'accesskey'=>"f", 'value' => 'fiado', 'name' => 'Venda[button]']) ?>&nbsp;
+                <?= Html::submitButton(('<u>P</u>agar'), ['class' => 'btn btn-primary', 'accesskey' => "p", 'value' => 'pagar', 'name' => 'Venda[button]']) ?> &nbsp;
+                <?= Html::submitButton(('<u>F</u>iado'), ['class' => 'btn btn-success', 'accesskey' => "f", 'value' => 'fiado', 'name' => 'Venda[button]']) ?>&nbsp;
                 <br><br>
-                <div type="button" id="bt_comprovante" class="btn btn-warning" value="" accesskey="c" onclick="window.open('comprovante?id=<?=$model->pk_venda?>', '_blank');"><u>C</u>omprovante</div>
-                
+                <div type="button" id="bt_comprovante" class="btn btn-warning" value="" accesskey="c" onclick="window.open('comprovante?id=<?= $model->pk_venda ?>', '_blank');"><u>C</u>omprovante</div>
+
             </div>
             <?php ActiveForm::end(); ?>
         </div>

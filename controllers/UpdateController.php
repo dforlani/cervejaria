@@ -214,11 +214,20 @@ REFERENCES unidade_medida(pk_unidade_medida)
         $this->atualizaBanco("ALTER TABLE `comanda` CHANGE `numero` `numero` CHAR(13) NULL DEFAULT NULL;", "comanda_char_13", "Comanda com CHAR 13");
         $this->atualizaBanco("update comanda set numero =  LPAD(numero,12,'0') where numero is not null;", "comanda_complete", "Completando com 0 nas comandas");
 
-         $this->atualizaBanco("ALTER TABLE `produto` ADD `custo_compra_producao` DECIMAL(10,2) NULL ;", "alter_produto_add_custo_compra_producao", "Inserido coluna custo de produção");
-        
-        
+        $this->atualizaBanco("ALTER TABLE `produto` ADD `custo_compra_producao` DECIMAL(10,2) NULL ;", "alter_produto_add_custo_compra_producao", "Inserido coluna custo de produção");
 
-
+        //04-09-2019
+        $this->atualizaBanco("create table caixa(
+            pk_caixa int not null AUTO_INCREMENT,
+    fk_venda int,
+    valor decimal(10,2),
+    tipo enum('Abertura de Caixa', 'Pagamento', 'Sangria'),
+    dt_movimento TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (pk_caixa),
+    FOREIGN KEY(fk_venda)
+    REFERENCES Venda(pk_venda)
+    ON UPDATE CASCADE 
+    ON DELETE CASCADE);", "create_caixa", 'Tabela Caixa criada com sucesso');
         echo 'Atualização do banco encerrada<br>';
     }
 
