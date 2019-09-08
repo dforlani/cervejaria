@@ -33,7 +33,7 @@ class Venda extends ActiveRecord {
     // public $nome;
     public $quantidade;
     public $unidade_medida;
-    public $cliente;
+    //public $cliente;
     public $produto;
 
     /**
@@ -115,7 +115,8 @@ class Venda extends ActiveRecord {
     /**
      * @return ActiveQuery
      */
-    public function getCliente() {
+    public function getCliente() {   
+
         return $this->hasOne(Cliente::className(), ['pk_cliente' => 'fk_cliente']);
     }
 
@@ -145,7 +146,5 @@ class Venda extends ActiveRecord {
         $this->fk_usuario_recebeu_pagamento = 'dforlani';
         return parent::beforeSave($insert);
     }
-
-
 
 }
