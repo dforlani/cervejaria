@@ -106,7 +106,7 @@ class VendaSearch extends Venda {
 
         if ($por_cliente) {
             $groupBy[] = 'cliente.nome';
-            $select[] = 'cliente.nome as cliente';
+            $select[] = 'cliente.nome as nome_cliente';
             $order['cliente.nome'] = SORT_ASC;
         }
 
@@ -134,7 +134,7 @@ class VendaSearch extends Venda {
         $data_final_convertida = date("Y-m-d", strtotime(str_replace('/', '-', $data_final)));
 
         $query->andWhere("dt_venda BETWEEN  '$data_inicial_convertida' AND '$data_final_convertida 23:59:59.999'");
-        $query->andFilterWhere(['like', 'cliente.nome', $this->cliente]);
+        $query->andFilterWhere(['like', 'cliente.nome', $this->nome_cliente]);
           $query->andFilterWhere(['like', 'produto.nome', $this->produto]);
 
         //precisa ter ao menos algo selecionado para que a consulta seja feita

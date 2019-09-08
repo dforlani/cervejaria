@@ -137,7 +137,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     if ($por_cliente) {
         $colunas[] = [
-            'attribute' => 'cliente',
+            'attribute' => 'nome_cliente',
             'contentOptions' => ['style' => 'text-align:right'],
         ];
     }

@@ -33,7 +33,7 @@ class Venda extends ActiveRecord {
     // public $nome;
     public $quantidade;
     public $unidade_medida;
-    //public $cliente;
+    public $nome_cliente;
     public $produto;
 
     /**
