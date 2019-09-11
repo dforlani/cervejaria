@@ -2,12 +2,16 @@
 
 namespace app\controllers;
 
-use Yii;
+use app\models\ItemVenda;
+use app\models\ItemVendaSearch;
+use app\models\Preco;
 use app\models\Venda;
 use app\models\VendaSearch;
+use Yii;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * VendaController implements the CRUD actions for Venda model.
@@ -45,7 +49,7 @@ class VendaController extends Controller {
     public function actionFolha() {
         $vendas = Venda::find()->where(['estado' => 'aberta'])->orderBy('nome')->joinWith(['cliente'])->all();
 
-        return $this->render('folha', ['vendas'=>$vendas]);
+        return $this->render('folha', ['vendas' => $vendas]);
     }
 
     /**
@@ -79,7 +83,7 @@ class VendaController extends Controller {
 
     public function actionAlteraDesconto($id) {
         $model = $this->findModel($id);
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        \Yii::$app->response->format = Response::FORMAT_JSON;
         $model->load(Yii::$app->request->post());
         $model->valor_final = $model->valor_total - $model->desconto;
         if ($model->save()) {
@@ -109,10 +113,10 @@ class VendaController extends Controller {
         } else {
             $model = $this->findModel($id);
 
-            $modelItem = new \app\models\ItemVenda();
+            $modelItem = new ItemVenda();
             $modelItem->fk_venda = $model->pk_venda;
             $modelItem->quantidade = 1;
-            $searchModelItem = new \app\models\ItemVendaSearch();
+            $searchModelItem = new ItemVendaSearch();
             $dataProviderItem = $searchModelItem->search(['ItemVendaSearch' => ['fk_venda' => $model->pk_venda]]);
         }
 
@@ -157,8 +161,8 @@ class VendaController extends Controller {
     }
 
     public function actionBuscaProduto($id) {
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $preco = \app\models\Preco::findOne($id);
+        \Yii::$app->response->format = Response::FORMAT_JSON;
+        $preco = Preco::findOne($id);
         if (!empty($preco)) {
             return ['preco' => $preco->preco, 'estoque_atual' => ($preco->produto->estoque_inicial - $preco->produto->estoque_vendido) . ' ' . $preco->produto->unidadeMedida->unidade_medida];
         } else
@@ -182,6 +186,49 @@ class VendaController extends Controller {
         return $this->render('update', [
                     'model' => $model,
         ]);
+    }
+
+    public function actionPagamento2($id) {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['_pagamento', 'id' => $model->pk_venda]);
+        }
+
+        return $this->render('_pagamento', [
+                    'model' => $model,
+        ]);
+    }
+
+    public function actionPagamento($id) {
+
+        $model = $this->findModel($id);
+    
+
+        if ($model->load(Yii::$app->request->post())) {
+           
+        
+            if ($model->save()) {
+
+                if (Yii::$app->request->isAjax) {
+                    // JSON response is expected in case of successful save
+                    Yii::$app->response->format = Response::FORMAT_JSON;
+                    return ['success' => true];
+                }
+                return $this->redirect(['venda', 'id' => $model->pk_venda]);
+            }
+        }
+
+
+        if (Yii::$app->request->isAjax) {
+            return $this->renderAjax('_pagamento', [
+                        'model' => $model,
+            ]);
+        } else {
+            return $this->render('_pagamento', [
+                        'model' => $model,
+            ]);
+        }
     }
 
     /**
@@ -231,7 +278,7 @@ class VendaController extends Controller {
     }
 
     protected function findModelItem($id) {
-        if (($model = \app\models\ItemVenda::findOne($id)) !== null) {
+        if (($model = ItemVenda::findOne($id)) !== null) {
             return $model;
         }
 

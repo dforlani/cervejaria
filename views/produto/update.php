@@ -121,12 +121,11 @@ $this->params['breadcrumbs'][] = 'Update';
                 'filterModel' => $searchModelPreco,
                 'columns' => [
                     ['class' => 'yii\grid\SerialColumn'],
-//            'pk_preco',
-//            'fk_produto',
+
                     'denominacao',
                     'preco:currency',
                     'quantidade:currency',
-                    // ['class' => 'yii\grid\ActionColumn'],
+
                     [
                         'class' => 'yii\grid\ActionColumn',
                         'header' => 'Ações',
@@ -158,7 +157,7 @@ $this->params['breadcrumbs'][] = 'Update';
                 ],
             ]);
             Pjax::end();
-            ?>
+?>
         </div>
     </div>
 </div>

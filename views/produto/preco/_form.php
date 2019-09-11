@@ -13,8 +13,8 @@ use kartik\number\NumberControl;
 <script>
     console.log('oi');
     var custo_compra_producao = <?= $model->produto->custo_compra_producao ?>;
-    console.log(custo_compra_producao);
-//    console.log('oi');
+    
+
     $(document).ready(function () {
         $('#sugestao').click(function () {
             $('#preco-codigo_barras').val($('#sugestao').attr('value'));
@@ -24,7 +24,7 @@ use kartik\number\NumberControl;
             calculaCusto();
         });
     });
-//
+
     function calculaCusto() {
         if ((Number($('#preco-quantidade').val()))) {
             $('#hlp_preco_custo').text(($('#preco-quantidade').val() * custo_compra_producao).toLocaleString("pt-BR", {style: "currency", currency: "BRL"}));

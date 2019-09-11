@@ -15,14 +15,7 @@ use yii\widgets\ActiveForm;
 /* @var $form ActiveForm */
 ?>
 
-<script>
-//    $(document).ready(function () {
-//        $('#produto-fk_unidade_medida').change(function () {
-//           // alert($('#produto-fk_unidade_medida').val());
-//        });
-//
-//    });
-</script>
+
 <div class="produto-form">
 
     <?php $form = ActiveForm::begin(); ?>

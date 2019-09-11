@@ -228,8 +228,14 @@ REFERENCES unidade_medida(pk_unidade_medida)
     REFERENCES Venda(pk_venda)
     ON UPDATE CASCADE 
     ON DELETE CASCADE);", "create_caixa", 'Tabela Caixa criada com sucesso');
+        
+        //11-09-2019
+        $this->atualizaBanco("ALTER TABLE `venda` ADD `valor_pago_credito` DECIMAL(10,2) NOT NULL AFTER `valor_total`, ADD `valor_pago_debito` DECIMAL(10,2) NOT NULL AFTER `valor_pago_credito`, ADD `valor_pago_dinheiro` DECIMAL(10,2) NOT NULL AFTER `valor_pago_debito`;",
+                "update_venda_pgtos", "Inserido campos pra diferentes formas de pagamento: credito, debito, dinheiro");
+        
         echo 'Atualização do banco encerrada<br>';
-    }
+        
+            }
 
     public function atualizaBanco($comando, $nome_configuracao, $mensagem) {
         //busca de a tualização do banco já foi inserida

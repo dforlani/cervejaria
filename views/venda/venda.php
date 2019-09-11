@@ -1,13 +1,7 @@
 <script>
 
     $(document).ready(function () {
-        $('#venda-desconto').change(function () {
-            if (($('venda-desconto').val() != '') && ($('#venda-valor_total').val() != '')) {
-                $('#venda-valor_final').val(parseFloat($('#venda-valor_total').val()) - parseFloat($('#venda-desconto').val()));
-            } else {
-                $('#venda-valor_final').val($('#venda-valor_total').val());
-            }
-        });
+      
         
         $(document).bind('keydown', 'alt+l', function(){
             $('#venda-fk_cliente').select2('open');
@@ -62,8 +56,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>               
                 <div class="col-sm-6" style="text-align: right">  
                     <?php
-                    if (!$model->isNewRecord){
-                        //echo Html::buttonInput((''), [  'accesskey'=>"i", 'onClick' => , 'class' => 'btn btn-danger'])
+                    if (!$model->isNewRecord){                        
                         ?>
                     <div type="button" id="bt_comprovante" class="btn btn-danger" value="" accesskey="i" onclick="window.location='./venda'"><u>I</u>niciar Nova Venda</div>
                     <?php }?>

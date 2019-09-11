@@ -108,7 +108,7 @@ use yii\web\View;
                         ]);
                         ?>
                     </div>
-                    <div class="col-sm-2" style="background-color:lav enderblush;"> 
+                    <div class="col-sm-2" style=""> 
                         <?=
                         $form->field($modelItem, 'preco_unitario')->widget(NumberControl::classname(), [
                             'maskedInputOptions' => [

@@ -35,11 +35,19 @@
 
 <h2>Notas de versão</h2>
 <div class="notasVersaoStyle">
+    <a href="#" id="v120" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.2.0 (11/09/2019)</a>
+    <ul id="nv120" style="display:none;">
+        <li><b>Caixa:</b>Inclusão da colunas valor_pagamento_dinheiro, valor_pagamento_credito, valor_pagamento_debito na tabela Venda e inclusão de modal em Vendas para utilizá-las;</li>            
+    </ul>
+</div>
+
+<div class="notasVersaoStyle">
     <a href="#" id="v110" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.1.0 (04/09/2019)</a>
     <ul id="nv110" style="display:none;">
         <li><b>Caixa:</b>Criação da Tabela Caixa;</li>            
     </ul>
 </div>
+
 <div class="notasVersaoStyle">
     <a href="#" id="v101" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.0.1 (04/09/2019)</a>
     <ul id="nv101" style="display:none;">

@@ -11,6 +11,7 @@ use yii\widgets\ActiveForm;
 <div class="papel-form">
 
     <?php $form = ActiveForm::begin(); ?>
+    
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 

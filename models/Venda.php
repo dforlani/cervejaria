@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
@@ -16,6 +17,9 @@ use yii\db\ActiveRecord;
  * @property string $valor_total
  * @property string $desconto
  * @property string $valor_final
+ * @property string $valor_pago_credito
+ * @property string $valor_pago_debito
+ * @property string $valor_pago_dinheiro
  * @property string $estado
  * @property string $dt_venda
  * @property string $dt_pagamento
@@ -30,7 +34,6 @@ class Venda extends ActiveRecord {
 
     public $pagamentos;
     public $pagamentos_liquido;
-    // public $nome;
     public $quantidade;
     public $unidade_medida;
     public $nome_cliente;
@@ -49,7 +52,8 @@ class Venda extends ActiveRecord {
     public function rules() {
         return [
             [['pk_venda', 'fk_cliente', 'fk_comanda'], 'integer'],
-            [['valor_total', 'desconto', 'valor_final'], 'number'],
+            [['valor_total', 'desconto', 'valor_final', 'valor_pago_debito', 'valor_pago_credito', 'valor_pago_dinheiro'], 'number', 'min' => 0],
+            [['valor_total', 'desconto', 'valor_final', 'valor_pago_debito', 'valor_pago_credito', 'valor_pago_dinheiro'], 'default', 'value' => 0],
             [['estado'], 'string'],
             [['dt_venda', 'dt_pagamento'], 'safe'],
             [['fk_usuario_iniciou_venda', 'fk_usuario_recebeu_pagamento'], 'string', 'max' => 20],
@@ -75,6 +79,9 @@ class Venda extends ActiveRecord {
             'valor_total' => 'Valor Total',
             'desconto' => 'Desconto',
             'valor_final' => 'Valor Final',
+            'valor_pago_debito' => 'Pago em Débito',
+            'valor_pago_credito' => 'Pago em Crédito',
+            'valor_pago_dinheiro' => 'Pago em Dinheiro',
             'estado' => 'Estado',
             'dt_venda' => 'Data Venda',
             'dt_pagamento' => 'Data Pagamento',
@@ -115,7 +122,7 @@ class Venda extends ActiveRecord {
     /**
      * @return ActiveQuery
      */
-    public function getCliente() {   
+    public function getCliente() {
 
         return $this->hasOne(Cliente::className(), ['pk_cliente' => 'fk_cliente']);
     }
@@ -144,7 +151,22 @@ class Venda extends ActiveRecord {
     public function beforeSave($insert) {
         $this->fk_usuario_iniciou_venda = 'dforlani';
         $this->fk_usuario_recebeu_pagamento = 'dforlani';
+
+        $this->valor_final = $this->valor_total - $this->desconto;
+
         return parent::beforeSave($insert);
+    }
+
+    public function getTroco() {
+        //só vai ter troco se algo foi pago
+        if ($this->valor_pago_credito + $this->valor_pago_dinheiro + $this->valor_pago_debito > 0)
+            return Yii::$app->formatter->asCurrency(($this->desconto + $this->valor_pago_credito + $this->valor_pago_dinheiro + $this->valor_pago_debito) - $this->valor_total);
+        else
+            return Yii::$app->formatter->asCurrency(0);
+    }
+
+    public function getValorTotalPago() {
+        return Yii::$app->formatter->asCurrency($this->valor_pago_credito + $this->valor_pago_dinheiro + $this->valor_pago_debito);
     }
 
 }
