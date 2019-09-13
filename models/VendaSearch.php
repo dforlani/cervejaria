@@ -18,7 +18,7 @@ class VendaSearch extends Venda {
     public function rules() {
         return [
             [['pk_venda', 'fk_cliente', 'fk_comanda'], 'integer'],
-            [['fk_usuario_iniciou_venda', 'fk_usuario_recebeu_pagamento', 'estado', 'dt_venda', 'dt_pagamento', 'cliente', 'produto'], 'safe'],
+            [['fk_usuario_iniciou_venda', 'fk_usuario_recebeu_pagamento', 'estado', 'dt_venda', 'dt_pagamento', 'cliente', 'produto', ], 'safe'],
             [['valor_total', 'desconto', 'valor_final'], 'number'],
         ];
     }
@@ -45,7 +45,7 @@ class VendaSearch extends Venda {
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort' => ['defaultOrder' => ['estado' => SORT_ASC]]
+            'sort' => ['defaultOrder' => ['dt_venda'=>SORT_DESC, 'estado' => SORT_ASC]]
         ]);
 
         $this->load($params);

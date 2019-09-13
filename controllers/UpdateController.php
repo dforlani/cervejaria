@@ -233,6 +233,23 @@ REFERENCES unidade_medida(pk_unidade_medida)
         $this->atualizaBanco("ALTER TABLE `venda` ADD `valor_pago_credito` DECIMAL(10,2) NOT NULL AFTER `valor_total`, ADD `valor_pago_debito` DECIMAL(10,2) NOT NULL AFTER `valor_pago_credito`, ADD `valor_pago_dinheiro` DECIMAL(10,2) NOT NULL AFTER `valor_pago_debito`;",
                 "update_venda_pgtos", "Inserido campos pra diferentes formas de pagamento: credito, debito, dinheiro");
         
+        //12-09-2019 Gerar PDF de todas as vendas
+        $this->atualizaBanco("INSERT INTO CONFIGURACAO (tipo, valor) VALUES ('pdf_todas_paginas', 1);",
+                "log_pdf_todas_paginas", 'Inicialização da configuração para gerar pdf de todas as vendas criada');
+        
+        //12-09-2019 aumentar tamanho das colunas de configuracao
+        $this->atualizaBanco("ALTER TABLE `configuracao` CHANGE `tipo` `tipo` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+        ALTER TABLE `configuracao` CHANGE `valor` `valor` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;",
+                "aumenta_tamanho_colunas_conf", 'Tamanho das colunas de configuração aumentadas');
+        
+        //12-09-2019 Gerar PDF de todas as vendas
+        $this->atualizaBanco("INSERT INTO CONFIGURACAO (tipo, valor) VALUES ('path_pdf_todas_paginas', '../pdf/vendas/');", "log_path_pdf_todas_paginas", 'Inicialização de local pra gerar os PDFs');
+                
+        //13-09-2019 Incluir tap list        
+        $this->atualizaBanco("ALTER TABLE `preco` ADD `is_tap_list` BOOLEAN NOT NULL DEFAULT FALSE;",
+                "alter_add_tap_list", "Inserido campo tap list em preço");
+
+
         echo 'Atualização do banco encerrada<br>';
         
             }

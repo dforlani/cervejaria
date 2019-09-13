@@ -46,6 +46,7 @@ class ClienteSearch extends Cliente
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+             'sort'=> ['defaultOrder' => ['nome'=>SORT_ASC]]
         ]);
 
         $this->load($params);

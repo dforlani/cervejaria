@@ -119,6 +119,17 @@ use yii\web\View;
 
 
 
+    
+        $('#fechar_venda').click(function () {
+            $('#estado').attr('value', 'paga');
+        });
+        
+        $('#fechar_venda').click(function () {
+            $('#estado').attr('value', 'paga');
+        });
+    
+
+
 </script>
 <div class="preco-form">
 
@@ -126,8 +137,10 @@ use yii\web\View;
 
     <?= $form->errorSummary($model); ?>
 
-    <?= $form->field($model, 'pk_venda')->hiddenInput()->label(false) ?>
+    <?= $form->field($model, 'pk_venda')->hiddenInput(['id'=>'estado'])->label(false) ?>
 
+    <?= $form->field($model, 'estado')->hiddenInput()->label(false) ?>
+    
     <div class="container-fluid">
         <div class="row">
 

@@ -37,25 +37,27 @@ AppAsset::register($this);
                                 ['label' => '', 'template' => '<a href="{url}"  accesskey="b">{icon}<u>B</u>alcão{label}</a>', 'url' => ['/venda/venda'],],
                                 ['label' => '', 'template' => '<a href="{url}"  accesskey="h">{icon}Fol<u>h</u>a de Vendas{label}</a>', 'url' => ['/venda/folha'],],
                                 ['label' => 'Caixa', 'url' => ['/caixa']],
-                                [],
-                                ['label' => 'Todas as Vendas', 'url' => ['/venda']],
-                                //['label' => 'Home', 'url' => ['/site/index']],
+                                ['options'=>['style'=>'background-color:#ddd;margin-top: 0px;']],
+                                
+                                ['label' => 'Todas as Vendas', 'url' => ['/venda']],                                
                                 ['label' => '', 'template' => '<a href="{url}"  accesskey="t">{icon}Clien<u>t</u>es{label}</a>', 'url' => ['/cliente']],
-                                ['label' => 'Comandas', 'url' => ['/comanda']],
-                                //['label' => 'Entrada', 'url' => ['/entrada']],
-                                // ['label' => 'Item Venda', 'url' => ['/item-venda']],
-                                // ['label' => 'Preço', 'url' => ['/preco']],
+                                ['label' => 'Comandas', 'url' => ['/comanda']],                                
                                 ['label' => 'Produtos', 'url' => ['/produto']],
-                                ['label' => 'Unidades de Medida', 'url' => ['/unidade-medida']],
-                                [],
+                                ['label' => 'Unidades de Medida', 'url' => ['/unidade-medida']],                                
+                                ['options'=>['style'=>'background-color:#ddd;margin-top: 0px;']],
+                                
                                 ['label' => 'Relatórios', 'items' => [['label' => 'Vendas', 'url' => ['/relatorio/vendas']]]],
-                                [],
+                                ['options'=>['style'=>'background-color:#ddd;margin-top: 0px;']],
+                                
+                                ['label' => 'Configuracao', 'url' => ['/configuracao']],
+                                ['options'=>['style'=>'background-color:#ddd;margin-top: 0px;']],
+                                
                                 ['label' => '1) Atualizar', 'template' => '<a href="{url}"  target="_blank">{icon}{label}</a>', 'url' => ['/update/atualizar']],
                                 ['label' => '2) Atualizar Banco', 'template' => '<a href="{url}"  target="_blank">{icon}{label}</a>', 'url' => ['/update/atualizar-banco']],
                             ],]
                         );
                         ?>
-
+                        
                     </div>
                     <div class="col-md-10">
                         <div class="panel panel-default">

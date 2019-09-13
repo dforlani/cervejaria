@@ -51,6 +51,7 @@ class Venda extends ActiveRecord {
      */
     public function rules() {
         return [
+            
             [['pk_venda', 'fk_cliente', 'fk_comanda'], 'integer'],
             [['valor_total', 'desconto', 'valor_final', 'valor_pago_debito', 'valor_pago_credito', 'valor_pago_dinheiro'], 'number', 'min' => 0],
             [['valor_total', 'desconto', 'valor_final', 'valor_pago_debito', 'valor_pago_credito', 'valor_pago_dinheiro'], 'default', 'value' => 0],
@@ -117,6 +118,14 @@ class Venda extends ActiveRecord {
                 $lista[$venda->pk_venda] = (!empty($venda->cliente) ? '' . $venda->cliente->nome : '') . ' => ' . (!empty($venda->comanda) ? $venda->comanda->getComandaComDigitoVerificador() : '');
             }
         return $lista;
+    }
+    
+    /**
+     * 
+     * @return type
+     */
+    public function getData_Venda_Formato_Linha(){
+        return Yii::$app->formatter->asDate($this->dt_venda, 'd-m-Y_h-m');
     }
 
     /**

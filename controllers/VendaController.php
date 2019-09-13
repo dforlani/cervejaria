@@ -7,6 +7,7 @@ use app\models\ItemVendaSearch;
 use app\models\Preco;
 use app\models\Venda;
 use app\models\VendaSearch;
+use kartik\mpdf\Pdf;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -100,6 +101,9 @@ class VendaController extends Controller {
      */
     public function actionVenda($id = null) {
 
+        $precoModelItem = new \app\models\PrecoSearch();
+        $tapListProvider = $precoModelItem->search(['PrecoSearch' => ['is_tap_list' => true]]);
+
         if (empty($id)) {
             $model = new Venda();
             $model->estado = 'aberta';
@@ -120,34 +124,21 @@ class VendaController extends Controller {
             $dataProviderItem = $searchModelItem->search(['ItemVendaSearch' => ['fk_venda' => $model->pk_venda]]);
         }
 
-        //salva a venda
+        //cria a nova venda
         if ((!empty(Yii::$app->request->post('Venda'))) && ($model->load(Yii::$app->request->post()))) {
-
-
-            if ((isset($_POST['Venda']['button'])) && $_POST['Venda']['button'] == 'pagar') {
-
-                $model->estado = 'paga';
-                date_default_timezone_set('America/Sao_Paulo');
-                $model->dt_pagamento = date_create()->format('Y-m-d H:i:s');
-                date('Y-m-d H:i:s');
-                $model->save();
-                return $this->redirect(['venda']);
-            } else
-            if ((isset($_POST['Venda']['button'])) && $_POST['Venda']['button'] == 'fiado') {
-                $model->estado = 'fiado';
-                $model->save();
-                return $this->redirect(['venda']);
-            } else if ($model->save()) {
+            if ($model->save()) {
                 return $this->redirect(['venda', 'id' => $model->pk_venda]);
             }
         }
-
+        
         //insere um item
         if (!empty(Yii::$app->request->post('ItemVenda'))) {
             $modelItem->preco_final = $modelItem->preco_unitario * $modelItem->quantidade;
             if ($modelItem->load(Yii::$app->request->post()) && $modelItem->save()) {
                 $model->atualizaValorFinal();
-                return $this->redirect(['venda', 'id' => $model->pk_venda]);
+
+                if (\app\models\Configuracao::isGravasPDF())
+                    $this->gerPDFVenda($model->pk_venda);
             }
         }
 
@@ -156,8 +147,29 @@ class VendaController extends Controller {
                     'model' => $model,
                     'modelItem' => $modelItem,
                     'searchModelItem' => $searchModelItem,
-                    'dataProviderItem' => $dataProviderItem
+                    'dataProviderItem' => $dataProviderItem,
+                    'tapListProvider' => $tapListProvider
         ]);
+    }
+
+    public function actionAdicionaItem($pk_venda, $pk_preco) {
+        $venda = $this->findModel($pk_venda);
+        $preco = $this->findPreco($pk_preco);
+
+        $itemVenda = new ItemVenda();
+        $itemVenda->fk_venda = $venda->pk_venda;
+        $itemVenda->fk_preco = $preco->pk_preco;
+        $itemVenda->quantidade = 1; //sempre virá apenas 1 produto
+        $itemVenda->preco_unitario = $preco->preco;
+        $itemVenda->preco_final = $preco->preco;
+
+        if ($itemVenda->save()) {
+            $venda->atualizaValorFinal();
+
+            if (\app\models\Configuracao::isGravasPDF())
+                $this->gerPDFVenda($model->pk_venda);
+            return $this->redirect(['venda', 'id' => $venda->pk_venda]);
+        }
     }
 
     public function actionBuscaProduto($id) {
@@ -203,17 +215,17 @@ class VendaController extends Controller {
     public function actionPagamento($id) {
 
         $model = $this->findModel($id);
-    
+
 
         if ($model->load(Yii::$app->request->post())) {
-           
-        
+
+
             if ($model->save()) {
 
                 if (Yii::$app->request->isAjax) {
                     // JSON response is expected in case of successful save
                     Yii::$app->response->format = Response::FORMAT_JSON;
-                    return ['success' => true];
+                    return ['success' => true, 'tipo'=>$model->estado,];
                 }
                 return $this->redirect(['venda', 'id' => $model->pk_venda]);
             }
@@ -277,12 +289,77 @@ class VendaController extends Controller {
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
+    protected function findPreco($id) {
+        if (($model = Preco::findOne($id)) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
     protected function findModelItem($id) {
         if (($model = ItemVenda::findOne($id)) !== null) {
             return $model;
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    protected function gerHTMLVenda($pk_venda) {
+        $model = $this->findModel($pk_venda);
+
+        $content = $this->renderPartial('comprovante', [
+            'model' => $model,
+        ]);
+
+        ob_start();
+        echo $content;
+        file_put_contents('yourpage.html', ob_get_contents());
+    }
+
+    /**
+     * Caso o usuário tenha colocado nas configurações pra gerar PDF sobre cada venda, vai gerar e gravar na pasta selecionada
+     * @param type $pk_venda
+     * @return type
+     */
+    protected function gerPDFVenda($pk_venda) {
+        $model = $this->findModel($pk_venda);
+
+        $content = $this->renderPartial('comprovante', [
+            'model' => $model,
+        ]);
+
+
+        $pdf = new Pdf([
+            // set to use core fonts only
+            'mode' => Pdf::MODE_CORE,
+            // A4 paper format
+            'format' => Pdf::FORMAT_A4,
+            // portrait orientation
+            'orientation' => Pdf::ORIENT_PORTRAIT,
+            // stream to browser inline
+            'destination' => Pdf::DEST_FILE,
+            // your html content input
+            'content' => $content,
+            // format content from your own css file if needed or use the
+            // enhanced bootstrap css built by Krajee for mPDF formatting 
+            'cssFile' => '@vendor/kartik-v/yii2-mpdf/src/assets/kv-mpdf-bootstrap.min.css',
+            // any css to be embedded if required
+            'cssInline' => '.kv-heading-1{font-size:18px}',
+            'tempPath' => Yii::getAlias('@web/runtime/mpdf/'),
+            'filename' => '../pdf/vendas/' . @$model->cliente->nome . '-' . $model->getData_Venda_Formato_Linha() . '.pdf',
+            // set mPDF properties on the fly
+            'options' => ['title' => @$model->cliente->nome . ' - ' . $model->dt_venda,
+            ],
+            // call mPDF methods on the fly
+            'methods' => [
+            // 'SetHeader' => ['Krajee Report Header'],
+            // 'SetFooter' => ['{PAGENO}'],
+            ]
+        ]);
+
+        // return the pdf output as per the destination setting
+        return $pdf->render();
     }
 
 }

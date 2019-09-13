@@ -13,7 +13,7 @@ use kartik\number\NumberControl;
 <script>
     console.log('oi');
     var custo_compra_producao = <?= $model->produto->custo_compra_producao ?>;
-    
+
 
     $(document).ready(function () {
         $('#sugestao').click(function () {
@@ -41,6 +41,8 @@ use kartik\number\NumberControl;
 
 
     <?= $form->field($model, 'fk_produto')->hiddenInput()->label(false) ?>
+
+    <?= $form->field($model, 'is_tap_list')->checkbox([1 => 'Sim', 0 => 'Não']) ?>
 
     <?= $form->field($model, 'denominacao')->textInput(['maxlength' => true, 'autofocus' => '']) ?>
 

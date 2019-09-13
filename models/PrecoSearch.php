@@ -9,16 +9,15 @@ use app\models\Preco;
 /**
  * PrecoSearch represents the model behind the search form of `app\models\Preco`.
  */
-class PrecoSearch extends Preco
-{
+class PrecoSearch extends Preco {
+
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['pk_preco', 'fk_produto', 'codigo_barras'], 'integer'],
-            [['denominacao'], 'safe'],
+            [['denominacao', 'is_tap_list'], 'safe'],
             [['preco', 'quantidade'], 'number'],
         ];
     }
@@ -26,8 +25,7 @@ class PrecoSearch extends Preco
     /**
      * {@inheritdoc}
      */
-    public function scenarios()
-    {
+    public function scenarios() {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
@@ -39,8 +37,7 @@ class PrecoSearch extends Preco
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
-    {
+    public function search($params) {
         $query = Preco::find();
 
         // add conditions that should always apply here
@@ -63,11 +60,13 @@ class PrecoSearch extends Preco
             'fk_produto' => $this->fk_produto,
             'preco' => $this->preco,
             'quantidade' => $this->quantidade,
-              'codigo_barras' => $this->codigo_barras,
+            'codigo_barras' => $this->codigo_barras,
+            'is_tap_list' => $this->is_tap_list
         ]);
 
         $query->andFilterWhere(['like', 'denominacao', $this->denominacao]);
 
         return $dataProvider;
     }
+
 }

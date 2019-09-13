@@ -47,9 +47,9 @@ class ItemVenda extends \yii\db\ActiveRecord {
         return [
             'fk_venda' => 'Fk Venda',
             'fk_preco' => 'Fk Preco',
-            'quantidade' => 'Quantidade',
-            'preco_unitario' => 'Preço Unitário',
-            'preco_final' => 'Preço Final',
+            'quantidade' => 'Qtd',
+            'preco_unitario' => 'Pr. Unit.',
+            'preco_final' => 'Pr. Final',
             'dt_inclusao' => 'Inclusão'
         ];
     }

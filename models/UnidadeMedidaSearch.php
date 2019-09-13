@@ -46,6 +46,7 @@ class UnidadeMedidaSearch extends UnidadeMedida
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+             'sort'=> ['defaultOrder' => ['unidade_medida'=>SORT_ASC]]
         ]);
 
         $this->load($params);

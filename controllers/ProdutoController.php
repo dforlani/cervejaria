@@ -78,7 +78,7 @@ class ProdutoController extends Controller {
     }
 
     public function actionGerarPdf() {
-        $precos = Preco::find()->where('is_vendavel IS TRUE AND (dt_vencimento >= CURDATE() OR dt_vencimento IS NULL) AND codigo_barras IS NOT NULL ')->joinWith('produto')->orderBy('nome, denominacao')->all();
+        $precos = Preco::find()->where('is_vendavel IS TRUE AND (dt_vencimento >= CURDATE() OR dt_vencimento IS NULL) AND codigo_barras IS NOT NULL AND codigo_barras != "" ')->joinWith('produto')->orderBy('nome, denominacao')->all();
         $codigos = array();
         
         foreach ($precos as $modelPreco) {

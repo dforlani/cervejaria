@@ -74,8 +74,8 @@ use yii\web\View;
             <?php $form = ActiveForm::begin(); ?>  
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col" style="background-color:lavend er;">  
-                        <br>
+                    <div class="col" style="">  
+                    
                         <?php
                         echo $form->field($modelItem, 'fk_preco')->widget(Select2::classname(), [
                             'data' => Preco::getArrayProdutosPrecos(),
@@ -96,8 +96,8 @@ use yii\web\View;
                 </div>
                 <div class="row">
 
-                    <div class="col-sm-2" style="background-color:lavend er;">  
-                        <br>
+                    <div class="col-sm-2" style="">  
+                   
                         <?=
                         $form->field($modelItem, 'quantidade')->widget(NumberControl::classname(), [
                             'maskedInputOptions' => [
@@ -108,7 +108,7 @@ use yii\web\View;
                         ]);
                         ?>
                     </div>
-                    <div class="col-sm-2" style=""> 
+                    <div class="col-sm-3" style=""> 
                         <?=
                         $form->field($modelItem, 'preco_unitario')->widget(NumberControl::classname(), [
                             'maskedInputOptions' => [
@@ -120,8 +120,8 @@ use yii\web\View;
                         ]);
                         ?>
                     </div>
-                    <div class="col-sm-2" style="background-color:lave nder;">  
-                        <br>
+                    <div class="col-sm-3" style="">  
+                        
                         <?=
                         $form->field($modelItem, 'preco_final')->widget(NumberControl::classname(), [
                             'maskedInputOptions' => [
@@ -133,8 +133,8 @@ use yii\web\View;
                         ]);
                         ?>
                     </div>
-                    <div class="col-sm-2" style="background-color:lave nder;">  
-                        <br><br>
+                    <div class="col-sm-2" style="">  
+                        <br>
                         <?= Html::submitButton('Incluir', ['id' => 'btn_incluir', 'class' => 'btn btn btn-primary']) ?>
                     </div>
                 </div>
@@ -155,8 +155,8 @@ use yii\web\View;
         GridView::widget([
             'dataProvider' => $dataProviderItem,
             'layout' => '{items}{pager}{summary}',
-            'columns' => [
-                //  ['class' => 'yii\grid\SerialColumn'],
+             'options' => ['style' => 'font-size:14px;'],
+            'columns' => [                
                 [
                     'label' => 'Produto',
                     'value' => 'preco.nomeProdutoPlusDenominacao',
