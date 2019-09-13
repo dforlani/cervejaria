@@ -11,7 +11,7 @@ use kartik\number\NumberControl;
 /* @var $form ActiveForm */
 ?>
 <script>
-    console.log('oi');
+    
     var custo_compra_producao = <?= $model->produto->custo_compra_producao ?>;
 
 

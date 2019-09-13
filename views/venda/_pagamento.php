@@ -84,13 +84,13 @@ use yii\web\View;
                 $('#troco').text((0).toLocaleString("pt-BR", {minimumFractionDigits: 2}));
             }
         }
-        
+
         /**
          * Pede confirmação de venda com valor pago menor que o valor final
          * @returns {undefined}
          */
-        $('#fechar_venda').click(function(evt){
-             dinheiro = 0;
+        $('#fechar_venda').click(function (evt) {
+            dinheiro = 0;
             credito = 0;
             debito = 0;
             if ($('#venda-valor_pago_dinheiro').val() != '') {
@@ -104,12 +104,12 @@ use yii\web\View;
             if ($('#venda-valor_pago_debito').val() != '') {
                 debito = parseFloat($('#venda-valor_pago_debito').val());
             }
-            
-            if((dinheiro + debito + credito) < valor_final){
-                if(!confirm('Tem certeza que deseja fechar a venda com valor de pagamento menor que o valor final?')){
+
+            if ((dinheiro + debito + credito) < valor_final) {
+                if (!confirm('Tem certeza que deseja fechar a venda com valor de pagamento menor que o valor final?')) {
                     evt.preventDefault();
                 }
-                    
+
             }
         });
 
@@ -119,15 +119,19 @@ use yii\web\View;
 
 
 
+
+    $('#fechar_venda').click(function () {
+        $('#estado').attr('value', 'paga');
+    });
+
+    $('#bt_fiado').click(function () {
+        $('#estado').attr('value', 'fiado');
+    });
     
-        $('#fechar_venda').click(function () {
-            $('#estado').attr('value', 'paga');
-        });
-        
-        $('#fechar_venda').click(function () {
-            $('#estado').attr('value', 'paga');
-        });
-    
+     $('#bt_salvar_pre_pagamento').click(function () {
+        $('#estado').attr('value', 'aberta');
+    });
+
 
 
 </script>
@@ -137,10 +141,10 @@ use yii\web\View;
 
     <?= $form->errorSummary($model); ?>
 
-    <?= $form->field($model, 'pk_venda')->hiddenInput(['id'=>'estado'])->label(false) ?>
+    <?= $form->field($model, 'pk_venda')->hiddenInput()->label(false) ?>
 
-    <?= $form->field($model, 'estado')->hiddenInput()->label(false) ?>
-    
+    <?= $form->field($model, 'estado')->hiddenInput(['id' => 'estado'])->label(false) ?>
+
     <div class="container-fluid">
         <div class="row">
 
@@ -227,10 +231,10 @@ use yii\web\View;
 
     <div class="form-group">
         <?= Html::submitButton('Fec<u>h</u>ar Venda', ['value' => 'paga', 'accesskey' => "h", 'id' => 'fechar_venda', 'class' => 'btn btn-primary', 'name' => 'Venda[estado]']) ?>
-        <?= Html::submitButton('Salvar P<u>r</u>é-Pagamento', ['accesskey' => "r", 'id' => 'salvar_pre_pagamento', 'class' => 'btn btn-success']) ?>        
-        <?= Html::submitButton(('Fiado'), ['value' => 'fiado', 'class' => 'btn btn-danger', 'value' => 'fiado', 'name' => 'Venda[estado]']) ?>
+        <?= Html::submitButton('Salvar P<u>r</u>é-Pagamento', ['accesskey' => "r", 'id' => 'bt_salvar_pre_pagamento', 'class' => 'btn btn-success']) ?>        
+        <?= Html::submitButton(('Fiado'), ['value' => 'fiado', 'class' => 'btn btn-danger', 'id' => 'bt_fiado', 'name' => 'Venda[estado]']) ?>
     </div>
-    
+
     <?php ActiveForm::end(); ?>
 
 </div>

@@ -58,9 +58,14 @@ use yii\widgets\Pjax;
                     ModalAjax::EVENT_MODAL_SUBMIT => new \yii\web\JsExpression("
             function(event, data, status, xhr, selector) {
                 console.log(status);
-                if(status == 'success'){
-                  
-                   //$(this).modal('toggle');
+                if(status == 'success'){                  
+                   if(data.estado == 'aberta'){
+                    location.reload();
+                   }
+                   else{
+                    window.location.replace('./venda');
+                   }
+                   
                 }
             }
         "),

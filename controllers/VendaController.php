@@ -225,7 +225,7 @@ class VendaController extends Controller {
                 if (Yii::$app->request->isAjax) {
                     // JSON response is expected in case of successful save
                     Yii::$app->response->format = Response::FORMAT_JSON;
-                    return ['success' => true, 'tipo'=>$model->estado,];
+                    return ['success' => true, 'estado'=>$model->estado,];
                 }
                 return $this->redirect(['venda', 'id' => $model->pk_venda]);
             }
