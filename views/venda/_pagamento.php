@@ -22,11 +22,13 @@ use yii\web\View;
         $("input[type='text']").click(function () {
             if ($(this).val() == '0,00')
                 $(this).val('');
+            $(this).select();
         });
         //ao entrar no campo, remove o 0,00
         $("input[type='text']").focus(function () {
             if ($(this).val() == '0,00')
                 $(this).val('');
+            $(this).select();
         });
         //ao sair  do campo, devolve o 0,00
         $("input[type='text']").blur(function () {
@@ -230,9 +232,11 @@ use yii\web\View;
 
 
     <div class="form-group">
-        <?= Html::submitButton('Fec<u>h</u>ar Venda', ['value' => 'paga', 'accesskey' => "h", 'id' => 'fechar_venda', 'class' => 'btn btn-primary', 'name' => 'Venda[estado]']) ?>
-        <?= Html::submitButton('Salvar P<u>r</u>é-Pagamento', ['accesskey' => "r", 'id' => 'bt_salvar_pre_pagamento', 'class' => 'btn btn-success']) ?>        
+        
+        
         <?= Html::submitButton(('Fiado'), ['value' => 'fiado', 'class' => 'btn btn-danger', 'id' => 'bt_fiado', 'name' => 'Venda[estado]']) ?>
+        <?= Html::submitButton('Salvar P<u>r</u>é-Pagamento', ['accesskey' => "r", 'id' => 'bt_salvar_pre_pagamento', 'class' => 'btn btn-success']) ?>        
+        <?= Html::submitButton('Fec<u>h</u>ar Venda', ['value' => 'paga', 'accesskey' => "h", 'id' => 'fechar_venda', 'class' => 'btn btn-primary', 'name' => 'Venda[estado]']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>
