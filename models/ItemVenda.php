@@ -34,7 +34,8 @@ class ItemVenda extends \yii\db\ActiveRecord {
             [['fk_venda', 'fk_preco', 'quantidade'], 'required'],
             [['fk_venda', 'fk_preco'], 'integer'],
             [['dt_inclusao'], 'safe'],
-            [['quantidade', 'preco_unitario', 'preco_final'], 'number'],
+            [['preco_unitario', 'preco_final'], 'number'],
+            [['quantidade'], 'number', 'min' => 1],
             [['fk_venda'], 'exist', 'skipOnError' => true, 'targetClass' => Venda::className(), 'targetAttribute' => ['fk_venda' => 'pk_venda']],
             [['fk_preco'], 'exist', 'skipOnError' => true, 'targetClass' => Preco::className(), 'targetAttribute' => ['fk_preco' => 'pk_preco']],
         ];

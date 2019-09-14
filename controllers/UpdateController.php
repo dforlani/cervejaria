@@ -248,6 +248,10 @@ REFERENCES unidade_medida(pk_unidade_medida)
         //13-09-2019 Incluir tap list        
         $this->atualizaBanco("ALTER TABLE `preco` ADD `is_tap_list` BOOLEAN NOT NULL DEFAULT FALSE;",
                 "alter_add_tap_list", "Inserido campo tap list em preço");
+        
+             //14-09-2019 Incluir pos tap list        
+        $this->atualizaBanco("ALTER TABLE `preco` ADD `pos_tap_list` INTEGER NOT NULL DEFAULT FALSE;",
+                "alter_add_pos_tap_list", "Inserido campo pos tap list em preço");
 
 
         echo 'Atualização do banco encerrada<br>';

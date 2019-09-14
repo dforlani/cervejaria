@@ -14,13 +14,16 @@ use yii\web\View;
 
 <?php
 
-$contador = 0;//vai ser utilizado para inserir teclas de atalho pela posição do item
+
 echo GridView::widget([
     'dataProvider' => $tapListProvider,
     'layout' => '{items}{pager}{summary}',
     'options' => ['style' => 'font-size:14px;'],
     'columns' => [
-        ['class' => 'yii\grid\SerialColumn'],
+         [
+            'label' => '#',
+            'value' => 'pos_tap_list',
+        ],
         [
             'label' => 'Produto',
             'value' => 'nomeProdutoPlusDenominacaoSemBarras',
@@ -36,10 +39,10 @@ echo GridView::widget([
             'headerOptions' => ['style' => 'color:#337ab7'],
             'template' => '{adiciona}',
             'buttons' => [
-                'adiciona' => function($url, $model_preco) use ($model, &$contador) {
-                    $contador++;
+                'adiciona' => function($url, $model_preco) use ($model) {
+                    
                     return Html::a('<span  class="glyphicon glyphicon-plus btn btn-default"></span>', ['adiciona-item', "pk_venda" => $model->pk_venda, 'pk_preco' => $model_preco->pk_preco], [                                                              
-                        'accessKey' => $contador,
+                        'accessKey' => $model_preco->pos_tap_list,
                         'title' => 'Adicionar 1 Produto na Venda',
                         
                                 'data' => [

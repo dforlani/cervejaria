@@ -80,10 +80,11 @@ use yii\web\View;
                 debito = parseFloat($('#venda-valor_pago_debito').val());
             }
 
-            if (dinheiro + credito + debito > 0) {
-                $('#troco').text(((dinheiro + debito + credito) - valor_final).toLocaleString("pt-BR", {minimumFractionDigits: 2}));
+            saldo = dinheiro + credito + debito - valor_final;
+            if (saldo > 0) {
+                $('#troco').text("Troco: " + (saldo).toLocaleString("pt-BR", {minimumFractionDigits: 2}));
             } else {
-                $('#troco').text((0).toLocaleString("pt-BR", {minimumFractionDigits: 2}));
+                $('#troco').text("Faltando: " + (-1 * saldo).toLocaleString("pt-BR", {minimumFractionDigits: 2}));
             }
         }
 
@@ -129,8 +130,8 @@ use yii\web\View;
     $('#bt_fiado').click(function () {
         $('#estado').attr('value', 'fiado');
     });
-    
-     $('#bt_salvar_pre_pagamento').click(function () {
+
+    $('#bt_salvar_pre_pagamento').click(function () {
         $('#estado').attr('value', 'aberta');
     });
 
@@ -139,7 +140,7 @@ use yii\web\View;
 </script>
 <div class="preco-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['id' => 'teste']); ?>
 
     <?= $form->errorSummary($model); ?>
 
@@ -152,6 +153,8 @@ use yii\web\View;
 
             <div class="col-sm-5">
                 <div class="row">
+                      <div class="col-sm-6" style="text-align: right"> 
+                     </div>
                     <div class="col-sm-6" >  
                         <?php
                         echo $form->field($model, 'valor_pago_dinheiro')->widget(NumberControl::classname(), [
@@ -166,6 +169,8 @@ use yii\web\View;
                     </div>
                 </div>
                 <div class="row">
+                      <div class="col-sm-6" style="text-align: right"> 
+                     </div>
                     <div class="col-sm-6" style=";"> 
                         <?php
                         echo $form->field($model, 'valor_pago_debito')->widget(NumberControl::classname(), [
@@ -179,6 +184,8 @@ use yii\web\View;
                     </div>
                 </div>
                 <div class="row">
+                      <div class="col-sm-6" style="text-align: right"> 
+                     </div>
                     <div class="col-sm-6" > 
                         <?php
                         echo $form->field($model, 'valor_pago_credito')->widget(NumberControl::classname(), [
@@ -193,17 +200,19 @@ use yii\web\View;
                 </div>
                 <div class="row">
 
-                    <h1 style="color: red"> Troco: <span id='troco'><?= $model->getTroco() ?></span></h1>
+                    <h1 style="color: red"> <span id='troco'><?= $model->getTroco() ?></span></h1>
 
                 </div>
             </div>
 
             <div class="col-sm-5">
                 <div class="row">
-                    <h2> Valor Total: <span id='troco'><?= Yii::$app->formatter->asCurrency($model->valor_total) ?></span></h2>
+                    <h2> Valor Total: <span id='valor_final'><?= Yii::$app->formatter->asCurrency($model->valor_total) ?></span></h2>
                 </div>
                 <div class="row">
-                    <div class="col-sm-6" > 
+                     <div class="col-sm-6" style="text-align: right"> 
+                     </div>
+                    <div class="col-sm-6" style="text-align: right"> 
                         <?php
                         echo $form->field($model, 'desconto')->widget(NumberControl::classname(), [
                             'maskedInputOptions' => [
@@ -232,8 +241,8 @@ use yii\web\View;
 
 
     <div class="form-group">
-        
-        
+
+
         <?= Html::submitButton(('Fiado'), ['value' => 'fiado', 'class' => 'btn btn-danger', 'id' => 'bt_fiado', 'name' => 'Venda[estado]']) ?>
         <?= Html::submitButton('Salvar P<u>r</u>é-Pagamento', ['accesskey' => "r", 'id' => 'bt_salvar_pre_pagamento', 'class' => 'btn btn-success']) ?>        
         <?= Html::submitButton('Fec<u>h</u>ar Venda', ['value' => 'paga', 'accesskey' => "h", 'id' => 'fechar_venda', 'class' => 'btn btn-primary', 'name' => 'Venda[estado]']) ?>

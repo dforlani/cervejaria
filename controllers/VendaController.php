@@ -101,8 +101,10 @@ class VendaController extends Controller {
      */
     public function actionVenda($id = null) {
 
+
         $precoModelItem = new \app\models\PrecoSearch();
-        $tapListProvider = $precoModelItem->search(['PrecoSearch' => ['is_tap_list' => true]]);
+
+        $tapListProvider = $precoModelItem->search(['PrecoSearch' => ['is_tap_list' => true]], true);
 
         if (empty($id)) {
             $model = new Venda();
@@ -130,7 +132,36 @@ class VendaController extends Controller {
                 return $this->redirect(['venda', 'id' => $model->pk_venda]);
             }
         }
-        
+
+        //insere um item
+//        if (!empty(Yii::$app->request->post('ItemVenda'))) {
+//            $modelItem->preco_final = $modelItem->preco_unitario * $modelItem->quantidade;
+//            if ($modelItem->load(Yii::$app->request->post()) && $modelItem->save()) {
+//                $model->atualizaValorFinal();
+//
+//                if (\app\models\Configuracao::isGravasPDF())
+//                    $this->gerPDFVenda($model->pk_venda);
+//            }
+//        }
+
+
+        return $this->render('venda', [
+                    'model' => $model,
+                    'modelItem' => $modelItem,
+                    'searchModelItem' => $searchModelItem,
+                    'dataProviderItem' => $dataProviderItem,
+                    'tapListProvider' => $tapListProvider
+        ]);
+    }
+
+    public function actionAdicionaItemForm($id = null) {
+
+        $model = $this->findModel($id);
+
+        $modelItem = new ItemVenda();
+        $modelItem->fk_venda = $model->pk_venda;
+        $modelItem->quantidade = 1;
+
         //insere um item
         if (!empty(Yii::$app->request->post('ItemVenda'))) {
             $modelItem->preco_final = $modelItem->preco_unitario * $modelItem->quantidade;
@@ -143,13 +174,7 @@ class VendaController extends Controller {
         }
 
 
-        return $this->render('venda', [
-                    'model' => $model,
-                    'modelItem' => $modelItem,
-                    'searchModelItem' => $searchModelItem,
-                    'dataProviderItem' => $dataProviderItem,
-                    'tapListProvider' => $tapListProvider
-        ]);
+        return $this->redirect(['venda', 'id'=>$id ]);
     }
 
     public function actionAdicionaItem($pk_venda, $pk_preco) {
@@ -167,7 +192,7 @@ class VendaController extends Controller {
             $venda->atualizaValorFinal();
 
             if (\app\models\Configuracao::isGravasPDF())
-                $this->gerPDFVenda($model->pk_venda);
+                $this->gerPDFVenda($venda->pk_venda);
             return $this->redirect(['venda', 'id' => $venda->pk_venda]);
         }
     }
@@ -225,7 +250,7 @@ class VendaController extends Controller {
                 if (Yii::$app->request->isAjax) {
                     // JSON response is expected in case of successful save
                     Yii::$app->response->format = Response::FORMAT_JSON;
-                    return ['success' => true, 'estado'=>$model->estado,];
+                    return ['success' => true, 'estado' => $model->estado,];
                 }
                 return $this->redirect(['venda', 'id' => $model->pk_venda]);
             }

@@ -38,7 +38,8 @@ class Preco extends \yii\db\ActiveRecord {
             [['denominacao'], 'string', 'max' => 100],
             [['codigo_barras'], 'number', 'min' => 100000000001, 'max' => 999999999999],
             [['pk_preco'], 'unique'],
-            [['is_tap_list'], 'safe'],
+            [['pos_tap_list'], 'integer'],
+            [['is_tap_list', ], 'safe'],
             [['codigo_barras'], 'unique'],
             [['fk_produto'], 'exist', 'skipOnError' => true, 'targetClass' => Produto::className(), 'targetAttribute' => ['fk_produto' => 'pk_produto']],
         ];
@@ -75,7 +76,9 @@ class Preco extends \yii\db\ActiveRecord {
             'preco' => 'Preço',
             'quantidade' => 'Quantidade',
             'codigo_barras' => 'Código de Barras',
-            'is_tap_list'=>'Tap List'
+            'is_tap_list'=>'Tap List',
+            'Posição na Tap List'=>'Tap List'
+            
         ];
     }
 

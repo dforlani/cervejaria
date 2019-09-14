@@ -18,11 +18,15 @@ use yii\widgets\Pjax;
                 <span>Valor Total:</span>
                 <span><?php echo Yii::$app->formatter->asCurrency($model->valor_total) ?></span>
             </div>
+
             <div style=";font-size: 20px">                  
                 <span>Valor Pago:</span>
                 <span><?php echo $model->getValorTotalPago() ?></span>
             </div>
-
+            
+            <div style=";font-size: 20px">                              
+                <?= $model->getTroco() ?>
+            </div>
 
             <div style=";font-size: 20px"> 
 
@@ -32,7 +36,7 @@ use yii\widgets\Pjax;
                 <label>Valor Final:</label>
                 <b><span id='valor_final' ><?php echo Yii::$app->formatter->asCurrency($model->valor_final) ?></span></b>
             </div >
-            <?php $form = ActiveForm::begin(); ?>             
+
             <br>
             <?php
             echo ModalAjax::widget([
@@ -64,26 +68,19 @@ use yii\widgets\Pjax;
                    }
                    else{
                     window.location.replace('./venda');
-                   }
-                   
+                   }                   
                 }
             }
         "),
                 ]
             ]);
             ?>
-            <?php
-            Pjax::begin([
-                'id' => 'grid-company-pjax',
-                'timeout' => 5000,
-            ]);
-            Pjax::end();
-            ?>
+
 
             <div type="button" id="bt_comprovante" class="btn btn-warning" value="" accesskey="c" onclick="window.open('comprovante?id=<?= $model->pk_venda ?>', '_blank');"><u>C</u>omprovante</div>
             &nbsp;&nbsp;
 
-            <?php ActiveForm::end(); ?>
+
         </div>
     </div>
 </div>

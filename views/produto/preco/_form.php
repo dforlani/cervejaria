@@ -44,6 +44,8 @@ use kartik\number\NumberControl;
 
     <?= $form->field($model, 'is_tap_list')->checkbox([1 => 'Sim', 0 => 'Não']) ?>
 
+    <?= $form->field($model, 'pos_tap_list')->textInput() ?>
+    
     <?= $form->field($model, 'denominacao')->textInput(['maxlength' => true, 'autofocus' => '']) ?>
 
 

@@ -71,7 +71,7 @@ use yii\web\View;
         <div class="item-venda-form">
 
 
-            <?php $form = ActiveForm::begin(); ?>  
+            <?php $form = ActiveForm::begin(['action'=>['adiciona-item-form',  'id'=>$model->pk_venda]]); ?>  
             <div class="container-fluid">
                 <div class="row">
                     <div class="col" style="">  

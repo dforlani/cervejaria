@@ -37,7 +37,7 @@ class PrecoSearch extends Preco {
      *
      * @return ActiveDataProvider
      */
-    public function search($params) {
+    public function search($params, $is_sort_pos_tap_list = false) {
         $query = Preco::find();
 
         // add conditions that should always apply here
@@ -62,9 +62,13 @@ class PrecoSearch extends Preco {
             'quantidade' => $this->quantidade,
             'codigo_barras' => $this->codigo_barras,
             'is_tap_list' => $this->is_tap_list
-        ]);
+        ]);        
 
         $query->andFilterWhere(['like', 'denominacao', $this->denominacao]);
+        
+        if($is_sort_pos_tap_list){
+            $query->orderBy('pos_tap_list');
+        }
 
         return $dataProvider;
     }
