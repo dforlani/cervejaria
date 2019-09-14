@@ -36,7 +36,7 @@ AppAsset::register($this);
                             'items' => [
                                 ['label' => '', 'template' => '<a href="{url}"  accesskey="b">{icon}<u>B</u>alcão{label}</a>', 'url' => ['/venda/venda'],],
                                 ['label' => '', 'template' => '<a href="{url}"  accesskey="h">{icon}Fol<u>h</u>a de Vendas{label}</a>', 'url' => ['/venda/folha'],],
-                                ['label' => 'Caixa', 'url' => ['/caixa']],
+                                //['label' => 'Caixa', 'url' => ['/caixa']],
                                 ['options'=>['style'=>'background-color:#ddd;margin-top: 0px;']],
                                 
                                 ['label' => 'Todas as Vendas', 'url' => ['/venda']],                                
@@ -49,7 +49,7 @@ AppAsset::register($this);
                                 ['label' => 'Relatórios', 'items' => [['label' => 'Vendas', 'url' => ['/relatorio/vendas']]]],
                                 ['options'=>['style'=>'background-color:#ddd;margin-top: 0px;']],
                                 
-                                ['label' => 'Configuracao', 'url' => ['/configuracao']],
+                                ['label' => 'Configuração', 'url' => ['/configuracao']],
                                 ['options'=>['style'=>'background-color:#ddd;margin-top: 0px;']],
                                 
                                 ['label' => '1) Atualizar', 'template' => '<a href="{url}"  target="_blank">{icon}{label}</a>', 'url' => ['/update/atualizar']],

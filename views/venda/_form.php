@@ -14,7 +14,7 @@ use yii\widgets\Pjax;
     <div class="container-fluid">
         <div class="row" style='text-align: right' >
             <div style=";font-size: 20px">  
-                <label style="font-size: 23px">  <?= (!empty($model->cliente) ? $model->cliente->nome : '') ?></label><br><br>
+                <label style="font-size: 23px">  <?= (!empty($model->cliente) ? $model->cliente->nome : '') ?></label><br>
                 <span>Valor Total:</span>
                 <span><?php echo Yii::$app->formatter->asCurrency($model->valor_total) ?></span>
             </div>

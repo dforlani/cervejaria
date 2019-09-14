@@ -17,12 +17,14 @@ use yii\web\View;
 
 echo GridView::widget([
     'dataProvider' => $tapListProvider,
-    'layout' => '{items}{pager}{summary}',
+    'layout' => '{items}{pager}',
     'options' => ['style' => 'font-size:14px;'],
     'columns' => [
          [
             'label' => '#',
             'value' => 'pos_tap_list',
+             
+              
         ],
         [
             'label' => 'Produto',
@@ -43,8 +45,7 @@ echo GridView::widget([
                     
                     return Html::a('<span  class="glyphicon glyphicon-plus btn btn-default"></span>', ['adiciona-item', "pk_venda" => $model->pk_venda, 'pk_preco' => $model_preco->pk_preco], [                                                              
                         'accessKey' => $model_preco->pos_tap_list,
-                        'title' => 'Adicionar 1 Produto na Venda',
-                        
+                        'title' => 'Adicionar 1 Produto na Venda',                        
                                 'data' => [
                                     'method' => 'post',
                                 ],
@@ -54,3 +55,5 @@ echo GridView::widget([
         ],
     ],
 ]);
+?>
+Use Alt + número em # para adicionar

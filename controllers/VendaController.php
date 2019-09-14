@@ -372,7 +372,7 @@ class VendaController extends Controller {
             // any css to be embedded if required
             'cssInline' => '.kv-heading-1{font-size:18px}',
             'tempPath' => Yii::getAlias('@web/runtime/mpdf/'),
-            'filename' => '../pdf/vendas/' . @$model->cliente->nome . '-' . $model->getData_Venda_Formato_Linha() . '.pdf',
+            'filename' => '../pdf/vendas/' . @$model->cliente->nome . '-'.@$model->comanda->numero . '-' . $model->getData_Venda_Formato_Linha() . '.pdf',
             // set mPDF properties on the fly
             'options' => ['title' => @$model->cliente->nome . ' - ' . $model->dt_venda,
             ],
