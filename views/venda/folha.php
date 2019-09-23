@@ -30,6 +30,8 @@
                 <br>
 
             </div>
+            
+             <?= $venda->getTroco() ?>
            
             <div style='  '>
                 Total:<?= $venda->valor_final ?>

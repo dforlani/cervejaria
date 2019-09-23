@@ -32,7 +32,8 @@
         "kartik-v/yii2-mpdf": "dev-master",
         "kartik-v/yii2-sortable": "dev-master",
         "kartik-v/yii2-widget-switchinput": "dev-master",
-        "kartik-v/yii2-field-range": "dev-master"
+        "kartik-v/yii2-field-range": "dev-master",
+        "kartik-v/yii2-builder": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

@@ -10,6 +10,7 @@ use yii\grid\GridView;
 $this->title = 'Produtos';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+<span class="input-group-addon input-group-append"><span class="input-group-text input-group-btn-vertical"><button class="btn btn-outline-secondary bootstrap-touchspin-up " type="button"><i class="fas fa-sort-up"></i></button><button class="btn btn-outline-secondary bootstrap-touchspin-down " type="button"><i class="fas fa-sort-down"></i></button></span></span>
 <div class="produto-index">
 
     <h1><?= Html::encode($this->title) ?></h1>

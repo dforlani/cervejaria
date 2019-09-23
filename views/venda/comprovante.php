@@ -14,7 +14,7 @@ use yii\widgets\ActiveForm;
 
 </script>
 <div style='width: 150px; margin-left: 20px; font-size:10px'>
-    <?= date('d/m/Y H:i:s', time()); ?><br>
+    <?= Yii::$app->formatter->asDatetime(date('Y-m-d H:i:s')); ?><br>
     <div style='text-align:center; font-size:14px'> Cervejaria Paraíso<div>
 
     Cliente: <?= (!empty($model->cliente) ? $model->cliente->nome : '') ?><br>

@@ -33,7 +33,7 @@ class Cliente extends \yii\db\ActiveRecord {
             [['dt_nascimento'], 'safe'],
             [['nome'], 'string', 'max' => 200],
             [['nome'], 'unique'],            
-            [['telefone'], 'string', 'max' => 10],
+            [['telefone'], 'string', 'max' => 14],
             [['cpf'], 'string', 'max' => 14],
             [['pk_cliente'], 'unique'],
             [['dt_nascimento'], 'default']

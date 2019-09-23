@@ -115,6 +115,9 @@ use yii\web\View;
 
             }
         });
+        
+           //inicia com o campo de valor pago selecionado
+        $('#venda-valor_pago_dinheiro-disp').click();    
 
 
     }
