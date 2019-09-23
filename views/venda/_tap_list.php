@@ -43,7 +43,7 @@ echo GridView::widget([
             'buttons' => [
                 'adiciona' => function($url, $model_preco) use ($model) {
                     
-                    return Html::a('<span  class="glyphicon glyphicon-plus btn btn-default"></span>', ['adiciona-item', "pk_venda" => $model->pk_venda, 'pk_preco' => $model_preco->pk_preco], [                                                              
+                    return Html::a('<span  style="border:1px solid #000; padding: 5px 10px;" class="glyphicon glyphicon-plus "></span>', ['adiciona-item', "pk_venda" => $model->pk_venda, 'pk_preco' => $model_preco->pk_preco], [                                                              
                         'accessKey' => $model_preco->pos_tap_list,
                         'title' => 'Adicionar 1 Produto na Venda',                        
                                 'data' => [

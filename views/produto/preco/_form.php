@@ -11,8 +11,8 @@ use kartik\number\NumberControl;
 /* @var $form ActiveForm */
 ?>
 <script>
-    
-    var custo_compra_producao = <?= $model->produto->custo_compra_producao ?>;
+
+    var custo_compra_producao = <?= !empty($model->produto->custo_compra_producao) ? $model->produto->custo_compra_producao : 0 ?>;
 
 
     $(document).ready(function () {
@@ -23,7 +23,23 @@ use kartik\number\NumberControl;
         $('#preco-quantidade').change(function () {
             calculaCusto();
         });
+
+
+        $("input[name='Preco[is_tap_list]']").click(function (evt) {
+            var valor = $("input[name='Preco[is_tap_list]']:checked").val();
+            showPosTapList(valor);
+        });
     });
+
+
+
+    function showPosTapList(valor) {
+        if (valor == 0) {
+            $('#divPosTapList').hide();
+        } else {
+            $('#divPosTapList').fadeIn();
+        }
+    }
 
     function calculaCusto() {
         if ((Number($('#preco-quantidade').val()))) {
@@ -32,6 +48,10 @@ use kartik\number\NumberControl;
             $('#hlp_preco_custo').text('');
         }
     }
+
+    showPosTapList(<?= !empty($model->is_tap_list) ? $model->is_tap_list : 0 ?>);
+
+
 
 </script>
 <div class="preco-form">
@@ -42,10 +62,10 @@ use kartik\number\NumberControl;
 
     <?= $form->field($model, 'fk_produto')->hiddenInput()->label(false) ?>
 
-    <?= $form->field($model, 'is_tap_list')->checkbox([1 => 'Sim', 0 => 'Não']) ?>
-
-    <?= $form->field($model, 'pos_tap_list')->textInput() ?>
-    
+    <?= $form->field($model, 'is_tap_list')->radioList([1 => 'Sim', 0 => 'Não'], ['id' => 'is_tap_list']) ?>
+    <div id="divPosTapList">
+        <?= $form->field($model, 'pos_tap_list')->textInput() ?>
+    </div>
     <?= $form->field($model, 'denominacao')->textInput(['maxlength' => true, 'autofocus' => '']) ?>
 
 

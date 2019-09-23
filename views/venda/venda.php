@@ -112,20 +112,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             ?>
                     </div>
                     <div class = "col-sm-5" style = "">
-                        <div class='row'>
-                            <div class='panel panel-success'>
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">Pagamento</h3>
-                                </div>
-                                <div class="panel-body" style="">
-                                    <?=
-                                    $this->render('_form', [
-                                        'model' => $model,
-                                    ])
-                                    ?>
-                                </div>
-                            </div>
-                        </div>
+                        
                         <div class='row'>
                             <div class='panel panel-danger' style="background-color:#fbddce; ">                               
 
@@ -136,6 +123,20 @@ $this->params['breadcrumbs'][] = $this->title;
                                     <?=
                                     $this->render('_tap_list', [
                                         'tapListProvider' => $tapListProvider,
+                                        'model' => $model,
+                                    ])
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='panel panel-success'>
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Pagamento</h3>
+                                </div>
+                                <div class="panel-body" style="">
+                                    <?=
+                                    $this->render('_form', [
                                         'model' => $model,
                                     ])
                                     ?>

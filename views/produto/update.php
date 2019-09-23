@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = 'Update';
     <div class="panel-body" style="padding: 5px">
         <div class="venda-create">
             <p>
-                <?php // Html::a('Adicionar Forma de Venda', ['create-preco', 'pk_produto' => $model->pk_produto], ['class' => 'btn btn-warning'])  ?>
+                
                 <?php
                 echo ModalAjax::widget([
                     'id' => 'createCompany',
@@ -74,12 +74,7 @@ $this->params['breadcrumbs'][] = 'Update';
             function(event, data, status, xhr, selector) {
              
                 if(status){
-                     location.reload();
-                    if(selector.data('scenario') == 'hello'){
-                       // alert('hello');
-                    } else {
-                       // alert('goodbye');
-                    }
+                     location.reload();                  
                     $(this).modal('toggle');
                 }
             }
