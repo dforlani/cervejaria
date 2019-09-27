@@ -257,6 +257,10 @@ REFERENCES unidade_medida(pk_unidade_medida)
         $this->atualizaBanco("ALTER TABLE `cliente` CHANGE `telefone` `telefone` CHAR(14) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;",
                 "alter_size_telefone_cliente", "Aumentado tamanho do campo telefone pra 14");
         
+                //17-09-2019 Incluir tap list        
+        $this->atualizaBanco("ALTER TABLE `cliente` CHANGE `pos_tap_list`  `pos_tap_list` INTEGER DEFAULT FALSE;",
+                "alter_size_telefone_cliente", "Aumentado tamanho do campo telefone pra 14");
+        
 
 
         echo 'Atualização do banco encerrada<br>';

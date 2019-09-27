@@ -38,10 +38,10 @@ class Preco extends \yii\db\ActiveRecord {
             [['denominacao'], 'string', 'max' => 100],
             [['codigo_barras'], 'number', 'min' => 100000000001, 'max' => 999999999999],
             [['pk_preco'], 'unique'],
-            [['pos_tap_list'], 'integer'],
+           // [['pos_tap_list'], 'integer'],
             [['is_tap_list',], 'safe'],
             [['codigo_barras'], 'unique'],
-            [['pos_tap_list'], 'validateValorUnicoSeTapList'],
+            //[['pos_tap_list'], 'validateValorUnicoSeTapList'],
             [['fk_produto'], 'exist', 'skipOnError' => true, 'targetClass' => Produto::className(), 'targetAttribute' => ['fk_produto' => 'pk_produto']],
         ];
     }
