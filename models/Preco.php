@@ -48,19 +48,19 @@ class Preco extends \yii\db\ActiveRecord {
 
     public function validateValorUnicoSeTapList($attribute, $params) {
 
-        if ($this->is_tap_list) {
-            if ($this->isNewRecord){
-                $precos = Preco::find()->where('is_tap_list = 1 AND pos_tap_list = ' . $this->pos_tap_list)->all();
-            }
-            else{
-                $precos = Preco::find()->where('is_tap_list = 1 AND pos_tap_list = ' . $this->pos_tap_list . ' AND pk_preco != ' . $this->pk_preco)->all();
-            }
-            if (!empty($precos)) {
-                $this->addError($attribute, 'Posição da Tap List já está sendo utilizada no produto: ' . $precos[0]->produto->nome . ' -> ' . $precos[0]->denominacao);
-            }
-        }else{
-            $this->pos_tap_list = null;
-        }
+//        if ($this->is_tap_list) {
+//            if ($this->isNewRecord){
+//                $precos = Preco::find()->where('is_tap_list = 1 AND pos_tap_list = ' . $this->pos_tap_list)->all();
+//            }
+//            else{
+//                $precos = Preco::find()->where('is_tap_list = 1 AND pos_tap_list = ' . $this->pos_tap_list . ' AND pk_preco != ' . $this->pk_preco)->all();
+//            }
+//            if (!empty($precos)) {
+//                $this->addError($attribute, 'Posição da Tap List já está sendo utilizada no produto: ' . $precos[0]->produto->nome . ' -> ' . $precos[0]->denominacao);
+//            }
+//        }else{
+//            $this->pos_tap_list = null;
+//        }
     }
 
     public static function getArrayProdutosPrecos() {
