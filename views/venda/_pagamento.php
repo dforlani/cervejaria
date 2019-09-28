@@ -115,9 +115,29 @@ use yii\web\View;
 
             }
         });
-        
-           //inicia com o campo de valor pago selecionado
-        $('#venda-valor_pago_dinheiro-disp').click();    
+
+
+        /**
+         * Previne que o form seja submetido ao dar enter e vai para o próximo elemento com tabindex. Já que kartik cria vários elementos escondidos
+         * @param {type} event
+         * @returns {Boolean}
+         */
+        $('input[type=text]').keydown(function (event) {
+
+            event.stopImmediatePropagation();
+            if (event.which == 13)
+            {
+                var tabindex = $(this).attr('tabindex');
+                tabindex++; //increment tabindex
+                //after increment of tabindex ,make the next element focus
+                $('[tabindex=' + tabindex + ']').focus();
+
+                return false; // to cancel out Onenter page postback in asp.net
+            }
+        });
+//        
+        //inicia com o campo de valor pago selecionado
+        $('#venda-valor_pago_dinheiro-disp').click();
 
 
     }
@@ -156,8 +176,8 @@ use yii\web\View;
 
             <div class="col-sm-5">
                 <div class="row">
-                      <div class="col-sm-6" style="text-align: right"> 
-                     </div>
+                    <div class="col-sm-6" style="text-align: right"> 
+                    </div>
                     <div class="col-sm-6" >  
                         <?php
                         echo $form->field($model, 'valor_pago_dinheiro')->widget(NumberControl::classname(), [
@@ -166,14 +186,14 @@ use yii\web\View;
                                 'suffix' => '',
                                 'allowMinus' => false
                             ],
-                            'displayOptions' => ['autofocus' => '',]
+                            'displayOptions' => ['autofocus' => '', 'tabindex' => 1]
                         ]);
                         ?>
                     </div>
                 </div>
                 <div class="row">
-                      <div class="col-sm-6" style="text-align: right"> 
-                     </div>
+                    <div class="col-sm-6" style="text-align: right"> 
+                    </div>
                     <div class="col-sm-6" style=";"> 
                         <?php
                         echo $form->field($model, 'valor_pago_debito')->widget(NumberControl::classname(), [
@@ -182,13 +202,14 @@ use yii\web\View;
                                 'suffix' => '',
                                 'allowMinus' => false
                             ],
+                            'displayOptions' => ['autofocus' => '', 'tabindex' => 2]
                         ]);
                         ?>
                     </div>
                 </div>
                 <div class="row">
-                      <div class="col-sm-6" style="text-align: right"> 
-                     </div>
+                    <div class="col-sm-6" style="text-align: right"> 
+                    </div>
                     <div class="col-sm-6" > 
                         <?php
                         echo $form->field($model, 'valor_pago_credito')->widget(NumberControl::classname(), [
@@ -197,6 +218,7 @@ use yii\web\View;
                                 'suffix' => '',
                                 'allowMinus' => false,
                             ],
+                            'displayOptions' => ['autofocus' => '', 'tabindex' => 3]
                         ]);
                         ?>
                     </div>
@@ -213,8 +235,8 @@ use yii\web\View;
                     <h2> Valor Total: <span id='valor_final'><?= Yii::$app->formatter->asCurrency($model->valor_total) ?></span></h2>
                 </div>
                 <div class="row">
-                     <div class="col-sm-6" style="text-align: right"> 
-                     </div>
+                    <div class="col-sm-6" style="text-align: right"> 
+                    </div>
                     <div class="col-sm-6" style="text-align: right"> 
                         <?php
                         echo $form->field($model, 'desconto')->widget(NumberControl::classname(), [
@@ -223,6 +245,7 @@ use yii\web\View;
                                 'suffix' => '',
                                 'allowMinus' => false
                             ],
+                            'displayOptions' => ['autofocus' => '', 'tabindex' => 4]
                         ]);
                         ?>
                     </div>
@@ -245,10 +268,11 @@ use yii\web\View;
 
     <div class="form-group">
 
+        <?= Html::submitButton('Fec<u>h</u>ar Venda', ['value' => 'paga', 'accesskey' => "h", 'id' => 'fechar_venda', 'class' => 'btn btn-primary', 'name' => 'Venda[estado]', 'tabindex' => 5]) ?>
+        <?= Html::submitButton('Salvar P<u>r</u>é-Pagamento', ['accesskey' => "r", 'id' => 'bt_salvar_pre_pagamento', 'class' => 'btn btn-success', 'tabindex' => 6]) ?>        
+        <?= Html::submitButton(('Fiado'), ['value' => 'fiado', 'class' => 'btn btn-danger', 'id' => 'bt_fiado', 'name' => 'Venda[estado]', 'tabindex' => 7]) ?>
 
-        <?= Html::submitButton(('Fiado'), ['value' => 'fiado', 'class' => 'btn btn-danger', 'id' => 'bt_fiado', 'name' => 'Venda[estado]']) ?>
-        <?= Html::submitButton('Salvar P<u>r</u>é-Pagamento', ['accesskey' => "r", 'id' => 'bt_salvar_pre_pagamento', 'class' => 'btn btn-success']) ?>        
-        <?= Html::submitButton('Fec<u>h</u>ar Venda', ['value' => 'paga', 'accesskey' => "h", 'id' => 'fechar_venda', 'class' => 'btn btn-primary', 'name' => 'Venda[estado]']) ?>
+
     </div>
 
     <?php ActiveForm::end(); ?>
