@@ -262,6 +262,12 @@ REFERENCES unidade_medida(pk_unidade_medida)
                 "alter_pos_tap_list_to_null", "Alterado campo tap list para poder ser NULL");
         
         
+         //02-10-2019 deixar pos_tap_list ser NULL   
+        $this->atualizaBanco(" ALTER TABLE `preco` CHANGE `is_tap_list` `is_tap_list` TINYINT(1) NULL DEFAULT '0';",
+                "alter_is_tap_list_to_null", "Alterado campo is tap list para poder ser NULL");
+       
+        
+        
         
 
 

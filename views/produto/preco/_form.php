@@ -58,18 +58,12 @@ use kartik\number\NumberControl;
 
     <?php $form = ActiveForm::begin(); ?>
 
-
+    <?= $form->errorSummary($model); ?>
 
     <?= $form->field($model, 'fk_produto')->hiddenInput()->label(false) ?>
 
-    <?= $form->field($model, 'is_tap_list')->radioList([1 => 'Sim', 0 => 'Não'], ['id' => 'is_tap_list']) ?>
-    <div id="divPosTapList">
-        <?= $form->field($model, 'pos_tap_list')->textInput() ?>
-    </div>
     <?= $form->field($model, 'denominacao')->textInput(['maxlength' => true, 'autofocus' => '']) ?>
-
-
-
+    
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-4" >  
