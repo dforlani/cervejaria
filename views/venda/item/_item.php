@@ -13,7 +13,6 @@ use yii\web\View;
 
     $(document).ready(function () {
         $('#itemvenda-quantidade-disp').change(function () {
-            console.log('oi');
             calculaValorFinal();
         });
 
@@ -71,11 +70,11 @@ use yii\web\View;
         <div class="item-venda-form">
 
 
-            <?php $form = ActiveForm::begin(['action'=>['adiciona-item-form',  'id'=>$model->pk_venda]]); ?>  
+            <?php $form = ActiveForm::begin(['action' => ['adiciona-item-form', 'id' => $model->pk_venda]]); ?>  
             <div class="container-fluid">
                 <div class="row">
                     <div class="col" style="">  
-                    
+
                         <?php
                         echo $form->field($modelItem, 'fk_preco')->widget(Select2::classname(), [
                             'data' => Preco::getArrayProdutosPrecos(),
@@ -97,7 +96,7 @@ use yii\web\View;
                 <div class="row">
 
                     <div class="col-sm-2" style="">  
-                   
+
                         <?=
                         $form->field($modelItem, 'quantidade')->widget(NumberControl::classname(), [
                             'maskedInputOptions' => [
@@ -121,7 +120,7 @@ use yii\web\View;
                         ?>
                     </div>
                     <div class="col-sm-3" style="">  
-                        
+
                         <?=
                         $form->field($modelItem, 'preco_final')->widget(NumberControl::classname(), [
                             'maskedInputOptions' => [
@@ -155,8 +154,8 @@ use yii\web\View;
         GridView::widget([
             'dataProvider' => $dataProviderItem,
             'layout' => '{items}{pager}{summary}',
-             'options' => ['style' => 'font-size:14px;'],
-            'columns' => [                
+            'options' => ['style' => 'font-size:14px;'],
+            'columns' => [
                 [
                     'label' => 'Produto',
                     'value' => 'preco.nomeProdutoPlusDenominacao',
@@ -207,8 +206,11 @@ use yii\web\View;
 
 <?php
 $this->registerJs(
+        //abre e fecha a tela para que ela fique com o foco
         "$(document).ready(function(){
-       $('#itemvenda-fk_preco').select2('open');
+            
+         //$('#itemvenda-fk_preco').select2('open');         
+         $('#itemvenda-fk_preco').select2('focus');
     });", View::POS_READY, 'my-buttdon-handler'
 );
 ?>

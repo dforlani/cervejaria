@@ -15,6 +15,7 @@ use yii\web\View;
 
 
     $(document).ready(function () {
+         $('#itemvenda-fk_preco').select2('close');
         var valor_total = <?= $model->valor_total ?>;
         var valor_final = <?= $model->valor_final ?>;
         console.log(valor_final);

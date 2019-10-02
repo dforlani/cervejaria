@@ -17,6 +17,15 @@ class MeuFormatador extends Formatter {
 
     private $_intlLoaded = false;
 
+      public function asTime($value, $format = null)
+    {
+        if ($format === null) {
+            $format = $this->timeFormat;
+        }
+
+        return $this->formatDateTimeValue($value, $format, 'time');
+    }
+    
     public function asDatetime($value, $format = null) {
         if ($format === null) {
             $format = $this->datetimeFormat;

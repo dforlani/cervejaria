@@ -17,7 +17,6 @@ $config = [
         '@npm' => '@vendor/npm-asset',
     ],
     'components' => [
-        
         'datecontrol' => [
             'class' => '\kartik\datecontrol\Module'
         ],
@@ -27,7 +26,7 @@ $config = [
             'decimalSeparator' => ',',
             'currencyCode' => '',
             'dateFormat' => 'dd/MM/yyyy',
-           'datetimeFormat' => 'dd/MM/yyyy H:i:s',
+            'datetimeFormat' => 'dd/MM/yyyy H:i:s',
             'timeFormat' => 'H:i:s',
         // 'timeZone' => 'America/Sao_Paulo',
         ],
@@ -94,6 +93,14 @@ $config = [
      */
     ],
     'modules' => [
+        'gridview' => [
+            'class' => '\kartik\grid\Module'
+        // enter optional module parameters below - only if you need to  
+        // use your own export download action or custom translation 
+        // message source
+        // 'downloadAction' => 'gridview/export/download',
+        // 'i18n' => []
+        ],
         'datecontrol' => [
             'class' => 'kartik\datecontrol\Module',
             // format settings for displaying each date attribute (ICU format example)

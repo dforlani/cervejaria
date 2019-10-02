@@ -37,27 +37,24 @@ AppAsset::register($this);
                                 ['label' => '', 'template' => '<a href="{url}"  accesskey="b">{icon}<u>B</u>alcão{label}</a>', 'url' => ['/venda/venda'],],
                                 ['label' => '', 'template' => '<a href="{url}"  accesskey="h">{icon}Fol<u>h</u>a de Vendas{label}</a>', 'url' => ['/venda/folha'],],
                                 //['label' => 'Caixa', 'url' => ['/caixa']],
-                                ['options'=>['style'=>'background-color:#ddd;margin-top: 0px;']],
-                                
-                                ['label' => 'Todas as Vendas', 'url' => ['/venda']],                                
+                                ['label' => 'Tap List', 'url' => ['/produto/tap-list']],
+                                ['options' => ['style' => 'background-color:#ddd;margin-top: 0px;']],
+                                ['label' => 'Todas as Vendas', 'url' => ['/venda']],
                                 ['label' => '', 'template' => '<a href="{url}"  accesskey="t">{icon}Clien<u>t</u>es{label}</a>', 'url' => ['/cliente']],
-                                ['label' => 'Comandas', 'url' => ['/comanda']],                                
+                                ['label' => 'Comandas', 'url' => ['/comanda']],
                                 ['label' => 'Produtos', 'url' => ['/produto']],
-                                ['label' => 'Unidades de Medida', 'url' => ['/unidade-medida']],                                
-                                ['options'=>['style'=>'background-color:#ddd;margin-top: 0px;']],
-                                
+                                ['label' => 'Unidades de Medida', 'url' => ['/unidade-medida']],
+                                ['options' => ['style' => 'background-color:#ddd;margin-top: 0px;']],
                                 ['label' => 'Relatórios', 'items' => [['label' => 'Vendas', 'url' => ['/relatorio/vendas']]]],
-                                ['options'=>['style'=>'background-color:#ddd;margin-top: 0px;']],
-                                
+                                ['options' => ['style' => 'background-color:#ddd;margin-top: 0px;']],
                                 ['label' => 'Configuração', 'url' => ['/configuracao']],
-                                ['options'=>['style'=>'background-color:#ddd;margin-top: 0px;']],
-                                
+                                ['options' => ['style' => 'background-color:#ddd;margin-top: 0px;']],
                                 ['label' => '1) Atualizar', 'template' => '<a href="{url}"  target="_blank">{icon}{label}</a>', 'url' => ['/update/atualizar']],
                                 ['label' => '2) Atualizar Banco', 'template' => '<a href="{url}"  target="_blank">{icon}{label}</a>', 'url' => ['/update/atualizar-banco']],
                             ],]
                         );
                         ?>
-                        
+
                     </div>
                     <div class="col-md-10">
                         <div class="panel panel-default">

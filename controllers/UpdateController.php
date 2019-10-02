@@ -253,13 +253,15 @@ REFERENCES unidade_medida(pk_unidade_medida)
         $this->atualizaBanco("ALTER TABLE `preco` ADD `pos_tap_list` INTEGER NOT NULL DEFAULT FALSE;",
                 "alter_add_pos_tap_list", "Inserido campo pos tap list em preço");
         
-        //17-09-2019 Incluir tap list        
+        //17-09-2019 Aumentar tamanho do campo telefone
         $this->atualizaBanco("ALTER TABLE `cliente` CHANGE `telefone` `telefone` CHAR(14) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;",
                 "alter_size_telefone_cliente", "Aumentado tamanho do campo telefone pra 14");
         
-                //17-09-2019 Incluir tap list        
-        $this->atualizaBanco("ALTER TABLE `cliente` CHANGE `pos_tap_list`  `pos_tap_list` INTEGER DEFAULT FALSE;",
-                "alter_size_telefone_cliente", "Aumentado tamanho do campo telefone pra 14");
+        //17-09-2019 deixar pos_tap_list ser NULL   
+        $this->atualizaBanco("ALTER TABLE `preco` CHANGE `pos_tap_list` `pos_tap_list` INT(11) NULL DEFAULT NULL;",
+                "alter_pos_tap_list_to_null", "Alterado campo tap list para poder ser NULL");
+        
+        
         
 
 

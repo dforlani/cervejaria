@@ -71,6 +71,6 @@ use yii\widgets\ActiveForm;
 <?php
 $this->registerJs(
         "$(document).ready(function(){
-       $('#pk_venda_aberta').select2('open');
+       $('#pk_venda_aberta').select2('focus');
     });", View::POS_READY, 'my-button-handler'
 );

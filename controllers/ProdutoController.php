@@ -9,6 +9,7 @@ use app\models\ProdutoSearch;
 use kartik\mpdf\Pdf;
 use Yii;
 use yii\filters\VerbFilter;
+use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -80,7 +81,7 @@ class ProdutoController extends Controller {
     public function actionGerarPdf() {
         $precos = Preco::find()->where('is_vendavel IS TRUE AND (dt_vencimento >= CURDATE() OR dt_vencimento IS NULL) AND codigo_barras IS NOT NULL AND codigo_barras != "" ')->joinWith('produto')->orderBy('nome, denominacao')->all();
         $codigos = array();
-        
+
         foreach ($precos as $modelPreco) {
             $codigos[] = $this->renderPartial('preco/codigo_barras', ['modelPreco' => $modelPreco]);
         }
@@ -124,7 +125,7 @@ class ProdutoController extends Controller {
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id) {
-        
+
         $model = $this->findModel($id);
 
 
@@ -140,6 +141,63 @@ class ProdutoController extends Controller {
                     'model' => $model,
                     'searchModelPreco' => $searchModelPreco,
                     'dataProviderPreco' => $dataProviderPreco,
+        ]);
+    }
+
+    public function actionTapList() {
+
+        if (!empty($_POST['Preco'])) {
+            //vindo de um pedido de inclusão na tap list
+            if (isset($_POST['Preco']['pk_preco'])) {
+                $model = $this->findModelPreco($_POST['Preco']['pk_preco']);
+
+                //se já estiver na tap list, não vai adicionar novamente
+                if (!$model->is_tap_list) {
+                    $pos = Preco::getMaiorTapList();
+                    if (empty($pos))
+                        $pos = 0;
+
+                    $model->is_tap_list = 1;
+                    $model->pos_tap_list = $pos + 1;
+                }
+            }else
+            if (isset($_POST['editableKey'])) {
+                $model = $this->findModelPreco($_POST['editableKey']);
+
+                $model->pos_tap_list = $_POST['Preco'][$_POST['editableIndex']]['pos_tap_list'];
+                $model->save();
+                $mensagem = '';
+           
+                if(!empty($model->getErrors())){
+                    $mensagem = implode(', ', $model->getErrorSummary(true));
+                }
+                    
+                echo Json::encode(['output' => $model->pos_tap_list, 'message' => $mensagem]);
+                
+                return;
+
+            }
+        } else {
+            $model = new Preco();
+        }
+
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['tap-list']);
+        }
+
+
+
+        $searchModel = new PrecoSearch();
+        if (empty($_GET['sort']))
+            $_GET['sort'] = 'pos_tap_list';
+
+        $dataProvider = $searchModel->search(['PrecoSearch' => ['is_tap_list' => 1],]);
+
+
+        return $this->render('tap_list', [
+                    'model' => $model,
+                    'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -259,6 +317,16 @@ class ProdutoController extends Controller {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionRemoverTapList($id) {
+        $model = $this->findModelPreco($id);
+        $model->is_tap_list = 0;
+        $model->pos_tap_list = null;
+        $model->save();
+
+
+        return $this->redirect(['tap-list']);
     }
 
     /**
