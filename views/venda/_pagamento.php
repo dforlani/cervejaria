@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Configuracao;
 use app\models\Preco;
 use kartik\number\NumberControl;
 use kartik\widgets\ActiveForm;
@@ -15,7 +16,7 @@ use yii\web\View;
 
 
     $(document).ready(function () {
-         $('#itemvenda-fk_preco').select2('close');
+        $('#itemvenda-fk_preco').select2('close');
         var valor_total = <?= $model->valor_total ?>;
         var valor_final = <?= $model->valor_final ?>;
         console.log(valor_final);
@@ -271,7 +272,13 @@ use yii\web\View;
 
         <?= Html::submitButton('Fec<u>h</u>ar Venda', ['value' => 'paga', 'accesskey' => "h", 'id' => 'fechar_venda', 'class' => 'btn btn-primary', 'name' => 'Venda[estado]', 'tabindex' => 5]) ?>
         <?= Html::submitButton('Salvar P<u>r</u>é-Pagamento', ['accesskey' => "r", 'id' => 'bt_salvar_pre_pagamento', 'class' => 'btn btn-success', 'tabindex' => 6]) ?>        
-        <?= Html::submitButton(('Fiado'), ['value' => 'fiado', 'class' => 'btn btn-danger', 'id' => 'bt_fiado', 'name' => 'Venda[estado]', 'tabindex' => 7]) ?>
+        <?php
+        $mostrar = Configuracao::getConfiguracaoByTipo("is_mostrar_botao_fiado");
+  
+        if (!empty($mostrar) && ($mostrar->valor == "1")) {
+            echo Html::submitButton(('Fiado'), ['value' => 'fiado', 'class' => 'btn btn-danger', 'id' => 'bt_fiado', 'name' => 'Venda[estado]', 'tabindex' => 7]);
+        }
+        ?>
 
 
     </div>

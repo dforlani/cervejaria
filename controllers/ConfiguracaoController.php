@@ -42,12 +42,21 @@ class ConfiguracaoController extends Controller {
         //configuracao pra gerar PDF sobre todas as vendas
         $configuracoes['path_pdf_todas_paginas'] = Configuracao::getConfiguracaoByTipo("path_pdf_todas_paginas");
         
+         //configuracao para mostrar ou não o botão de fiado
+        $configuracoes['is_mostrar_botao_fiado'] = Configuracao::getConfiguracaoByTipo("is_mostrar_botao_fiado");
+        
+        
         //solicitação de salvar
         if(!empty(Yii::$app->request->get())){     
             //configurações de pdf_todas_paginas
             $model = $configuracoes['pdf_todas_paginas'];
             $model->valor = Yii::$app->request->get('conf_pdf_todas_paginas', '0');
-            $model->save();            
+            $model->save();       
+            
+             //configurações de pdf_todas_paginas
+            $model = $configuracoes['is_mostrar_botao_fiado'];
+            $model->valor = Yii::$app->request->get('is_mostrar_botao_fiado', '0');
+            $model->save();   
         }
 
         

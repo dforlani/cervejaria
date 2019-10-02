@@ -267,7 +267,8 @@ REFERENCES unidade_medida(pk_unidade_medida)
                 "alter_is_tap_list_to_null", "Alterado campo is tap list para poder ser NULL");
        
         
-        
+        //02-10-2019 Gerar PDF de todas as vendas
+        $this->atualizaBanco("INSERT INTO CONFIGURACAO (tipo, valor) VALUES ('is_mostrar_botao_fiado', '0');", "log_is_mostrar_botao_fiado", 'Inicialização flag para mostrar ou não o botão de fiado');
         
 
 
