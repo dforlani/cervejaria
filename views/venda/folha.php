@@ -9,35 +9,48 @@
 <div class="row" style='margin-left: 10px;  display: table;' >
 
     <?php foreach ($vendas as $venda) { ?>
-    <a href="./venda?id=<?= $venda->pk_venda?>" class="link">
-        <div type="button" class="btn btn-default" style='margin: 5px;text-align: left;min-width: 250px;min-height:250px; '>
-            <div >
-                <b><?= (!empty($venda->cliente) ? $venda->cliente->nome . '<br> ' : '(Sem nome)<br>' ) ?><?= (!empty($venda->comanda) ? $venda->comanda->numero : '(Sem Comanda)' ) ?></b><br><br>
+        <a href="./venda?id=<?= $venda->pk_venda ?>" class="link">
+            <div type="button" class="btn btn-default" style='margin: 5px;text-align: left;min-width: 250px;min-height:250px; '>
+                <div >
+                    <b><?= (!empty($venda->cliente) ? $venda->cliente->nome . '<br> ' : '(Sem nome)<br>' ) ?><?= (!empty($venda->comanda) ? $venda->comanda->numero : '(Sem Comanda)' ) ?></b><br><br>
+                    <?php
+                    //faz a contagem de itens
+                    $itens = [];
+                    foreach ($venda->itensVenda as $item) {
+                        $itens[$item->fk_preco]['nome'] = $item->preco->produto->nome . ' ' . $item->preco->denominacao;
+                        $itens[$item->fk_preco]['qtd'] = (isset($itens[$item->fk_preco]['qtd']) ? $itens[$item->fk_preco]['qtd'] + $item->quantidade : $item->quantidade);
+                    }
+
+                    foreach ($itens as $item) {
+                        ?>
+                        <?= $item['qtd'] . ': ' . $item['nome'] ?><br>
+                    <?php } ?>
+
+
+                    <br>
+
+                </div>
+
+                <div>Valor Pago: <?php echo $venda->getValorTotalPago() ?></div>
+                <div>
                 <?php
-                //faz a contagem de itens
-                $itens = [];
-                foreach ($venda->itensVenda as $item) {
-                    $itens[$item->fk_preco]['nome'] = $item->preco->produto->nome . ' ' . $item->preco->denominacao;
-                    $itens[$item->fk_preco]['qtd'] = (isset($itens[$item->fk_preco]['qtd']) ? $itens[$item->fk_preco]['qtd'] + $item->quantidade : $item->quantidade);
-                }
+                $pagamento = $venda->getTroco();
 
-                foreach ($itens as $item) {
-                    ?>
-                    <?= $item['qtd']. ': '.$item['nome']   ?><br>
-                <?php } ?>
-
-
+                if (strpos($pagamento, "Faltando") !== FALSE)
+                    echo "<b><span style='color:red'> $pagamento</span></b>";
+                else
+                if (strpos($pagamento, "Troco") !== FALSE)
+                    echo "<b><span style='color:blue'> $pagamento</span></b>";
+                else
+                    echo $pagamento;
+                ?>
+                </div>
                 <br>
-
+                <div>
+                    Valor Final: <?= Yii::$app->formatter->asCurrency($venda->valor_final) ?>
+                </div>
             </div>
-            
-             <?= $venda->getTroco() ?>
-           
-            <div style='  '>
-                Total:<?= $venda->valor_final ?>
-            </div>
-        </div>
-    </a>
+        </a>
     <?php } ?>
 
 

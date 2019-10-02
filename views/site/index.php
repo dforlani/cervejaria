@@ -40,7 +40,8 @@
     <ul id="nv122" style="display:">
         <li><b>Tap List:</b> Inclusão de nova tela para organização da Tap List</li>                    
         <li><b>Vendas:</b> Correção da hora da venda dos produtos</li>            
- <li><b>Vendas:</b> Ordenados itens pela data mais nova por padrão</li>                      
+        <li><b>Vendas:</b> Ordenados itens pela data mais nova por padrão</li>                      
+        <li><b>COnfiguração:</b>Colocado nas configurações a opção de mostrar o não o botão de fiado</li>  
     </ul>
 </div>
 

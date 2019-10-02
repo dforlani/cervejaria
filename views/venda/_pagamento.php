@@ -274,7 +274,7 @@ use yii\web\View;
         <?= Html::submitButton('Salvar P<u>r</u>é-Pagamento', ['accesskey' => "r", 'id' => 'bt_salvar_pre_pagamento', 'class' => 'btn btn-success', 'tabindex' => 6]) ?>        
         <?php
         $mostrar = Configuracao::getConfiguracaoByTipo("is_mostrar_botao_fiado");
-  
+
         if (!empty($mostrar) && ($mostrar->valor == "1")) {
             echo Html::submitButton(('Fiado'), ['value' => 'fiado', 'class' => 'btn btn-danger', 'id' => 'bt_fiado', 'name' => 'Venda[estado]', 'tabindex' => 7]);
         }
