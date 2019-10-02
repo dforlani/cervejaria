@@ -39,7 +39,8 @@
     <a href="#" id="v122" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.2.0 (11/09/2019)</a>
     <ul id="nv122" style="display:">
         <li><b>Tap List:</b> Inclusão de nova tela para organização da Tap List</li>                    
-        <li><b>Vendas:</b> Correção da hora da venda dos produtos</li>                    
+        <li><b>Vendas:</b> Correção da hora da venda dos produtos</li>            
+ <li><b>Vendas:</b> Ordenados itens pela data mais nova por padrão</li>                      
     </ul>
 </div>
 

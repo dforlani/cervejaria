@@ -123,6 +123,10 @@ class VendaController extends Controller {
             $modelItem->fk_venda = $model->pk_venda;
             $modelItem->quantidade = 1;
             $searchModelItem = new ItemVendaSearch();
+            //adiciona como padrão o sort invertido para a data de inclusão dos itens
+            if(!isset($_GET['dp-1-sort']))
+                    $_GET['dp-1-sort']='-dt_inclusao';
+                    
             $dataProviderItem = $searchModelItem->search(['ItemVendaSearch' => ['fk_venda' => $model->pk_venda]]);
         }
 
@@ -132,17 +136,6 @@ class VendaController extends Controller {
                 return $this->redirect(['venda', 'id' => $model->pk_venda]);
             }
         }
-
-        //insere um item
-//        if (!empty(Yii::$app->request->post('ItemVenda'))) {
-//            $modelItem->preco_final = $modelItem->preco_unitario * $modelItem->quantidade;
-//            if ($modelItem->load(Yii::$app->request->post()) && $modelItem->save()) {
-//                $model->atualizaValorFinal();
-//
-//                if (\app\models\Configuracao::isGravasPDF())
-//                    $this->gerPDFVenda($model->pk_venda);
-//            }
-//        }
 
 
         return $this->render('venda', [
