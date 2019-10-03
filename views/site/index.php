@@ -36,12 +36,19 @@
 <h2>Notas de versão</h2>
 
 <div class="notasVersaoStyle">
+    <a href="#" id="v123" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.2.0 (11/09/2019)</a>
+    <ul id="nv123" style="display:">
+        <li><b>Backup:</b> Inserido mecanismo de backup das tabelas</li>                            
+    </ul>
+</div>
+
+<div class="notasVersaoStyle">
     <a href="#" id="v122" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.2.0 (11/09/2019)</a>
     <ul id="nv122" style="display:">
         <li><b>Tap List:</b> Inclusão de nova tela para organização da Tap List</li>                    
         <li><b>Vendas:</b> Correção da hora da venda dos produtos</li>            
         <li><b>Vendas:</b> Ordenados itens pela data mais nova por padrão</li>                      
-        <li><b>COnfiguração:</b>Colocado nas configurações a opção de mostrar o não o botão de fiado</li>  
+        <li><b>Configuração:</b>Colocado nas configurações a opção de mostrar o não o botão de fiado</li>  
     </ul>
 </div>
 
