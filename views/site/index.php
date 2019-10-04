@@ -48,7 +48,7 @@
         <li><b>Tap List:</b> Inclusão de nova tela para organização da Tap List</li>                    
         <li><b>Vendas:</b> Correção da hora da venda dos produtos</li>            
         <li><b>Vendas:</b> Ordenados itens pela data mais nova por padrão</li>                      
-        <li><b>Configuração:</b>Colocado nas configurações a opção de mostrar o não o botão de fiado</li>  
+        <li><b>Configuração:</b>Colocado nas configurações a opção de mostrar ou não o botão de fiado</li>  
     </ul>
 </div>
 
