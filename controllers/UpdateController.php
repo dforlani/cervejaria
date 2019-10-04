@@ -228,55 +228,47 @@ REFERENCES unidade_medida(pk_unidade_medida)
     REFERENCES Venda(pk_venda)
     ON UPDATE CASCADE 
     ON DELETE CASCADE);", "create_caixa", 'Tabela Caixa criada com sucesso');
-        
+
         //11-09-2019
-        $this->atualizaBanco("ALTER TABLE `venda` ADD `valor_pago_credito` DECIMAL(10,2) NOT NULL AFTER `valor_total`, ADD `valor_pago_debito` DECIMAL(10,2) NOT NULL AFTER `valor_pago_credito`, ADD `valor_pago_dinheiro` DECIMAL(10,2) NOT NULL AFTER `valor_pago_debito`;",
-                "update_venda_pgtos", "Inserido campos pra diferentes formas de pagamento: credito, debito, dinheiro");
-        
+        $this->atualizaBanco("ALTER TABLE `venda` ADD `valor_pago_credito` DECIMAL(10,2) NOT NULL AFTER `valor_total`, ADD `valor_pago_debito` DECIMAL(10,2) NOT NULL AFTER `valor_pago_credito`, ADD `valor_pago_dinheiro` DECIMAL(10,2) NOT NULL AFTER `valor_pago_debito`;", "update_venda_pgtos", "Inserido campos pra diferentes formas de pagamento: credito, debito, dinheiro");
+
         //12-09-2019 Gerar PDF de todas as vendas
-        $this->atualizaBanco("INSERT INTO CONFIGURACAO (tipo, valor) VALUES ('pdf_todas_paginas', 1);",
-                "log_pdf_todas_paginas", 'Inicialização da configuração para gerar pdf de todas as vendas criada');
-        
+        $this->atualizaBanco("INSERT INTO CONFIGURACAO (tipo, valor) VALUES ('pdf_todas_paginas', 1);", "log_pdf_todas_paginas", 'Inicialização da configuração para gerar pdf de todas as vendas criada');
+
         //12-09-2019 aumentar tamanho das colunas de configuracao
         $this->atualizaBanco("ALTER TABLE `configuracao` CHANGE `tipo` `tipo` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
-        ALTER TABLE `configuracao` CHANGE `valor` `valor` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;",
-                "aumenta_tamanho_colunas_conf", 'Tamanho das colunas de configuração aumentadas');
-        
+        ALTER TABLE `configuracao` CHANGE `valor` `valor` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;", "aumenta_tamanho_colunas_conf", 'Tamanho das colunas de configuração aumentadas');
+
         //12-09-2019 Gerar PDF de todas as vendas
         $this->atualizaBanco("INSERT INTO CONFIGURACAO (tipo, valor) VALUES ('path_pdf_todas_paginas', '../pdf/vendas/');", "log_path_pdf_todas_paginas", 'Inicialização de local pra gerar os PDFs');
-                
+
         //13-09-2019 Incluir tap list        
-        $this->atualizaBanco("ALTER TABLE `preco` ADD `is_tap_list` BOOLEAN NOT NULL DEFAULT FALSE;",
-                "alter_add_tap_list", "Inserido campo tap list em preço");
-        
-             //14-09-2019 Incluir pos tap list        
-        $this->atualizaBanco("ALTER TABLE `preco` ADD `pos_tap_list` INTEGER NOT NULL DEFAULT FALSE;",
-                "alter_add_pos_tap_list", "Inserido campo pos tap list em preço");
-        
+        $this->atualizaBanco("ALTER TABLE `preco` ADD `is_tap_list` BOOLEAN NOT NULL DEFAULT FALSE;", "alter_add_tap_list", "Inserido campo tap list em preço");
+
+        //14-09-2019 Incluir pos tap list        
+        $this->atualizaBanco("ALTER TABLE `preco` ADD `pos_tap_list` INTEGER NOT NULL DEFAULT FALSE;", "alter_add_pos_tap_list", "Inserido campo pos tap list em preço");
+
         //17-09-2019 Aumentar tamanho do campo telefone
-        $this->atualizaBanco("ALTER TABLE `cliente` CHANGE `telefone` `telefone` CHAR(14) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;",
-                "alter_size_telefone_cliente", "Aumentado tamanho do campo telefone pra 14");
-        
+        $this->atualizaBanco("ALTER TABLE `cliente` CHANGE `telefone` `telefone` CHAR(14) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;", "alter_size_telefone_cliente", "Aumentado tamanho do campo telefone pra 14");
+
         //17-09-2019 deixar pos_tap_list ser NULL   
-        $this->atualizaBanco("ALTER TABLE `preco` CHANGE `pos_tap_list` `pos_tap_list` INT(11) NULL DEFAULT NULL;",
-                "alter_pos_tap_list_to_null", "Alterado campo tap list para poder ser NULL");
-        
-        
-         //02-10-2019 deixar pos_tap_list ser NULL   
-        $this->atualizaBanco(" ALTER TABLE `preco` CHANGE `is_tap_list` `is_tap_list` TINYINT(1) NULL DEFAULT '0';",
-                "alter_is_tap_list_to_null", "Alterado campo is tap list para poder ser NULL");
-       
-        
+        $this->atualizaBanco("ALTER TABLE `preco` CHANGE `pos_tap_list` `pos_tap_list` INT(11) NULL DEFAULT NULL;", "alter_pos_tap_list_to_null", "Alterado campo tap list para poder ser NULL");
+
+
+        //02-10-2019 deixar pos_tap_list ser NULL   
+        $this->atualizaBanco(" ALTER TABLE `preco` CHANGE `is_tap_list` `is_tap_list` TINYINT(1) NULL DEFAULT '0';", "alter_is_tap_list_to_null", "Alterado campo is tap list para poder ser NULL");
+
+
         //02-10-2019 Gerar PDF de todas as vendas
         $this->atualizaBanco("INSERT INTO CONFIGURACAO (tipo, valor) VALUES ('is_mostrar_botao_fiado', '0');", "log_is_mostrar_botao_fiado", 'Inicialização flag para mostrar ou não o botão de fiado');
-        
-         
-        
-        
+
+
+
+
         //04-10-2019 Reestruturação da Tabela Caixa
-        //$this->atualizaBanco("INSERT INTO CONFIGURACAO (tipo, valor) VALUES ('is_mostrar_botao_fiado', '0');", "log_is_mostrar_botao_fiado", 'Inicialização flag para mostrar ou não o botão de fiado');
-        /*
-        "CREATE TABLE `caixa` (
+        $this->atualizaBanco("DROP TABLE CAIXA", "drop_table_caixa_reestruturacao", 'Drop Reestruturação da tabela caixa');
+
+        $this->atualizaBanco("CREATE TABLE `caixa` (
   `pk_caixa` int(11) NOT NULL,
   `fk_venda` int(11) DEFAULT NULL,
   `valor_dinheiro` decimal(10,2) DEFAULT NULL,
@@ -299,12 +291,11 @@ ALTER TABLE `caixa`
 
 ALTER TABLE `caixa`
   ADD CONSTRAINT `caixa_ibfk_1` FOREIGN KEY (`fk_venda`) REFERENCES `venda` (`pk_venda`) ON DELETE CASCADE ON UPDATE CASCADE;
-"*/
+", "create_table_caixa_reestruturacao", 'Create Reestruturação da tabela caixa');
 
 
         echo 'Atualização do banco encerrada<br>';
-        
-            }
+    }
 
     public function atualizaBanco($comando, $nome_configuracao, $mensagem) {
         //busca de a tualização do banco já foi inserida
