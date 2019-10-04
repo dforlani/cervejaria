@@ -270,6 +270,36 @@ REFERENCES unidade_medida(pk_unidade_medida)
         //02-10-2019 Gerar PDF de todas as vendas
         $this->atualizaBanco("INSERT INTO CONFIGURACAO (tipo, valor) VALUES ('is_mostrar_botao_fiado', '0');", "log_is_mostrar_botao_fiado", 'Inicialização flag para mostrar ou não o botão de fiado');
         
+         
+        
+        
+        //04-10-2019 Reestruturação da Tabela Caixa
+        //$this->atualizaBanco("INSERT INTO CONFIGURACAO (tipo, valor) VALUES ('is_mostrar_botao_fiado', '0');", "log_is_mostrar_botao_fiado", 'Inicialização flag para mostrar ou não o botão de fiado');
+        /*
+        "CREATE TABLE `caixa` (
+  `pk_caixa` int(11) NOT NULL,
+  `fk_venda` int(11) DEFAULT NULL,
+  `valor_dinheiro` decimal(10,2) DEFAULT NULL,
+  `valor_debito` decimal(10,2) DEFAULT NULL,
+  `valor_credito` decimal(10,2) DEFAULT NULL,
+  `tipo` enum('Abertura de Caixa','Entrada - Recebimento de Pagamento','Saída - Pagamento de Despesa','Sangria') DEFAULT NULL,
+  `observacao` varchar(900) NOT NULL,
+  `dt_movimento` timestamp NOT NULL DEFAULT current_timestamp(),
+  `categoria` enum('Água','Luz','Telefone','Insumos da Fábrica','Produtos pra Venda','Outra') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `caixa`
+  ADD PRIMARY KEY (`pk_caixa`),
+  ADD KEY `fk_venda` (`fk_venda`);
+
+
+ALTER TABLE `caixa`
+  MODIFY `pk_caixa` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+
+ALTER TABLE `caixa`
+  ADD CONSTRAINT `caixa_ibfk_1` FOREIGN KEY (`fk_venda`) REFERENCES `venda` (`pk_venda`) ON DELETE CASCADE ON UPDATE CASCADE;
+"*/
 
 
         echo 'Atualização do banco encerrada<br>';
