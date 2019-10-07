@@ -1,0 +1,13 @@
+git clone git@github.com:dforlani/cervejaria.git
+git clone https://github.com/dforlani/cervejaria.git
+
+git config --global user.email "dforlani@gmail.com"
+
+git add *
+git commit -am "descrição da versão"
+git push origin master
+git push  git@github.com:dforlani/cervejaria.git
+
+git tag v1.4-lw
+git push origin --tags
+git push git@github.com:dforlani/cervejaria.git --tags
