@@ -8,11 +8,11 @@ git commit -am "descrição da versão"
 git push origin master
 git push  git@github.com:dforlani/cervejaria.git
 
+//criar tag
 git tag v1.4-lw
+
+//subir tags pro servidor
 git push origin --tags
 git push git@github.com:dforlani/cervejaria.git --tags
-
-git pull git@github.com:dforlani/cervejaria.git --tags
-
 
 git merge v1.3.1
