@@ -11,3 +11,5 @@ git push  git@github.com:dforlani/cervejaria.git
 git tag v1.4-lw
 git push origin --tags
 git push git@github.com:dforlani/cervejaria.git --tags
+
+git pull git@github.com:dforlani/cervejaria.git --tags
