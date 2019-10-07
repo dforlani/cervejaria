@@ -36,7 +36,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h2>Clique nos botões para alterar a versão em utilização no momento. <br>
         Este procedimento não faz alterações no Banco de Dados. <br>
-        A troca pode ser desfeita a qualquer momento.</h2>
+        Se a troca for para uma versão maior que 1.2.4, ela poderá ser desfeita a qualquer momento.</h2>
+        
 
     <div class="row" style='margin-left: 10px;  display: table;' >
         <a href="./versoes?versao=master" class="link">
