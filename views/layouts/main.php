@@ -52,6 +52,7 @@ AppAsset::register($this);
                                 ['options' => ['style' => 'background-color:#ddd;margin-top: 0px;']],
                                 ['label' => '1) Atualizar', 'template' => '<a href="{url}"  target="_blank">{icon}{label}</a>', 'url' => ['/update/atualizar']],
                                 ['label' => '2) Atualizar Banco', 'template' => '<a href="{url}"  target="_blank">{icon}{label}</a>', 'url' => ['/update/atualizar-banco']],
+                                ['label' => 'Versões', 'template' => '<a href="{url}"  target="_blank">{icon}{label}</a>', 'url' => ['/update/versoes']],
                             ],]
                         );
                         ?>
