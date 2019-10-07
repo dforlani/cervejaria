@@ -1,0 +1,64 @@
+<?php
+
+use app\models\VendaSearch;
+use yii\data\ActiveDataProvider;
+use yii\helpers\Html;
+
+/*
+  <?php
+
+  use yii\helpers\Html;
+  use yii\grid\GridView;
+
+  /* @var $this yii\web\View */
+/* @var $searchModel VendaSearch */
+/* @var $dataProvider ActiveDataProvider */
+
+$this->title = 'Gerenciador de Versões';
+$this->params['breadcrumbs'][] = $this->title;
+?>
+
+<script>
+    $(document).ready(function () {
+        $('a').click(function (e) {     
+                if (!confirm('Deseja realmente alterar a versão?')) {
+                    e.preventDefault();
+                }
+        });
+    });
+
+
+</script>
+
+<div class="venda-index">
+
+    <h1><?= Html::encode($this->title) ?></h1>
+
+    <h2>Clique nos botões para alterar a versão em utilização no momento. <br>
+        Este procedimento não faz alterações no Banco de Dados. <br>
+        A troca pode ser desfeita a qualquer momento.</h2>
+
+    <div class="row" style='margin-left: 10px;  display: table;' >
+        <a href="./versoes?versao=master" class="link">
+            <div type="button" class="btn btn-default" style='margin: 5px;text-align: left;min-width: 25px;min-height:50px; '>
+                <div >
+                    Versão Atual
+                </div>               
+            </div>
+        </a>
+
+        <?php foreach ($versoes as $versao) { ?>
+            <a href="./versoes?versao=<?= $versao ?>" class="link">
+                <div type="button" class="btn btn-default" style='margin: 5px;text-align: left;min-width:  25px;min-height:50px; '>
+                    <div >
+                        <?= $versao ?>
+                    </div>               
+                </div>
+            </a>
+        <?php } ?>
+
+
+
+    </div>
+</div>
+

@@ -27,6 +27,25 @@ class UpdateController extends Controller {
         ];
     }
 
+    public function actionVersoes(){
+    
+        if(isset($_GET['versao'])){
+            shell_exec('git checkout '.$_GET['versao']);
+        }
+        
+        
+        //recebe as informações do GIT e inverte a ordem, para mostrar primeiro os mais atuais
+        $output = nl2br(shell_exec('git tag'));
+        $versoes = array_reverse(explode('<br />', $output));
+ 
+        //remove o primeiro elemento que costuma estar em branco
+        if(trim($versoes[0]) == "")
+            array_shift($versoes);
+ 
+        echo $this->render('versoes', ['versoes'=>$versoes]);
+    }
+    
+    
     public function actionUpdate1() {
         $transaction = Yii::$app->db->beginTransaction();
         try {

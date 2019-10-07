@@ -15,4 +15,9 @@ git tag v1.4-lw
 git push origin --tags
 git push git@github.com:dforlani/cervejaria.git --tags
 
+
+//alterar a versão atual
+git checkout v2.19.0
+
+//merge da versão atual com alguma outra
 git merge v1.3.1
