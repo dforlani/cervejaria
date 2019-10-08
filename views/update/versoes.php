@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <script>
     $(document).ready(function () {
-        $('a').click(function (e) {     
+        $('.btn').click(function (e) {     
                 if (!confirm('Deseja realmente alterar a versão?')) {
                     e.preventDefault();
                 }
@@ -41,25 +41,22 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="row" style='margin-left: 10px;  display: table;' >
         <a href="./versoes?versao=master" class="link">
-            <div type="button" class="btn btn-default" style='margin: 5px;text-align: left;min-width: 25px;min-height:50px; '>
+            <div type="button" class="btn btn-primary" style='margin: 5px;text-align: left;min-width: 25px;min-height:50px; '>
                 <div >
                     Versão Atual
                 </div>               
             </div>
-        </a>
+        </a><br>
 
         <?php foreach ($versoes as $versao) { ?>
             <a href="./versoes?versao=<?= $versao ?>" class="link">
-                <div type="button" class="btn btn-default" style='margin: 5px;text-align: left;min-width:  25px;min-height:50px; '>
+                <div type="button" class="btn btn-success" style='margin: 5px;text-align: left;min-width:  25px;min-height:50px; '>
                     <div >
                         <?= $versao ?>
                     </div>               
                 </div>
-            </a>
+            </a><br>
         <?php } ?>
-
-
-
     </div>
 </div>
 
