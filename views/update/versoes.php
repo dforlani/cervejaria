@@ -1,18 +1,8 @@
 <?php
 
-use app\models\VendaSearch;
-use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
 
-/*
-  <?php
 
-  use yii\helpers\Html;
-  use yii\grid\GridView;
-
-  /* @var $this yii\web\View */
-/* @var $searchModel VendaSearch */
-/* @var $dataProvider ActiveDataProvider */
 
 $this->title = 'Gerenciador de Versões';
 $this->params['breadcrumbs'][] = $this->title;

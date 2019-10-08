@@ -42,7 +42,8 @@ class UpdateController extends Controller {
         if(trim($versoes[0]) == "")
             array_shift($versoes);
  
-        echo $this->render('versoes', ['versoes'=>$versoes]);
+        return $this->render('versoes', ['versoes'=>$versoes]);
+
     }
     
     
