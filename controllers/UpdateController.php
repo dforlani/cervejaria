@@ -41,6 +41,18 @@ class UpdateController extends Controller {
         //remove o primeiro elemento que costuma estar em branco
         if(trim($versoes[0]) == "")
             array_shift($versoes);
+        
+        //remove versões que ainda não tinham o sistema de troca de versões
+        foreach ($versoes as $index=>$versao) {
+            if(strpos($versao, 'v1.2.3.1')){
+                unset ($versoes[$index]);
+            
+            }
+            elseif($versao == 'v1.2.3'){
+                unset ($versoes[$index]);          
+            }
+
+        }
  
         return $this->render('versoes', ['versoes'=>$versoes]);
 
