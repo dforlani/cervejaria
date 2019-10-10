@@ -36,21 +36,21 @@
 <h2>Notas de versão</h2>
 
 <div class="notasVersaoStyle">
-    <a href="#" id="v124" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.2.0 (11/09/2019)</a>
+    <a href="#" id="v124" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.2.4 (11/09/2019)</a>
     <ul id="nv124" style="display:">
-        <li><b>Versões:</b> Inserido mecanismo de backup das tabelas</li>                            
+        <li><b>Versões:</b>  Adicionado mecanismo de alteração de versões</li>                            
     </ul>
 </div>
 
 <div class="notasVersaoStyle">
-    <a href="#" id="v123" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.2.0 (11/09/2019)</a>
+    <a href="#" id="v123" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.2.3 (11/09/2019)</a>
     <ul id="nv123" style="display:">
-        <li><b>Backup:</b> Adicionado mecanismo de alteração de versões</li>                            
+        <li><b>Backup:</b> Inserido mecanismo de backup das tabelas</li>                            
     </ul>
 </div>
 
 <div class="notasVersaoStyle">
-    <a href="#" id="v122" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.2.0 (11/09/2019)</a>
+    <a href="#" id="v122" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.2.2 (11/09/2019)</a>
     <ul id="nv122" style="display:">
         <li><b>Tap List:</b> Inclusão de nova tela para organização da Tap List</li>                    
         <li><b>Vendas:</b> Correção da hora da venda dos produtos</li>            
@@ -60,7 +60,7 @@
 </div>
 
 <div class="notasVersaoStyle">
-    <a href="#" id="v121" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.2.0 (11/09/2019)</a>
+    <a href="#" id="v121" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.2.1 (11/09/2019)</a>
     <ul id="nv121" style="display:none">
         <li><b>Cliente:</b> Aumentado tamanho pra 14 do telefone e adicionado máscara no telefone e cpf</li>                    
     </ul>

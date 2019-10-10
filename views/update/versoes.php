@@ -25,8 +25,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <h2>Clique nos botões para alterar a versão em utilização no momento. <br>
-        Este procedimento não faz alterações no Banco de Dados. <br>
-        Se a troca for para uma versão maior que 1.2.4, ela poderá ser desfeita a qualquer momento.</h2>
+        Este procedimento não faz alterações no Banco de Dados e nem nos dados já cadastrados. <br>
+        A troca poderá ser desfeita a qualquer momento.</h2>
         
 
     <div class="row" style='margin-left: 10px;  display: table;' >
