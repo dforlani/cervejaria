@@ -42,7 +42,7 @@ class CaixaController extends Controller {
         $caixa = null;
         $model = new ItemCaixa(); //item de abertura de caixa
         //fechamento de Caixa        
-        if (isset($_GET['fechar_caixa']) && Caixa::hasCaixaAberto()) {
+        if (isset($_POST['fechar_caixa']) && Caixa::hasCaixaAberto()) {
             $caixa = Caixa::getCaixaAberto();
             $caixa->estado = 'fechado';
             $caixa->dt_fechamento = new \yii\db\Expression('NOW()');
@@ -51,7 +51,7 @@ class CaixaController extends Controller {
 
         //só permite abrir o caixa, se nenhum estiver aberto
         if (isset($_POST['abrir']) && !Caixa::hasCaixaAberto()) {
-            $caixa = new Caixa();
+            $caixa = new Caixa();             
             $caixa->estado = 'aberto';
             if ($caixa->save()) {
                 //cria o primeiro movimento o de abertura de caixa
@@ -182,6 +182,7 @@ class CaixaController extends Controller {
         } else {
             $model = Caixa::findOne($id);
             $model->estado = 'aberto';
+            $model->dt_fechamento = null;
             $model->save();
             return $this->redirect(['/caixa']);
         }

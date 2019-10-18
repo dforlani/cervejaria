@@ -20,7 +20,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
+
     <?php if (!empty($caixa)) { ?>
+        <h3>Abertura:<?= Yii::$app->formatter->asDatetime($caixa->dt_abertura)?></h3>
         <?php
         echo ModalAjax::widget([
             'id' => 'createMovimento',
@@ -36,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'autoClose' => true,
             'pjaxContainer' => '#grid-company-pjax',
         ]);
-        $form = ActiveForm::begin(['method' => 'GET']);
+        $form = ActiveForm::begin(['method' => 'POST']);
         echo Html::submitButton('Fechar Caixa', ['name' => 'fechar_caixa', 'value' => '1', 'class' => 'btn btn-danger', 'style' => 'margin-left:20px']);
         ActiveForm::end();
 
