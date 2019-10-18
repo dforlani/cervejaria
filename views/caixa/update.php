@@ -7,7 +7,7 @@ use yii\helpers\Html;
 
 $this->title = 'Movimento de Caixa';
 $this->params['breadcrumbs'][] = ['label' => 'Caixas', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->pk_caixa, 'url' => ['view', 'id' => $model->pk_caixa]];
+$this->params['breadcrumbs'][] = ['label' => $model->pk_item_caixa, 'url' => ['view', 'id' => $model->pk_item_caixa]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
 <div class="caixa-update">

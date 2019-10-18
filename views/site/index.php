@@ -36,21 +36,29 @@
 <h2>Notas de versão</h2>
 
 <div class="notasVersaoStyle">
-    <a href="#" id="v124" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.2.4 (11/09/2019)</a>
+    <a href="#" id="v130" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.3.0 (10/10/2019)</a>
+    <ul id="nv130" style="display:">
+        <li><b>Caixa:</b>  Adicionada tela de Caixa</li>                            
+        <li><b>Venda:</b>  Adicionada clouna de troca para permitir melhor controle do dinheiro que entra e que sai</li>   
+    </ul>
+</div>
+
+<div class="notasVersaoStyle">
+    <a href="#" id="v124" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.2.4 (07/10/2019)</a>
     <ul id="nv124" style="display:">
         <li><b>Versões:</b>  Adicionado mecanismo de alteração de versões</li>                            
     </ul>
 </div>
 
 <div class="notasVersaoStyle">
-    <a href="#" id="v123" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.2.3 (11/09/2019)</a>
+    <a href="#" id="v123" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.2.3 (05/10/2019)</a>
     <ul id="nv123" style="display:">
         <li><b>Backup:</b> Inserido mecanismo de backup das tabelas</li>                            
     </ul>
 </div>
 
 <div class="notasVersaoStyle">
-    <a href="#" id="v122" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.2.2 (11/09/2019)</a>
+    <a href="#" id="v122" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.2.2 (30/09/2019)</a>
     <ul id="nv122" style="display:">
         <li><b>Tap List:</b> Inclusão de nova tela para organização da Tap List</li>                    
         <li><b>Vendas:</b> Correção da hora da venda dos produtos</li>            

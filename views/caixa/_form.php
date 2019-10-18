@@ -11,13 +11,37 @@ use yii\widgets\ActiveForm;
 /* @var $form ActiveForm */
 ?>
 
+<script>
+    
+    $(document).ready(function () {
+        
+        $('#tipo').change(function () {
+            mostraCategoria($('#tipo :checked').val());
+        });
+
+        mostraCategoria('<?= $model->tipo ?>');
+
+    });
+
+    function mostraCategoria(categoria) {
+        if (categoria == 'Saída - Pagamento de Despesa') {
+            $('#div_categoria').fadeIn();
+        } else {
+            $('#div_categoria').hide();
+        }
+
+    }
+</script>
 <div class="caixa-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
+    <?= $form->errorSummary($model) ?>
+
+    <?= $form->field($model, 'fk_caixa')->hiddenInput()->label(false) ?>
 
     <?php
-    echo $form->field($model, 'valor')->widget(NumberControl::classname(), [
+    echo $form->field($model, 'valor_dinheiro')->widget(NumberControl::classname(), [
         'maskedInputOptions' => [
             'prefix' => 'R$ ',
             'suffix' => '',
@@ -26,7 +50,14 @@ use yii\widgets\ActiveForm;
     ]);
     ?>
 
-    <?= $form->field($model, 'tipo')->radioList(['Abertura de Caixa' => 'Abertura de Caixa', 'Sangria' => 'Sangria'], ['prompt' => '']) ?>
+
+    <?= $form->field($model, 'tipo')->radioList(['Sangria' => 'Sangria', 'Saída - Pagamento de Despesa' => 'Saída - Pagamento de Despesa', $model->getStringAbertura() =>$model->getStringAbertura()], ['prompt' => '', 'id' => 'tipo', 'separator' => '<br>']) ?>
+
+    <div id="div_categoria">
+        <?= $form->field($model, 'categoria')->radioList(['Água' => 'Água', 'Luz' => 'Luz', 'Telefone' => 'Telefone', 'Insumos da Fábrica' => 'Insumos da Fábrica', 'Produtos pra Venda' => 'Produtos pra Venda', 'Outra' => 'Outra'], ['prompt' => 'Selecione a categoria de despesa', 'id' => 'tipo', 'separator' => '<br>']) ?>
+    </div>
+
+    <?= $form->field($model, 'observacao')->textarea() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Salvar', ['class' => 'btn btn-success']) ?>

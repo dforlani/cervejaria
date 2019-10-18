@@ -1,50 +1,51 @@
 <?php
 
-use app\components\Somatorio;
 use app\models\CaixaSearch;
 use lo\widgets\modal\ModalAjax;
 use yii\data\ActiveDataProvider;
-use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\JsExpression;
 use yii\web\View;
-use yii\widgets\Pjax;
+use yii\widgets\ActiveForm;
 
 /* @var $this View */
 /* @var $searchModel CaixaSearch */
 /* @var $dataProvider ActiveDataProvider */
 
-$this->title = 'Caixa';
+$this->title = 'Caixa Aberto';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="caixa-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?php //echo Html::a('Criar Movimento', ['create'], ['class' => 'btn btn-success']) ?>
+    <?php if (!empty($caixa)) { ?>
         <?php
         echo ModalAjax::widget([
-            'id' => 'createCompany',
+            'id' => 'createMovimento',
             'header' => 'Adicionar Movimento',
             'toggleButton' => [
                 'label' => 'Adicionar Movimento',
                 'class' => 'btn btn-primary pull-left'
             ],
-            'url' => Url::to(['create']), // Ajax view with form to load
+            'url' => Url::toRoute(['create', 'fk_caixa' => $caixa->pk_caixa]), // Ajax view with form to load
             'ajaxSubmit' => true, // Submit the contained form as ajax, true by default
             'size' => ModalAjax::SIZE_LARGE,
             'options' => ['class' => 'header-primary'],
             'autoClose' => true,
             'pjaxContainer' => '#grid-company-pjax',
         ]);
+        $form = ActiveForm::begin(['method' => 'GET']);
+        echo Html::submitButton('Fechar Caixa', ['name' => 'fechar_caixa', 'value' => '1', 'class' => 'btn btn-danger', 'style' => 'margin-left:20px']);
+        ActiveForm::end();
+
         echo '<br><br>';
 
 
         echo ModalAjax::widget([
-            'id' => 'updateCompany',
-            'selector' => '.update', // all buttons in grid view with href attribute
+            'id' => 'createMovimento',
+            'selector' => '.update', // all buttons in grid view with .update class
             'options' => ['class' => 'header-primary'],
             'pjaxContainer' => '#grid-company-pjax',
             'events' => [
@@ -86,40 +87,19 @@ $this->params['breadcrumbs'][] = $this->title;
             ]
         ]);
         ?>
-    </p>    
+        <?=
+        $this->render('_item_movimento', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'caixa' => $caixa,
+            'visualizar'=>false
+        ]);
+        ?>
 
-    <?php
-    Pjax::begin([
-        'id' => 'grid-company-pjax',
-        'timeout' => 5000,
-    ]);
-    echo GridView::widget([
-        'dataProvider' => $dataProvider,
-        //'filterModel' => $searchModel,
-        'showFooter' => true,
-        'footerRowOptions' => ['style' => 'font-weight:bold;text-align:right;text-decoration: underline;'],
-        'columns' => [
-            // ['class' => 'yii\grid\SerialColumn'],
-            [
-                'attribute' => 'valor',
-                'format'=>'currency',
-                'footer' => Yii::$app->formatter->asCurrency(Somatorio::getTotal($dataProvider->models, 'valor')),
-                'contentOptions' => ['style' => 'text-align:right'],
-            ],
-            'tipo',
-            ['class' => 'yii\grid\ActionColumn',
-                'template' => '{update} {delete}',
-                'buttons' => [
-                    'update' => function ($url, $model) {
-                        return Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['update', 'id' => $model->pk_caixa], [
-                                    'class' => 'update',
-                                    'title' => 'Atualizar',
-                        ]);
-                    },
-                ],],
-        ],
-    ]);
-    Pjax::end();
+        <?php
+    } else {
+        echo $this->render('_abrir_caixa', ['model' => $model]);
+    }
     ?>
 
 

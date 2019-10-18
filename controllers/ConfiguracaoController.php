@@ -2,13 +2,11 @@
 
 namespace app\controllers;
 
-use app\models\Caixa;
 use app\models\Configuracao;
+use Ifsnop\Mysqldump\Mysqldump;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
-use yii\web\NotFoundHttpException;
-use yii\web\Response;
 
 /**
  * CaixaController implements the CRUD actions for Caixa model.
@@ -65,67 +63,8 @@ class ConfiguracaoController extends Controller {
         ]);
     }
 
-    /**
-     * Updates an existing Caixa model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id) {
-        $model = $this->findModel($id);
+    
 
-        if ($model->load(Yii::$app->request->post())) {
-            if ($model->save()) {
-
-                if (Yii::$app->request->isAjax) {
-                    // JSON response is expected in case of successful save
-                    Yii::$app->response->format = Response::FORMAT_JSON;
-                    return ['success' => true];
-                }
-                return $this->redirect(['index']);
-            }
-        }
-
-
-        if (Yii::$app->request->isAjax) {
-            return $this->renderAjax('update', [
-                        'model' => $model,
-            ]);
-        } else {
-            return $this->render('update', [
-                        'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Deletes an existing Caixa model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id) {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the Caixa model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return Caixa the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id) {
-        if (($model = Caixa::findOne($id)) !== null) {
-            return $model;
-        }
-
-        throw new NotFoundHttpException('The requested page does not exist.');
-    }
 
     
     public function actionBackup() {
@@ -137,7 +76,7 @@ class ConfiguracaoController extends Controller {
           //  use Ifsnop\Mysqldump as IMysqldump;
           
             try {
-                $dump = new \Ifsnop\Mysqldump\Mysqldump('mysql:host=localhost;dbname=fabrica', 'root', '');
+                $dump = new Mysqldump('mysql:host=localhost;dbname=fabrica', 'root', '');
                 $dump->start($pasta);
                  $msg =  "Backup realizado com sucesso na pasta do sistema em $pasta!";
             } catch (\Exception $e) {

@@ -1,7 +1,6 @@
 <?php
 
 use app\models\Produto;
-use kartik\widgets\AlertBlock;
 use lo\widgets\modal\ModalAjax;
 use yii\grid\GridView;
 use yii\helpers\Html;
@@ -41,7 +40,7 @@ $this->params['breadcrumbs'][] = 'Update';
     <div class="panel-body" style="padding: 5px">
         <div class="venda-create">
             <p>
-                
+
                 <?php
                 echo ModalAjax::widget([
                     'id' => 'createCompany',
@@ -60,7 +59,7 @@ $this->params['breadcrumbs'][] = 'Update';
 
 
                 echo ModalAjax::widget([
-                    'id' => 'updateCompany',
+                    'id' => 'createCompany',
                     'selector' => '.update-preco', // all buttons in grid view with href attribute
                     'options' => ['class' => 'header-primary'],
                     'pjaxContainer' => '#grid-company-pjax',
@@ -116,11 +115,9 @@ $this->params['breadcrumbs'][] = 'Update';
                 'filterModel' => $searchModelPreco,
                 'columns' => [
                     ['class' => 'yii\grid\SerialColumn'],
-
                     'denominacao',
                     'preco:currency',
                     'quantidade:currency',
-
                     [
                         'class' => 'yii\grid\ActionColumn',
                         'header' => 'Ações',
@@ -152,7 +149,7 @@ $this->params['breadcrumbs'][] = 'Update';
                 ],
             ]);
             Pjax::end();
-?>
+            ?>
         </div>
     </div>
 </div>

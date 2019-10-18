@@ -27,38 +27,33 @@ class UpdateController extends Controller {
         ];
     }
 
-    public function actionVersoes(){
-    
-        if(isset($_GET['versao'])){
-            shell_exec('git checkout '.$_GET['versao']);
+    public function actionVersoes() {
+
+        if (isset($_GET['versao'])) {
+            shell_exec('git checkout ' . $_GET['versao']);
         }
-        
-        
+
+
         //recebe as informações do GIT e inverte a ordem, para mostrar primeiro os mais atuais
         $output = nl2br(shell_exec('git tag'));
         $versoes = array_reverse(explode('<br />', $output));
- 
+
         //remove o primeiro elemento que costuma estar em branco
-        if(trim($versoes[0]) == "")
+        if (trim($versoes[0]) == "")
             array_shift($versoes);
-        
+
         //remove versões que ainda não tinham o sistema de troca de versões
-        foreach ($versoes as $index=>$versao) {
-            if(strpos($versao, 'v1.2.3.1')){
-                unset ($versoes[$index]);
-            
+        foreach ($versoes as $index => $versao) {
+            if (strpos($versao, 'v1.2.3.1')) {
+                unset($versoes[$index]);
+            } elseif ($versao == 'v1.2.3') {
+                unset($versoes[$index]);
             }
-            elseif($versao == 'v1.2.3'){
-                unset ($versoes[$index]);          
-            }
-
         }
- 
-        return $this->render('versoes', ['versoes'=>$versoes]);
 
+        return $this->render('versoes', ['versoes' => $versoes]);
     }
-    
-    
+
     public function actionUpdate1() {
         $transaction = Yii::$app->db->beginTransaction();
         try {
@@ -326,6 +321,39 @@ ALTER TABLE `caixa`
 ", "create_table_caixa_reestruturacao", 'Create Reestruturação da tabela caixa');
 
 
+        //10-10-2019 Rename da Tabela Caixa Original para item_caixa
+        $this->atualizaBanco("RENAME TABLE `fabrica`.`caixa` TO `fabrica`.`item_caixa`;", "rename_table_caixa_to_item_caixa", 'Renomeada tabela caixa para item caixa');
+
+
+        //10-10-2019 Rename da pk de item_caixa Original para pk_item_caixa
+        $this->atualizaBanco("ALTER TABLE `item_caixa` CHANGE `pk_caixa` `pk_item_caixa` INT(11) NOT NULL AUTO_INCREMENT;", "rename_pk_caixa_to_pk_item_caixa", 'Renomeada atributo pk_caixa to pk_item_caixa');
+
+        //10-10-2019 Add fk_caixa to table caixa
+        $this->atualizaBanco("ALTER TABLE `item_caixa` ADD `fk_caixa` INT NOT NULL AFTER `fk_venda`;", "add_fk_caixa_to_table_caixa", 'Adicionado fk_caixa to tabela item_caixa');
+
+        //10-10-2019 create da tabela caixa
+        $this->atualizaBanco("CREATE TABLE `caixa` (
+  `pk_caixa` int(11) PRIMARY KEY AUTO_INCREMENT,  
+  `dt_abertura` timestamp NOT NULL DEFAULT current_timestamp(),
+  `dt_fechamento` timestamp NULL,
+  `estado` ENUM('aberto','fechado') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;", "create_table_caixa_mae", 'Create tabela caixa mãe');
+
+
+        //10-10-2019 Add restrição de chave estrangeira e fk_caixa to table item_caixa
+        $this->atualizaBanco(" ALTER TABLE `item_caixa`
+            ADD CONSTRAINT `item_caixa_ibfk_18p` FOREIGN KEY (`fk_caixa`) REFERENCES `caixa` (`pk_caixa`) ON DELETE CASCADE ON UPDATE CASCADE;", "add_retrição_fk_caixa_to_table_caixa", 'Adicionado restrição fk_caixa to tabela item_caixa');
+
+        //11-10-2019 Add troco na tela de vendas
+        $this->atualizaBanco("ALTER TABLE `venda` ADD `troco` DECIMAL(10,2) NULL DEFAULT NULL AFTER `valor_pago_dinheiro`;", "add_troco_table_vendas", 'Adicionado coluna de troco na tabela de vendas');
+
+        //11-10-2019 Update tabela venda pra gravar o valor dos trocos
+        $this->atualizaBanco("UPDATE `venda` SET troco = valor_pago_credito + valor_pago_dinheiro + valor_pago_debito + desconto - valor_total;", "update_troco_table_vendas", 'Update coluna de troco na tabela de vendas');
+       
+        //11-10-2019 Update tabela venda pra gravar o valor dos trocos
+        $this->atualizaBanco("ALTER TABLE `item_caixa` CHANGE `categoria` `categoria` ENUM('Água','Luz','Telefone','Insumos da Fábrica','Produtos pra Venda','Outra') CHARACTER SET utf8 COLLATE utf8_general_ci NULL;", "update_categoria_table_caixa_", 'Update coluna de categoria em item_caixa');
+
+
         echo 'Atualização do banco encerrada<br>';
     }
 
@@ -340,6 +368,8 @@ ALTER TABLE `caixa`
                 $conf->tipo = $nome_configuracao;
                 $conf->valor = "Atualização banco";
                 $conf->save();
+                if ($conf->getErrors())
+                    print_r($conf->getErrors());
             } catch (\Exception $e) {
 
                 echo $e->getMessage() . '<br>';

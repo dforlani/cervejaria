@@ -2,9 +2,12 @@
 
 namespace app\controllers;
 
+use app\models\Caixa;
+use app\models\Configuracao;
 use app\models\ItemVenda;
 use app\models\ItemVendaSearch;
 use app\models\Preco;
+use app\models\PrecoSearch;
 use app\models\Venda;
 use app\models\VendaSearch;
 use kartik\mpdf\Pdf;
@@ -84,7 +87,7 @@ class VendaController extends Controller {
 
     public function actionAlteraDesconto($id) {
         $model = $this->findModel($id);
-        \Yii::$app->response->format = Response::FORMAT_JSON;
+        Yii::$app->response->format = Response::FORMAT_JSON;
         $model->load(Yii::$app->request->post());
         $model->valor_final = $model->valor_total - $model->desconto;
         if ($model->save()) {
@@ -100,9 +103,14 @@ class VendaController extends Controller {
      * @return mixed
      */
     public function actionVenda($id = null) {
+        //só vai poder iniciar as vendas se tiver um caixa aberto
+        if (!Caixa::hasCaixaAberto()) {
+            Yii::$app->session->setFlash('warning', "O Caixa não está aberto. Abra o caixa para iniciar as vendas.");
+            return $this->redirect(['/caixa']);
+        }
 
 
-        $precoModelItem = new \app\models\PrecoSearch();
+        $precoModelItem = new PrecoSearch();
 
         $tapListProvider = $precoModelItem->search(['PrecoSearch' => ['is_tap_list' => true]], true);
 
@@ -124,9 +132,9 @@ class VendaController extends Controller {
             $modelItem->quantidade = 1;
             $searchModelItem = new ItemVendaSearch();
             //adiciona como padrão o sort invertido para a data de inclusão dos itens
-            if(!isset($_GET['dp-1-sort']))
-                    $_GET['dp-1-sort']='-dt_inclusao';
-                    
+            if (!isset($_GET['dp-1-sort']))
+                $_GET['dp-1-sort'] = '-dt_inclusao';
+
             $dataProviderItem = $searchModelItem->search(['ItemVendaSearch' => ['fk_venda' => $model->pk_venda]]);
         }
 
@@ -161,13 +169,13 @@ class VendaController extends Controller {
             if ($modelItem->load(Yii::$app->request->post()) && $modelItem->save()) {
                 $model->atualizaValorFinal();
 
-                if (\app\models\Configuracao::isGravasPDF())
+                if (Configuracao::isGravasPDF())
                     $this->gerPDFVenda($model->pk_venda);
             }
         }
 
 
-        return $this->redirect(['venda', 'id'=>$id ]);
+        return $this->redirect(['venda', 'id' => $id]);
     }
 
     public function actionAdicionaItem($pk_venda, $pk_preco) {
@@ -184,14 +192,14 @@ class VendaController extends Controller {
         if ($itemVenda->save()) {
             $venda->atualizaValorFinal();
 
-            if (\app\models\Configuracao::isGravasPDF())
+            if (Configuracao::isGravasPDF())
                 $this->gerPDFVenda($venda->pk_venda);
             return $this->redirect(['venda', 'id' => $venda->pk_venda]);
         }
     }
 
     public function actionBuscaProduto($id) {
-        \Yii::$app->response->format = Response::FORMAT_JSON;
+        Yii::$app->response->format = Response::FORMAT_JSON;
         $preco = Preco::findOne($id);
         if (!empty($preco)) {
             return ['preco' => $preco->preco, 'estoque_atual' => ($preco->produto->estoque_inicial - $preco->produto->estoque_vendido) . ' ' . $preco->produto->unidadeMedida->unidade_medida];
@@ -365,7 +373,7 @@ class VendaController extends Controller {
             // any css to be embedded if required
             'cssInline' => '.kv-heading-1{font-size:18px}',
             'tempPath' => Yii::getAlias('@web/runtime/mpdf/'),
-            'filename' => '../pdf/vendas/' . @$model->cliente->nome . '-'.@$model->comanda->numero . '-' . $model->getData_Venda_Formato_Linha() . '.pdf',
+            'filename' => '../pdf/vendas/' . @$model->cliente->nome . '-' . @$model->comanda->numero . '-' . $model->getData_Venda_Formato_Linha() . '.pdf',
             // set mPDF properties on the fly
             'options' => ['title' => @$model->cliente->nome . ' - ' . $model->dt_venda,
             ],

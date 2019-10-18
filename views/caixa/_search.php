@@ -15,7 +15,8 @@ use yii\widgets\ActiveForm;
         'method' => 'get',
     ]); ?>
 
-    <?= $form->field($model, 'pk_caixa') ?>
+    <?= $form->field($model, 'pk_item_caixa') ?>
+    <?= $form->field($model, 'fk_caixa') ?>
 
     <?= $form->field($model, 'fk_venda') ?>
 

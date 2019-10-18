@@ -36,7 +36,12 @@ AppAsset::register($this);
                             'items' => [
                                 ['label' => '', 'template' => '<a href="{url}"  accesskey="b">{icon}<u>B</u>alcão{label}</a>', 'url' => ['/venda/venda'],],
                                 ['label' => '', 'template' => '<a href="{url}"  accesskey="h">{icon}Fol<u>h</u>a de Vendas{label}</a>', 'url' => ['/venda/folha'],],
-                                //['label' => 'Caixa', 'url' => ['/caixa']],
+                                ['label' => 'Caixa',
+                                    'items' => [
+                                        ['label' => 'Aberto', 'url' => ['/caixa/index']],
+                                        ['label' => 'Fechados', 'url' => ['/caixa/fechados']]
+                                    ]
+                                ],
                                 ['label' => 'Tap List', 'url' => ['/produto/tap-list']],
                                 ['options' => ['style' => 'background-color:#ddd;margin-top: 0px;']],
                                 ['label' => 'Todas as Vendas', 'url' => ['/venda']],

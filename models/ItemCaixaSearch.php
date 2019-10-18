@@ -4,12 +4,12 @@ namespace app\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Caixa;
+use app\models\ItemCaixa;
 
 /**
  * CaixaSearch represents the model behind the search form of `app\models\Caixa`.
  */
-class CaixaSearch extends Caixa
+class ItemCaixaSearch extends ItemCaixa
 {
     /**
      * {@inheritdoc}
@@ -17,8 +17,9 @@ class CaixaSearch extends Caixa
     public function rules()
     {
         return [
-            [['pk_caixa'], 'integer'],
-            [['dt_abertura', 'dt_fechamento', 'estado'], 'safe'],
+            [['fk_caixa', 'pk_item_caixa', 'fk_venda'], 'integer'],
+            [['valor_dinheiro', 'valor_debito', 'valor_credito'], 'number'],
+            [['tipo'], 'safe'],
         ];
     }
 
@@ -40,30 +41,34 @@ class CaixaSearch extends Caixa
      */
     public function search($params)
     {
-        $query = Caixa::find();
+        $query = ItemCaixa::find();
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+             'sort'=> ['defaultOrder' => ['dt_movimento'=>SORT_ASC]],
+             'pagination' => [ 'pageSize' => false ],
         ]);
 
         $this->load($params);
 
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
+        if (!$this->validate()) {            
             return $dataProvider;
         }
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'pk_caixa' => $this->pk_caixa,
-            'dt_abertura' => $this->dt_abertura,
-            'dt_fechamento' => $this->dt_fechamento,
+            'fk_caixa' => $this->fk_caixa,
+            'pk_item_caixa' => $this->pk_item_caixa,
+            'fk_venda' => $this->fk_venda,
+            'valor_debito' => $this->valor_debito,
+            'valor_credito' => $this->valor_credito,
+            'valor_dinheiro' => $this->valor_dinheiro,            
         ]);
+        
 
-        $query->andFilterWhere(['like', 'estado', $this->estado]);
+        $query->andFilterWhere(['like', 'tipo', $this->tipo]);
 
         return $dataProvider;
     }

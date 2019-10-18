@@ -4,6 +4,8 @@ namespace app\controllers;
 
 use app\models\Caixa;
 use app\models\CaixaSearch;
+use app\models\ItemCaixa;
+use app\models\ItemCaixaSearch;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -34,24 +36,60 @@ class CaixaController extends Controller {
      * @return mixed
      */
     public function actionIndex() {
-        $searchModel = new CaixaSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        $searchModel = null;
+        $dataProvider = null;
+        $caixa = null;
+        $model = new ItemCaixa(); //item de abertura de caixa
+        //fechamento de Caixa        
+        if (isset($_GET['fechar_caixa']) && Caixa::hasCaixaAberto()) {
+            $caixa = Caixa::getCaixaAberto();
+            $caixa->estado = 'fechado';
+            $caixa->dt_fechamento = new \yii\db\Expression('NOW()');
+            $caixa->save();
+        }
+
+        //só permite abrir o caixa, se nenhum estiver aberto
+        if (isset($_POST['abrir']) && !Caixa::hasCaixaAberto()) {
+            $caixa = new Caixa();
+            $caixa->estado = 'aberto';
+            if ($caixa->save()) {
+                //cria o primeiro movimento o de abertura de caixa
+                $model->load(Yii::$app->request->post());
+                $model->fk_caixa = $caixa->pk_caixa;
+                $model->tipo = $model->getStringAbertura();
+                if (!$model->save()) {
+                    $caixa->delete();
+                }
+            }
+        } else {
+            $caixa = Caixa::getCaixaAberto();
+        }
+
+        if (!empty($caixa)) {
+            $searchModel = new ItemCaixaSearch();
+            $dataProvider = $searchModel->search(['ItemCaixaSearch' => ['fk_caixa' => $caixa->pk_caixa]]);
+        }
 
         return $this->render('index', [
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,
+                    'caixa' => $caixa,
+                    'model' => $model,
         ]);
     }
 
-    /**
-     * Displays a single Caixa model.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id) {
-        return $this->render('view', [
-                    'model' => $this->findModel($id),
+    public function actionVisualizar($id) {
+        $caixa = Caixa::findOne($id);
+        $searchModel = new ItemCaixaSearch();
+        $dataProvider = $searchModel->search(['ItemCaixaSearch' => ['fk_caixa' => $caixa->pk_caixa]]);
+
+
+
+        return $this->render('visualizar', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'caixa' => $caixa,
         ]);
     }
 
@@ -60,10 +98,12 @@ class CaixaController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate() {
-        $model = new Caixa();
+    public function actionCreate($fk_caixa) {
+        $model = new ItemCaixa();
+        $model->fk_caixa = $fk_caixa;
 
         if ($model->load(Yii::$app->request->post())) {
+
             if ($model->save()) {
                 if (Yii::$app->request->isAjax) {
                     // JSON response is expected in case of successful save
@@ -104,7 +144,7 @@ class CaixaController extends Controller {
                     Yii::$app->response->format = Response::FORMAT_JSON;
                     return ['success' => true];
                 }
-                 return $this->redirect(['index']);
+                return $this->redirect(['index']);
             }
         }
 
@@ -117,6 +157,33 @@ class CaixaController extends Controller {
             return $this->render('update', [
                         'model' => $model,
             ]);
+        }
+    }
+
+    public function actionFechados() {
+        $searchModel = new CaixaSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('fechados', [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
+     * Reabre um caixa se não tiver nenhum aberto
+     * @param type $id
+     * @return type
+     */
+    public function actionReabrir($id) {
+        if (Caixa::hasCaixaAberto()) {
+            Yii::$app->session->setFlash('warning', "Já existe um caixa aberto. Feche o caixa atual para reabrir o solicitado. Só pode haver um Caixa aberto por vez.");
+            return $this->redirect(['fechados']);
+        } else {
+            $model = Caixa::findOne($id);
+            $model->estado = 'aberto';
+            $model->save();
+            return $this->redirect(['/caixa']);
         }
     }
 
@@ -137,10 +204,18 @@ class CaixaController extends Controller {
      * Finds the Caixa model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Caixa the loaded model
+     * @return ItemCaixa the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id) {
+        if (($model = ItemCaixa::findOne($id)) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    protected function findModelCaixa($id) {
         if (($model = Caixa::findOne($id)) !== null) {
             return $model;
         }

@@ -15,6 +15,7 @@ use yii\db\ActiveRecord;
  * @property string $fk_usuario_iniciou_venda
  * @property string $fk_usuario_recebeu_pagamento
  * @property string $valor_total
+ * @property string $troco
  * @property string $desconto
  * @property string $valor_final
  * @property string $valor_pago_credito
@@ -51,10 +52,10 @@ class Venda extends ActiveRecord {
      */
     public function rules() {
         return [
-            
             [['pk_venda', 'fk_cliente', 'fk_comanda'], 'integer'],
-            [['valor_total', 'desconto', 'valor_final', 'valor_pago_debito', 'valor_pago_credito', 'valor_pago_dinheiro'], 'number', 'min' => 0],
-            [['valor_total', 'desconto', 'valor_final', 'valor_pago_debito', 'valor_pago_credito', 'valor_pago_dinheiro'], 'default', 'value' => 0],
+            [['valor_total', 'desconto', 'valor_final', 'valor_pago_debito', 'valor_pago_credito', 'valor_pago_dinheiro', ], 'number', 'min' => 0],
+            [['troco'], 'number', 'min'=>0],
+            [['valor_total', 'desconto', 'valor_final', 'valor_pago_debito', 'valor_pago_credito', 'valor_pago_dinheiro', 'troco'], 'default', 'value' => 0],
             [['estado'], 'string'],
             [['dt_venda', 'dt_pagamento'], 'safe'],
             [['fk_usuario_iniciou_venda', 'fk_usuario_recebeu_pagamento'], 'string', 'max' => 20],
@@ -96,6 +97,10 @@ class Venda extends ActiveRecord {
         return $this->hasMany(ItemVenda::className(), ['fk_venda' => 'pk_venda']);
     }
 
+    public function isPaga() {
+        return $this->estado == 'paga';
+    }
+
     public function atualizaValorFinal() {
         $precos = $this->itensVenda;
         $total = 0;
@@ -119,12 +124,12 @@ class Venda extends ActiveRecord {
             }
         return $lista;
     }
-    
+
     /**
      * 
      * @return type
      */
-    public function getData_Venda_Formato_Linha(){
+    public function getData_Venda_Formato_Linha() {
         return Yii::$app->formatter->asDate($this->dt_venda, 'd-m-Y_h-m');
     }
 
@@ -153,26 +158,79 @@ class Venda extends ActiveRecord {
     /**
      * @return ActiveQuery
      */
+    public function getItemCaixa() {
+        return $this->hasOne(ItemCaixa::className(), ['fk_venda' => 'pk_venda']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
     public function getFkUsuarioRecebeuPagamento() {
         return $this->hasOne(Usuario::className(), ['login' => 'fk_usuario_recebeu_pagamento']);
     }
 
+    public function beforeValidate() {
+        if(is_numeric($this->valor_total) && is_numeric($this->desconto))
+        
+         $this->valor_final = $this->valor_total - $this->desconto;
+         return parent::beforeValidate();
+        
+    }
     public function beforeSave($insert) {
         $this->fk_usuario_iniciou_venda = 'dforlani';
         $this->fk_usuario_recebeu_pagamento = 'dforlani';
 
-        $this->valor_final = $this->valor_total - $this->desconto;
+       
+
+        //inclui ou atualiza um item no caixa
+        if ($this->isPaga()) {
+            $item_caixa = $this->itemCaixa;
+            if (empty($item_caixa)) {
+                $caixa  = Caixa::getCaixaAberto();
+                if(!empty($caixa)){
+                    $item_caixa = new ItemCaixa(['fk_venda' => $this->pk_venda, 'fk_caixa'=>$caixa->pk_caixa]);
+                    
+                }else{
+                    echo 'Errrrrrrrroooooooo: Não foi encontrado nenhum caixa aberto';
+                    exit();
+                }
+            }
+
+            $item_caixa->valor_credito = $this->valor_pago_credito;
+            $item_caixa->valor_debito = $this->valor_pago_debito;
+            $item_caixa->valor_dinheiro = $this->valor_pago_dinheiro - $this->troco;
+
+            $item_caixa->tipo = 'Entrada - Recebimento de Pagamento';
+            $item_caixa->save();
+        } else {
+            //se tiver algo no caixa, é pq trocou o estado, daí remove o item em caixa
+            $item_caixa = $this->itemCaixa;
+            if (!empty($item_caixa)) {
+                $item_caixa->delete();
+            }
+        }
+
 
         return parent::beforeSave($insert);
     }
+
+//    public function beforeDelete() {
+//         //se tiver algo no caixa remove o item em caixa
+//        $caixa = $this->itemCaixa;
+//        if (!empty($caixa)) {
+//            $caixa->delete();
+//        }
+//
+//        parent::beforeDelete();
+//    }
 
     public function getTroco() {
         //só vai ter troco se algo foi pago
         $saldo = $this->valor_pago_credito + $this->valor_pago_dinheiro + $this->valor_pago_debito + $this->desconto - $this->valor_total;
         if ($saldo > 0)
-            return 'Troco: '. Yii::$app->formatter->asCurrency($saldo);
+            return 'Troco: ' . Yii::$app->formatter->asCurrency($saldo);
         else
-             return 'Faltando: '. Yii::$app->formatter->asCurrency(-1*$saldo);
+            return 'Faltando: ' . Yii::$app->formatter->asCurrency(-1 * $saldo);
     }
 
     public function getValorTotalPago() {

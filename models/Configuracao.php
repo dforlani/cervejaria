@@ -26,7 +26,7 @@ class Configuracao extends \yii\db\ActiveRecord {
     public function rules() {
         return [
             [['tipo', 'valor'], 'required'],
-            [['tipo', 'valor'], 'string', 'max' => 30],
+            [['tipo', 'valor'], 'string', 'max' => 100],
         ];
     }
 
