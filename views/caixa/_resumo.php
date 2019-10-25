@@ -47,7 +47,7 @@ foreach ($itens as $item) {
             </span><br>
              <span style=''>
                  
-            <b>Caixa Fechado com Valor em Dinheiro de:</b> <?=  Yii::$app->formatter->asCurrency( $total_abertura +$total_despesa + $total_sangria + $total_dinheiro) ?><br><br>            
+            <b>Caixa com Valor em Dinheiro de:</b> <?=  Yii::$app->formatter->asCurrency( $total_abertura +$total_despesa + $total_sangria + $total_dinheiro) ?><br><br>            
             </span>
         </div>
     </div>

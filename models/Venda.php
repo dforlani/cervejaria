@@ -54,7 +54,7 @@ class Venda extends ActiveRecord {
         return [
             [['pk_venda', 'fk_cliente', 'fk_comanda'], 'integer'],
             [['valor_total', 'desconto', 'valor_final', 'valor_pago_debito', 'valor_pago_credito', 'valor_pago_dinheiro', ], 'number', 'min' => 0],
-            [['troco'], 'number', 'min'=>0],
+            [['troco'], 'number', 'max'=>0],
             [['valor_total', 'desconto', 'valor_final', 'valor_pago_debito', 'valor_pago_credito', 'valor_pago_dinheiro', 'troco'], 'default', 'value' => 0],
             [['estado'], 'string'],
             [['dt_venda', 'dt_pagamento'], 'safe'],
@@ -198,7 +198,7 @@ class Venda extends ActiveRecord {
 
             $item_caixa->valor_credito = $this->valor_pago_credito;
             $item_caixa->valor_debito = $this->valor_pago_debito;
-            $item_caixa->valor_dinheiro = $this->valor_pago_dinheiro - $this->troco;
+            $item_caixa->valor_dinheiro = $this->valor_pago_dinheiro + $this->troco;
 
             $item_caixa->tipo = 'Entrada - Recebimento de Pagamento';
             $item_caixa->save();
@@ -226,7 +226,7 @@ class Venda extends ActiveRecord {
 
     public function getTroco() {
         //só vai ter troco se algo foi pago
-        $saldo = $this->valor_pago_credito + $this->valor_pago_dinheiro + $this->valor_pago_debito + $this->desconto - $this->valor_total;
+        $saldo = $this->valor_total - ($this->valor_pago_credito + $this->valor_pago_dinheiro + $this->valor_pago_debito + $this->desconto) ;
         if ($saldo > 0)
             return 'Troco: ' . Yii::$app->formatter->asCurrency($saldo);
         else

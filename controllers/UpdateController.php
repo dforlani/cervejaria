@@ -347,8 +347,12 @@ ALTER TABLE `caixa`
         //11-10-2019 Add troco na tela de vendas
         $this->atualizaBanco("ALTER TABLE `venda` ADD `troco` DECIMAL(10,2) NULL DEFAULT NULL AFTER `valor_pago_dinheiro`;", "add_troco_table_vendas", 'Adicionado coluna de troco na tabela de vendas');
 
+        //11-10-2019 Update tabela venda pra gravar o valor de pagamento, para as vendas que foram criadas antes de poder adicionar valor de pagamento
+        //pra facilitar, vamos gravar tudo como se tivesse sido pago em dinheiro
+        $this->atualizaBanco("UPDATE `venda` SET valor_pago_dinheiro = valor_final where valor_pago_credito = 0 AND valor_pago_debito = 0 AND valor_pago_credito = 0;", "update_default_valor_pago_dinheiro", 'Update coluna de valor de pagamento, para que o valor em dinheiro seja preenchido nas vendas que estão sem valor de pagamento preenchido');
+        
         //11-10-2019 Update tabela venda pra gravar o valor dos trocos
-        $this->atualizaBanco("UPDATE `venda` SET troco = valor_pago_credito + valor_pago_dinheiro + valor_pago_debito + desconto - valor_total;", "update_troco_table_vendas", 'Update coluna de troco na tabela de vendas');
+        $this->atualizaBanco("UPDATE `venda` SET troco = valor_total - (valor_pago_credito + valor_pago_dinheiro + valor_pago_debito + desconto);", "update_troco_table_vendas", 'Update coluna de troco na tabela de vendas');
        
         //11-10-2019 Update tabela venda pra gravar o valor dos trocos
         $this->atualizaBanco("ALTER TABLE `item_caixa` CHANGE `categoria` `categoria` ENUM('Água','Luz','Telefone','Insumos da Fábrica','Produtos pra Venda','Outra') CHARACTER SET utf8 COLLATE utf8_general_ci NULL;", "update_categoria_table_caixa_", 'Update coluna de categoria em item_caixa');

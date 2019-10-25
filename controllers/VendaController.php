@@ -103,11 +103,7 @@ class VendaController extends Controller {
      * @return mixed
      */
     public function actionVenda($id = null) {
-        //só vai poder iniciar as vendas se tiver um caixa aberto
-        if (!Caixa::hasCaixaAberto()) {
-            Yii::$app->session->setFlash('warning', "O Caixa não está aberto. Abra o caixa para iniciar as vendas.");
-            return $this->redirect(['/caixa']);
-        }
+        
 
 
         $precoModelItem = new PrecoSearch();
@@ -136,6 +132,12 @@ class VendaController extends Controller {
                 $_GET['dp-1-sort'] = '-dt_inclusao';
 
             $dataProviderItem = $searchModelItem->search(['ItemVendaSearch' => ['fk_venda' => $model->pk_venda]]);
+        }
+        
+        //só vai poder iniciar as vendas se tiver um caixa aberto. Caso seja uma venda paga, deixa o usuário entrar pra ver o que foi feito        
+        if (!$model->isPaga() && !Caixa::hasCaixaAberto()) {
+            Yii::$app->session->setFlash('warning', "O Caixa não está aberto. Abra o caixa para iniciar as vendas.");
+            return $this->redirect(['/caixa']);
         }
 
         //cria a nova venda
@@ -222,18 +224,6 @@ class VendaController extends Controller {
         }
 
         return $this->render('update', [
-                    'model' => $model,
-        ]);
-    }
-
-    public function actionPagamento2($id) {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['_pagamento', 'id' => $model->pk_venda]);
-        }
-
-        return $this->render('_pagamento', [
                     'model' => $model,
         ]);
     }

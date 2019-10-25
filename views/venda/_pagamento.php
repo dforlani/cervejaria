@@ -1,8 +1,8 @@
 <?php
 
+use app\models\Caixa;
 use app\models\Configuracao;
 use app\models\Preco;
-use kartik\editable\Editable;
 use kartik\number\NumberControl;
 use kartik\widgets\ActiveForm;
 use yii\helpers\Html;
@@ -52,7 +52,7 @@ use yii\web\View;
                 $('#venda-valor_final').text(valor_total);
             }
         });
-        
+
         $('#venda-valor_pago_dinheiro-disp').change(function () {
             console.log('descontro');
 
@@ -133,7 +133,7 @@ use yii\web\View;
                 debito = parseFloat($('#venda-valor_pago_debito').val());
             }
 
-            saldo = dinheiro + credito + debito - valor_final;
+            saldo = valor_final - (dinheiro + credito + debito);
             console.log(saldo);
             return saldo;
         }
@@ -143,8 +143,8 @@ use yii\web\View;
             atualizaFaltando(getSaldo());
         }
         function atualizaTroco(saldo) {
-            if (saldo > 0) {                
-                $('#troco').text((saldo).toLocaleString("pt-BR", {minimumFractionDigits: 2}));                
+            if (saldo < 0) {
+                $('#troco').text((saldo).toLocaleString("pt-BR", {minimumFractionDigits: 2}));
                 $('#venda-troco-disp').val((saldo).toLocaleString("pt-BR", {minimumFractionDigits: 2}));
                 $('#venda-troco').val((saldo));
             } else {
@@ -155,16 +155,16 @@ use yii\web\View;
         }
 
         function atualizaFaltando(saldo) {
-            if (saldo >= 0) {
+            if (saldo <= 0) {
                 $('#faltando').text((0).toLocaleString("pt-BR", {minimumFractionDigits: 2}));
             } else {
                 $('#faltando').text((-1 * saldo).toLocaleString("pt-BR", {minimumFractionDigits: 2}));
             }
         }
 
-        
+
         atualizaFaltando(getSaldo());
-        
+
         //inicia com o campo de valor pago selecionado
         $('#venda-valor_pago_dinheiro-disp').click();
     }
@@ -254,27 +254,27 @@ use yii\web\View;
                 <div class="row">
 
                     <h1 id='troco_div' style="color: green">
-                       
 
-                        
-                                Troco: <span id='troco'> <?= Yii::$app->formatter->asCurrency($model->troco) ?></span>
-                        
-                               
-                                <span id="troco_input" style="display:none ">
-                                    <?php
-                                    echo $form->field($model, 'troco')->widget(NumberControl::classname(), [
-                                        'maskedInputOptions' => [
-                                            'prefix' => '',
-                                            'suffix' => '',
-                                            'allowMinus' => true
-                                        ],
-                                        'displayOptions' => ['autofocus' => '']
-                                    ])->label(false);
-                                    ?>
-                                </span>
-                            
 
-                
+
+                        Troco: <span id='troco'> <?= Yii::$app->formatter->asCurrency($model->troco) ?></span>
+
+
+                        <span id="troco_input" style="display:none ">
+                            <?php
+                            echo $form->field($model, 'troco')->widget(NumberControl::classname(), [
+                                'maskedInputOptions' => [
+                                    'prefix' => '',
+                                    'suffix' => '',
+                                    'allowMinus' => true
+                                ],
+                                'displayOptions' => ['autofocus' => '']
+                            ])->label(false);
+                            ?>
+                        </span>
+
+
+
 
 
                     </h1>
@@ -317,8 +317,14 @@ use yii\web\View;
 
     <div class="form-group">
 
-        <?= Html::submitButton('Fec<u>h</u>ar Venda', ['value' => 'paga', 'accesskey' => "h", 'id' => 'fechar_venda', 'class' => 'btn btn-primary', 'name' => 'Venda[estado]', 'tabindex' => 5]) ?>
-        <?= Html::submitButton('Salvar P<u>r</u>é-Pagamento', ['accesskey' => "r", 'id' => 'bt_salvar_pre_pagamento', 'class' => 'btn btn-success', 'tabindex' => 6]) ?>        
+        <?php
+        if ($model->isAberto() || Caixa::hasCaixaAberto()) {
+            echo Html::submitButton('Fec<u>h</u>ar Venda', ['value' => 'paga', 'accesskey' => "h", 'id' => 'fechar_venda', 'class' => 'btn btn-primary', 'name' => 'Venda[estado]', 'tabindex' => 5]);
+            echo Html::submitButton('Salvar P<u>r</u>é-Pagamento', ['accesskey' => "r", 'id' => 'bt_salvar_pre_pagamento', 'class' => 'btn btn-success', 'tabindex' => 6]);
+        } else {
+            echo "<h2> Abra o caixa para permitir alterações de pagamento!</h2>";
+        }
+        ?>
         <?php
         $mostrar = Configuracao::getConfiguracaoByTipo("is_mostrar_botao_fiado");
 
