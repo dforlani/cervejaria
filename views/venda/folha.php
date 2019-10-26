@@ -34,7 +34,7 @@
                 <div>Valor Pago: <?php echo $venda->getValorTotalPago() ?></div>
                 <div>
                 <?php
-                $pagamento = $venda->getTroco();
+                $pagamento = $venda->getSaldoFormatedBR();
 
                 if (strpos($pagamento, "Faltando") !== FALSE)
                     echo "<b><span style='color:red'> $pagamento</span></b>";

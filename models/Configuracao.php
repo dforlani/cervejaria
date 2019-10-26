@@ -45,7 +45,7 @@ class Configuracao extends \yii\db\ActiveRecord {
         return Configuracao::find()->where("tipo = '$tipo'")->one();
     }
 
-    public static function isGravasPDF() {
+    public static function isGravarPDF() {
 
         $conf = Configuracao::find()->where("tipo = 'pdf_todas_paginas'")->one();
         if (!empty($conf) && $conf->valor == 1)

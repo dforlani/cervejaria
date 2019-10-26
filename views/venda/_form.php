@@ -75,7 +75,7 @@ use yii\widgets\Pjax;
                             </div>
 
                             <div style=";font-size: 18px;color:red">                              
-                                <?= $model->getTroco() ?>
+                                <?= $model->getSaldoFormatedBR() ?>
                             </div>
 
 

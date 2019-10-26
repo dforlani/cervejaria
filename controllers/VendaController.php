@@ -103,7 +103,7 @@ class VendaController extends Controller {
      * @return mixed
      */
     public function actionVenda($id = null) {
-        
+
 
 
         $precoModelItem = new PrecoSearch();
@@ -133,7 +133,7 @@ class VendaController extends Controller {
 
             $dataProviderItem = $searchModelItem->search(['ItemVendaSearch' => ['fk_venda' => $model->pk_venda]]);
         }
-        
+
         //só vai poder iniciar as vendas se tiver um caixa aberto. Caso seja uma venda paga, deixa o usuário entrar pra ver o que foi feito        
         if (!$model->isPaga() && !Caixa::hasCaixaAberto()) {
             Yii::$app->session->setFlash('warning', "O Caixa não está aberto. Abra o caixa para iniciar as vendas.");
@@ -169,9 +169,10 @@ class VendaController extends Controller {
         if (!empty(Yii::$app->request->post('ItemVenda'))) {
             $modelItem->preco_final = $modelItem->preco_unitario * $modelItem->quantidade;
             if ($modelItem->load(Yii::$app->request->post()) && $modelItem->save()) {
-                $model->atualizaValorFinal();
 
-                if (Configuracao::isGravasPDF())
+                $this->atualizaValoresVenda($model);
+
+                if (Configuracao::isGravarPDF())
                     $this->gerPDFVenda($model->pk_venda);
             }
         }
@@ -190,13 +191,23 @@ class VendaController extends Controller {
         $itemVenda->quantidade = 1; //sempre virá apenas 1 produto
         $itemVenda->preco_unitario = $preco->preco;
         $itemVenda->preco_final = $preco->preco;
+        
 
         if ($itemVenda->save()) {
             $venda->atualizaValorFinal();
+            $venda->save();
 
-            if (Configuracao::isGravasPDF())
+            if (Configuracao::isGravarPDF())
                 $this->gerPDFVenda($venda->pk_venda);
             return $this->redirect(['venda', 'id' => $venda->pk_venda]);
+        }
+    }
+    
+      protected function atualizaValoresVenda($venda) {
+        $venda->atualizaValorFinal();
+        if(!$venda->save()){
+            
+            Yii::$app->session->setFlash('error', "Ocorreu um problema ao tentar atualizar os Valores da venda. ". implode(",", $venda->getErrorSummary(true)));
         }
     }
 
@@ -278,7 +289,8 @@ class VendaController extends Controller {
         $model->delete();
 
         $venda = $this->findModel($fkVenda);
-        $venda->atualizaValorFinal();
+        $this->atualizaValoresVenda($venda);
+
 
         return $this->redirect(['venda', 'id' => $fkVenda]);
     }

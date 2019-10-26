@@ -53,8 +53,8 @@ class Venda extends ActiveRecord {
     public function rules() {
         return [
             [['pk_venda', 'fk_cliente', 'fk_comanda'], 'integer'],
-            [['valor_total', 'desconto', 'valor_final', 'valor_pago_debito', 'valor_pago_credito', 'valor_pago_dinheiro', ], 'number', 'min' => 0],
-            [['troco'], 'number', 'max'=>0],
+            [['valor_total', 'desconto', 'valor_final', 'valor_pago_debito', 'valor_pago_credito', 'valor_pago_dinheiro',], 'number', 'min' => 0],
+            [['troco'], 'number', 'max' => 0],
             [['valor_total', 'desconto', 'valor_final', 'valor_pago_debito', 'valor_pago_credito', 'valor_pago_dinheiro', 'troco'], 'default', 'value' => 0],
             [['estado'], 'string'],
             [['dt_venda', 'dt_pagamento'], 'safe'],
@@ -112,7 +112,9 @@ class Venda extends ActiveRecord {
 
         $this->valor_total = $total;
         $this->valor_final = $total - $this->desconto;
-        $this->save();
+
+        $this->troco = $this->getTroco();
+     
     }
 
     public static function getArrayVendasEmAberto() {
@@ -170,27 +172,25 @@ class Venda extends ActiveRecord {
     }
 
     public function beforeValidate() {
-        if(is_numeric($this->valor_total) && is_numeric($this->desconto))
-        
-         $this->valor_final = $this->valor_total - $this->desconto;
-         return parent::beforeValidate();
-        
+        if (is_numeric($this->valor_total) && is_numeric($this->desconto))
+            $this->valor_final = $this->valor_total - $this->desconto;
+        return parent::beforeValidate();
     }
+
     public function beforeSave($insert) {
         $this->fk_usuario_iniciou_venda = 'dforlani';
         $this->fk_usuario_recebeu_pagamento = 'dforlani';
 
-       
+
 
         //inclui ou atualiza um item no caixa
         if ($this->isPaga()) {
             $item_caixa = $this->itemCaixa;
             if (empty($item_caixa)) {
-                $caixa  = Caixa::getCaixaAberto();
-                if(!empty($caixa)){
-                    $item_caixa = new ItemCaixa(['fk_venda' => $this->pk_venda, 'fk_caixa'=>$caixa->pk_caixa]);
-                    
-                }else{
+                $caixa = Caixa::getCaixaAberto();
+                if (!empty($caixa)) {
+                    $item_caixa = new ItemCaixa(['fk_venda' => $this->pk_venda, 'fk_caixa' => $caixa->pk_caixa]);
+                } else {
                     echo 'Errrrrrrrroooooooo: Não foi encontrado nenhum caixa aberto';
                     exit();
                 }
@@ -214,21 +214,25 @@ class Venda extends ActiveRecord {
         return parent::beforeSave($insert);
     }
 
-//    public function beforeDelete() {
-//         //se tiver algo no caixa remove o item em caixa
-//        $caixa = $this->itemCaixa;
-//        if (!empty($caixa)) {
-//            $caixa->delete();
-//        }
-//
-//        parent::beforeDelete();
-//    }
-
     public function getTroco() {
+        
+        $saldo = $this->getSaldo();
+        if ($saldo <= 0) {
+            return $saldo;
+        } else {//está faltando
+            return 0;
+        }
+    }
+
+    public function getSaldo() {
+        return $this->valor_total - ($this->valor_pago_credito + $this->valor_pago_dinheiro + $this->valor_pago_debito + $this->desconto);
+    }
+
+    public function getSaldoFormatedBR() {
         //só vai ter troco se algo foi pago
-        $saldo = $this->valor_total - ($this->valor_pago_credito + $this->valor_pago_dinheiro + $this->valor_pago_debito + $this->desconto) ;
+        $saldo = $this->getSaldo();
         if ($saldo < 0)
-            return 'Troco: ' . Yii::$app->formatter->asCurrency(-1*$saldo);
+            return 'Troco: ' . Yii::$app->formatter->asCurrency($saldo);
         else
             return 'Falta: ' . Yii::$app->formatter->asCurrency($saldo);
     }
