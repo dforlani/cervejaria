@@ -103,7 +103,7 @@ use yii\widgets\Pjax;
                             return !$model->isEntrada() ;
                         },
                         'delete' => function($model) {
-                            return !$model->isAberturaCaixa() && !$model->isEntrada();
+                            return !$model->isEntrada();
                         }
                     ]
                 ],

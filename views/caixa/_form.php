@@ -51,7 +51,7 @@ use yii\widgets\ActiveForm;
     ?>
 
 
-    <?= $form->field($model, 'tipo')->radioList(['Sangria' => 'Sangria', 'Saída - Pagamento de Despesa' => 'Saída - Pagamento de Despesa', $model->getStringAbertura() =>$model->getStringAbertura()], ['prompt' => '', 'id' => 'tipo', 'separator' => '<br>']) ?>
+    <?= $form->field($model, 'tipo')->radioList(['Sangria' => 'Sangria', 'Saída - Pagamento de Despesa' => 'Saída - Pagamento de Despesa', 'Complementação de Caixa' =>'Complementação de Caixa'], ['prompt' => '', 'id' => 'tipo', 'separator' => '<br>']) ?>
 
     <div id="div_categoria">
         <?= $form->field($model, 'categoria')->radioList(['Água' => 'Água', 'Luz' => 'Luz', 'Telefone' => 'Telefone', 'Insumos da Fábrica' => 'Insumos da Fábrica', 'Produtos pra Venda' => 'Produtos pra Venda', 'Outra' => 'Outra'], ['prompt' => 'Selecione a categoria de despesa', 'id' => 'tipo', 'separator' => '<br>']) ?>

@@ -102,15 +102,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class = "row">
                     <div class = "col-sm-7" style = "">
                         <?php
-                        if (!empty($modelItem)) 
+                        if (!empty($modelItem))
                             echo $this->render('item/_item', [
-                            'model' => $model,
-                            'modelItem' => $modelItem,
-                            'dataProviderItem' => $dataProviderItem,
-                            'searchModelItem' => $searchModelItem,
+                                'model' => $model,
+                                'modelItem' => $modelItem,
+                                'dataProviderItem' => $dataProviderItem,
+                                'searchModelItem' => $searchModelItem,
                             ])
-                        
-                        ?>
+                            ?>
                     </div>
                     <div class = "col-sm-5" style = "">
 
@@ -130,20 +129,11 @@ $this->params['breadcrumbs'][] = $this->title;
                                 </div>
                             </div>
                         </div>
-                        <div class='row'>
-                            <div class='panel panel-success'>
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">Pagamento</h3>
-                                </div>
-                                <div class="panel-body" style="">
-                                    <?=
-                                    $this->render('_form', [
-                                        'model' => $model,
-                                    ])
-                                    ?>
-                                </div>
-                            </div>
-                        </div>
+                        <?=
+                        $this->render('_form', [
+                            'model' => $model,
+                        ])
+                        ?>
                     </div>
                 </div>
             </div>

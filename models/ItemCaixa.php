@@ -54,6 +54,9 @@ class ItemCaixa extends \yii\db\ActiveRecord {
         } elseif ($this->tipo == 'Abertura de Caixa' && $this->valor_dinheiro < 0) {
             $this->addError($attribute, "A Abertura de Caixa deve ter valor positivo.");
         }
+         elseif ($this->tipo == 'Complementação de Caixa' && $this->valor_dinheiro < 0) {
+            $this->addError($attribute, "A Complementação de Caixa deve ter valor positivo.");
+        }
     }
 
     /**
@@ -84,11 +87,11 @@ class ItemCaixa extends \yii\db\ActiveRecord {
     }
 
     public function isAberturaCaixa() {
-        return $this->tipo == 'Abertura de Caixa';
+        return $this->tipo == 'Abertura de Caixa' || $this->tipo == 'Complementação de Caixa';
     }
 
     public function isEntrada() {
-        return $this->tipo == 'Entrada - Recebimento de Pagamento';
+        return $this->tipo == 'Entrada - Recebimento de Pagamento' ;
     }
 
     public function isSaidaOuSangria() {

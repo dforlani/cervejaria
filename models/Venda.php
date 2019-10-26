@@ -227,10 +227,10 @@ class Venda extends ActiveRecord {
     public function getTroco() {
         //só vai ter troco se algo foi pago
         $saldo = $this->valor_total - ($this->valor_pago_credito + $this->valor_pago_dinheiro + $this->valor_pago_debito + $this->desconto) ;
-        if ($saldo > 0)
-            return 'Troco: ' . Yii::$app->formatter->asCurrency($saldo);
+        if ($saldo < 0)
+            return 'Troco: ' . Yii::$app->formatter->asCurrency(-1*$saldo);
         else
-            return 'Faltando: ' . Yii::$app->formatter->asCurrency(-1 * $saldo);
+            return 'Falta: ' . Yii::$app->formatter->asCurrency($saldo);
     }
 
     public function getValorTotalPago() {

@@ -9,7 +9,7 @@ use yii\helpers\Html;
 use yii\web\View;
 
 /* @var $this View */
-/* @var $model Preco */
+/* @var $model Venda */
 /* @var $form ActiveForm */
 ?>
 <script>
@@ -158,7 +158,7 @@ use yii\web\View;
             if (saldo <= 0) {
                 $('#faltando').text((0).toLocaleString("pt-BR", {minimumFractionDigits: 2}));
             } else {
-                $('#faltando').text((-1 * saldo).toLocaleString("pt-BR", {minimumFractionDigits: 2}));
+                $('#faltando').text((saldo).toLocaleString("pt-BR", {minimumFractionDigits: 2}));
             }
         }
 
@@ -194,7 +194,7 @@ use yii\web\View;
     <div class="container-fluid">
         <div class="row">
 
-            <div class="col-sm-5">
+            <div class="col-sm-5" style='text-align: right'>
                 <div class="row">
                     <div class="col-sm-6" style="text-align: right"> 
                     </div>
@@ -282,7 +282,8 @@ use yii\web\View;
                 </div>
             </div>
 
-            <div class="col-sm-5">
+            <div class="col-sm-5"  style='text-align: right'>
+                <br><br><br><br><br><br><br><br><br>
                 <div class="row">
                     <h2> Valor Total: <span id='valor_final'><?= Yii::$app->formatter->asCurrency($model->valor_total) ?></span></h2>
                 </div>
@@ -305,37 +306,34 @@ use yii\web\View;
                 </div>
 
                 <div class="row">
-                    <br><br>
-                    <br>
-                    <br>
+
                     <h1 style='color:blue'> Valor Final: <span id='venda-valor_final'><?= Yii::$app->formatter->asCurrency($model->valor_final) ?></span></h1>
                 </div>
             </div>
         </div>
+        <div class="form-group" style="text-align: right; margin-right: 90px" >
+
+            <?php
+            if (!$model->isPaga() || Caixa::hasCaixaAberto()) {
+                echo Html::submitButton('Fec<u>h</u>ar Venda', ['style' => "margin-right: 20px", 'value' => 'paga', 'accesskey' => "h", 'id' => 'fechar_venda', 'class' => 'btn btn-primary', 'name' => 'Venda[estado]', 'tabindex' => 5]);
+                echo Html::submitButton('Salvar P<u>r</u>é-Pagamento', ['style' => "margin-right: 20px", 'accesskey' => "r", 'id' => 'bt_salvar_pre_pagamento', 'class' => 'btn btn-success', 'tabindex' => 6]);
+            } else {
+                echo "<h2> Abra o caixa para permitir alterações de pagamento!</h2>";
+            }
+            ?>
+            <?php
+            $mostrar = Configuracao::getConfiguracaoByTipo("is_mostrar_botao_fiado");
+
+            if (!empty($mostrar) && ($mostrar->valor == "1")) {
+                echo Html::submitButton(('Fiado'), ['value' => 'fiado', 'class' => 'btn btn-danger', 'id' => 'bt_fiado', 'name' => 'Venda[estado]', 'tabindex' => 7]);
+            }
+            ?>
+        </div>
+
+        <?php ActiveForm::end(); ?>
     </div>
 
 
-    <div class="form-group">
 
-        <?php
-        if ($model->isAberto() || Caixa::hasCaixaAberto()) {
-            echo Html::submitButton('Fec<u>h</u>ar Venda', ['value' => 'paga', 'accesskey' => "h", 'id' => 'fechar_venda', 'class' => 'btn btn-primary', 'name' => 'Venda[estado]', 'tabindex' => 5]);
-            echo Html::submitButton('Salvar P<u>r</u>é-Pagamento', ['accesskey' => "r", 'id' => 'bt_salvar_pre_pagamento', 'class' => 'btn btn-success', 'tabindex' => 6]);
-        } else {
-            echo "<h2> Abra o caixa para permitir alterações de pagamento!</h2>";
-        }
-        ?>
-        <?php
-        $mostrar = Configuracao::getConfiguracaoByTipo("is_mostrar_botao_fiado");
-
-        if (!empty($mostrar) && ($mostrar->valor == "1")) {
-            echo Html::submitButton(('Fiado'), ['value' => 'fiado', 'class' => 'btn btn-danger', 'id' => 'bt_fiado', 'name' => 'Venda[estado]', 'tabindex' => 7]);
-        }
-        ?>
-
-
-    </div>
-
-    <?php ActiveForm::end(); ?>
 
 </div>

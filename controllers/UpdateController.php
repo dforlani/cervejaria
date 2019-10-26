@@ -357,7 +357,10 @@ ALTER TABLE `caixa`
         //11-10-2019 Update tabela venda pra gravar o valor dos trocos
         $this->atualizaBanco("ALTER TABLE `item_caixa` CHANGE `categoria` `categoria` ENUM('Água','Luz','Telefone','Insumos da Fábrica','Produtos pra Venda','Outra') CHARACTER SET utf8 COLLATE utf8_general_ci NULL;", "update_categoria_table_caixa_", 'Update coluna de categoria em item_caixa');
 
+        //26-10-2019 Inclusão de novo tipo de item caixa
+               $this->atualizaBanco("ALTER TABLE `item_caixa` CHANGE `tipo` `tipo` ENUM('Abertura de Caixa','Entrada - Recebimento de Pagamento','Saída - Pagamento de Despesa','Sangria','Complementação de Caixa') CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;", "update_novo_item_caixa", 'Update tabela item_caixa, novo item caixa');
 
+        
         echo 'Atualização do banco encerrada<br>';
     }
 

@@ -35,6 +35,15 @@
 
 <h2>Notas de versão</h2>
 
+div class="notasVersaoStyle">
+    <a href="#" id="v131" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.3.1 (26/10/2019)</a>
+    <ul id="nv131" style="display:">
+        <li><b>Vendas:</b> Aba de comprovante fecha sozinha após impressão.</li>                            
+        <li><b>Vendas:</b> Correções no cálculo do troco e do faltante.</li>   
+        
+    </ul>
+</div>
+
 <div class="notasVersaoStyle">
     <a href="#" id="v130" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.3.0 (10/10/2019)</a>
     <ul id="nv130" style="display:">

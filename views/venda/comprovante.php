@@ -12,15 +12,16 @@ use yii\widgets\ActiveForm;
 
     window.print();
 
+
 </script>
 <div style='width: 150px; margin-left: 20px; font-size:10px'>
     <?= Yii::$app->formatter->asDatetime(date('Y-m-d H:i:s')); ?><br>
-    <div style='text-align:center; font-size:14px'> Cervejaria Paraíso<div>
+    <div style='text-align:center; font-size:14px'> Cervejaria Paraíso</div>
 
     Cliente: <?= (!empty($model->cliente) ? $model->cliente->nome : '') ?><br>
     Comanda: <?= (!empty($model->comanda) ? $model->comanda->numero : '') ?><br>
-   
- <hr>
+
+    <hr>
     <table style='font-size:11px'> 
         <thead>
             <tr>
@@ -31,10 +32,10 @@ use yii\widgets\ActiveForm;
                     Qtd
                 </td>
                 <td>
-                   Vl. Unit.
+                    Vl. Unit.
                 </td>
                 <td>
-                     Vl. Item
+                    Vl. Item
                 </td>
             </tr>
         </thead>
@@ -49,16 +50,16 @@ use yii\widgets\ActiveForm;
                 foreach ($itens as $item) {
                     $totais[$item->fk_preco]['nome'] = $item->preco->getNomeProdutoPlusDenominacaoSemBarras();
                     $totais[$item->fk_preco]['quantidade'] = (isset($totais[$item->fk_preco]['quantidade']) ? $totais[$item->fk_preco]['quantidade'] + $item->quantidade : $item->quantidade);
-                     $totais[$item->fk_preco]['preco_unitario'] = $item->preco_unitario;
-                     $totais[$item->fk_preco]['preco_final'] = (isset($totais[$item->fk_preco]['preco_final'])? $totais[$item->fk_preco]['preco_final'] + $item->preco_final: $item->preco_final);
+                    $totais[$item->fk_preco]['preco_unitario'] = $item->preco_unitario;
+                    $totais[$item->fk_preco]['preco_final'] = (isset($totais[$item->fk_preco]['preco_final']) ? $totais[$item->fk_preco]['preco_final'] + $item->preco_final : $item->preco_final);
                 }
-                
-                
-                
+
+
+
                 foreach ($totais as $item) {
                     ?> 
                     <tr>
-                         <td style="margin-right: 50px">
+                        <td style="margin-right: 50px">
                             <?= $item['nome'] ?>
                         </td>
                         <td style='text-align: right'>
@@ -67,7 +68,7 @@ use yii\widgets\ActiveForm;
                         <td style='text-align: right'>
                             <?= Yii::$app->formatter->asCurrency($item['preco_unitario']) ?>
                         </td>
-                         <td style='text-align: right'>
+                        <td style='text-align: right'>
                             <?= Yii::$app->formatter->asCurrency($item['preco_final']) ?>
                         </td>
                     </tr>
@@ -81,7 +82,12 @@ use yii\widgets\ActiveForm;
     <hr>
     <div style="text-align: left">
         Valor Total: <?= Yii::$app->formatter->asCurrency($model->valor_total) ?> <br>
-    Desconto: <?= Yii::$app->formatter->asCurrency($model->desconto) ?> <br>
-    <b>Valor Final</b>: <?= Yii::$app->formatter->asCurrency($model->valor_final) ?> <br>
-    <div>
+        Desconto: <?= Yii::$app->formatter->asCurrency($model->desconto) ?> <br>
+        <b>Valor Final</b>: <?= Yii::$app->formatter->asCurrency($model->valor_final) ?> <br>
+        <div>
+        </div>
+    </div>
 </div>
+<script>
+    window.close();
+</script>

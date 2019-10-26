@@ -15,6 +15,12 @@ Thumbs.db
 # composer vendor dir
 /vendor
 
+#pdf de vendas
+pdf/vendas/*.pdf
+
+#backups
+backup/*.sql
+
 #uploads
 web/uploads/*
 
