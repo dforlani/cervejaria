@@ -60,6 +60,10 @@ class CaixaController extends Controller {
                 $model->tipo = $model->getStringAbertura();
                 if (!$model->save()) {
                     $caixa->delete();
+                    Yii::$app->session->setFlash('error', "O Caixa não pôde ser aberto. Ocorreram os seguintes errors: ".$model->getErrorSummary(true));
+                   
+                }else{
+                     Yii::$app->session->setFlash('success', "Caixa aberto com sucesso. Pode iniciar as vendas.");
                 }
             }
         } else {

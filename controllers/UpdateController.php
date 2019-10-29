@@ -349,26 +349,28 @@ ALTER TABLE `caixa`
 
         //11-10-2019 Update tabela venda pra gravar o valor de pagamento, para as vendas que foram criadas antes de poder adicionar valor de pagamento
         //pra facilitar, vamos gravar tudo como se tivesse sido pago em dinheiro
-        $this->atualizaBanco("UPDATE `venda` SET valor_pago_dinheiro = valor_final where valor_pago_credito = 0 AND valor_pago_debito = 0 AND valor_pago_credito = 0;", "update_default_valor_pago_dinheiro", 'Update coluna de valor de pagamento, para que o valor em dinheiro seja preenchido nas vendas que estão sem valor de pagamento preenchido');
-        
+        $this->atualizaBanco("UPDATE `venda` SET valor_pago_dinheiro = valor_final where valor_pago_dinheiro = 0 AND valor_pago_debito = 0 AND valor_pago_credito = 0;", "update_default_valor_pago_dinheiro", 'Update coluna de valor de pagamento, para que o valor em dinheiro seja preenchido nas vendas que estão sem valor de pagamento preenchido');
+
         //11-10-2019 Update tabela venda pra gravar o valor dos trocos
         $this->atualizaBanco("UPDATE `venda` SET troco = valor_total - (valor_pago_credito + valor_pago_dinheiro + valor_pago_debito + desconto);", "update_troco_table_vendas", 'Update coluna de troco na tabela de vendas');
-       
+
         //11-10-2019 Update tabela venda pra gravar o valor dos trocos
         $this->atualizaBanco("ALTER TABLE `item_caixa` CHANGE `categoria` `categoria` ENUM('Água','Luz','Telefone','Insumos da Fábrica','Produtos pra Venda','Outra') CHARACTER SET utf8 COLLATE utf8_general_ci NULL;", "update_categoria_table_caixa_", 'Update coluna de categoria em item_caixa');
 
         //26-10-2019 Inclusão de novo tipo de item caixa
-               $this->atualizaBanco("ALTER TABLE `item_caixa` CHANGE `tipo` `tipo` ENUM('Abertura de Caixa','Entrada - Recebimento de Pagamento','Saída - Pagamento de Despesa','Sangria','Complementação de Caixa') CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;", "update_novo_item_caixa", 'Update tabela item_caixa, novo item caixa');
+        $this->atualizaBanco("ALTER TABLE `item_caixa` CHANGE `tipo` `tipo` ENUM('Abertura de Caixa','Entrada - Recebimento de Pagamento','Saída - Pagamento de Despesa','Sangria','Complementação de Caixa') CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;", "update_novo_item_caixa", 'Update tabela item_caixa, novo item caixa');
 
-        
+
         echo 'Atualização do banco encerrada<br>';
     }
 
     public function atualizaBanco($comando, $nome_configuracao, $mensagem) {
+
         //busca de a tualização do banco já foi inserida
         $conf = Configuracao::findOne(['tipo' => $nome_configuracao]);
         if (empty($conf)) {
             try {
+                ConfiguracaoController::backup("update_banco_".$nome_configuracao);//vai fazer um backup antes de cada atualização do banco
                 $posts = Yii::$app->db->createCommand($comando)->execute();
                 echo("<br>$mensagem<br>");
                 $conf = new Configuracao();

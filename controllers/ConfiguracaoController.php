@@ -63,33 +63,31 @@ class ConfiguracaoController extends Controller {
         ]);
     }
 
-    
-
-
-    
     public function actionBackup() {
-        $data = date('Y-m-d-H-i-s');
-        $pasta = "../backup/dump_$data.sql";
-   
+
+
         $msg = "";
         if (@$_GET['gerar'] == 1) {
-          //  use Ifsnop\Mysqldump as IMysqldump;
-          
-            try {
-                $dump = new Mysqldump('mysql:host=localhost;dbname=fabrica', 'root', '');
-                $dump->start($pasta);
-                 $msg =  "Backup realizado com sucesso na pasta do sistema em $pasta!";
-            } catch (\Exception $e) {
-                $msg = 'mysqldump-php error: ' . $e->getMessage();
-            }
-           
-        }elseif (@$_GET['abrir_pasta'] == 1) {
-            exec ("explorer ". realpath('../backup/'));
-           
+            //  use Ifsnop\Mysqldump as IMysqldump;
+            ConfiguracaoController::backup();
+        } elseif (@$_GET['abrir_pasta'] == 1) {
+            exec("explorer " . realpath('../backup/'));
         }
-        
 
-        return $this->render('backup', ['msg'=>$msg]);
+
+        return $this->render('backup', ['msg' => $msg]);
+    }
+
+    public static function backup($file_name = "") {
+        $data = date('Y-m-d-H-i-s');
+        $pasta = "../backup/dump_{$data}_{$file_name}.sql";
+        try {
+            $dump = new Mysqldump('mysql:host=localhost;dbname=fabrica', 'root', '');
+            $dump->start($pasta);
+            $msg = "Backup realizado com sucesso na pasta do sistema em $pasta!";
+        } catch (\Exception $e) {
+            $msg = 'mysqldump-php error: ' . $e->getMessage();
+        }
     }
 
 }

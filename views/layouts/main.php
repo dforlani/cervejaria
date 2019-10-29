@@ -3,7 +3,6 @@
 /* @var $content string */
 
 use app\assets\AppAsset;
-use app\widgets\Alert;
 use kartik\widgets\AlertBlock;
 use kartik\widgets\SideNav;
 use yii\helpers\Html;
@@ -75,8 +74,22 @@ AppAsset::register($this);
                             AlertBlock::widget([
                                 'useSessionFlash' => true,
                                 'type' => AlertBlock::TYPE_ALERT,
-                                'delay' => false,
-                            ]);
+                                'delay' => 10000,
+                                //'titleOptions' => ['icon' => 'info-sign'],
+                                "alertSettings" => [
+//                                    'settings' => [
+//                                        'pluginOptions' => [
+//                                            'showProgressbar' => true,
+//                                            'icon_type' => 'image',
+//                                            'placement' => [
+//                                                'from' => 'top',
+//                                                'align' => 'right',
+//                                            ],
+//                                        ]
+//                                    ]
+                                ]
+                                    ]
+                            );
                             ?>
                             <?php // Alert::widget() ?>
                             <?= $content ?>
