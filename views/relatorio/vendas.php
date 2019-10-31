@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <form>
-        <div class="row">
+        <div class="row" style="height: 40px">
             <div class="col-md-2">
                 <?php
                 echo '<label class="control-label">Por dia</label>';

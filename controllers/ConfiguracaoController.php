@@ -45,6 +45,8 @@ class ConfiguracaoController extends Controller {
         //configuracao para mostrar ou não o botão de fiado
         $configuracoes['is_mostrar_botao_fiado'] = Configuracao::getConfiguracaoByTipo("is_mostrar_botao_fiado");
 
+        //tempo em minutos pra realização do backup
+        $configuracoes['tempo_em_minutos_para_backup_automatico'] = Configuracao::getConfiguracaoByTipo("tempo_em_minutos_para_backup_automatico");
 
         //solicitação de salvar
         if (!empty(Yii::$app->request->get())) {
@@ -56,6 +58,11 @@ class ConfiguracaoController extends Controller {
             //configurações de pdf_todas_paginas
             $model = $configuracoes['is_mostrar_botao_fiado'];
             $model->valor = Yii::$app->request->get('is_mostrar_botao_fiado', '0');
+            $model->save();
+
+            //configurações de pdf_todas_paginas
+            $model = $configuracoes['tempo_em_minutos_para_backup_automatico'];
+            $model->valor = Yii::$app->request->get('tempo_em_minutos_para_backup_automatico', '0');
             $model->save();
         }
 
@@ -94,20 +101,21 @@ class ConfiguracaoController extends Controller {
 
     public function actionBackupAutomatico() {
         $conf_aux = Configuracao::getConfiguracaoByTipo("tempo_em_minutos_para_backup_automatico");
-        $minutos_minimo_pro_backup = $conf_aux->valor;
-        $conf_aux = Configuracao::getConfiguracaoByTipo("dia_e_hora_desde_ultimo_backup_automatico");
-        $ultimo_backup = new DateTime($conf_aux->valor);
-        $agora = new DateTime("now");
+        if ($conf_aux->valor != 0) {//se o valor é igual a zero, não gera o backup
+            $minutos_minimo_pro_backup = $conf_aux->valor;
+            $conf_aux = Configuracao::getConfiguracaoByTipo("dia_e_hora_desde_ultimo_backup_automatico");
+            $ultimo_backup = new DateTime($conf_aux->valor);
+            $agora = new DateTime("now");
 
-        $interval = $agora->diff($ultimo_backup);
-        $minutos_passado = $interval->format('%i');
-        if($minutos_passado >= $minutos_minimo_pro_backup){
-            $this->backup("automatico");
-            $conf_aux->valor = $agora->format("Y-m-d H:i:s");
-            $conf_aux->save();
+            $interval = $agora->diff($ultimo_backup);
+            $minutos_passado = $interval->format('%i');
+            if ($minutos_passado >= $minutos_minimo_pro_backup) {
+                $this->backup("automatico");
+                $conf_aux->valor = $agora->format("Y-m-d H:i:s");
+                $conf_aux->save();
+            }
+            echo $minutos_passado;
         }
-        echo $minutos_passado;
-        
     }
 
 }

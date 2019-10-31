@@ -23,6 +23,16 @@ $this->params['breadcrumbs'][] = $this->title;
             'dt_abertura:datetime',
             'dt_fechamento:datetime',
             [
+                'attribute' => 'valorEntradas',
+                'format' => 'currency',
+                'contentOptions' => ['style' => 'text-align:right'],
+            ],
+            [
+                'attribute' => 'valorSaidas',
+                'format' => 'currency',
+                'contentOptions' => ['style' => 'text-align:right'],
+            ],
+            [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => 'Ações',
                 'headerOptions' => ['style' => 'color:#337ab7'],

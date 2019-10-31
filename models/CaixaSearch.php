@@ -61,6 +61,7 @@ class CaixaSearch extends Caixa
             'pk_caixa' => $this->pk_caixa,
             'dt_abertura' => $this->dt_abertura,
             'dt_fechamento' => $this->dt_fechamento,
+            'estado' => $this->estado,
         ]);
 
         $query->andFilterWhere(['like', 'estado', $this->estado]);

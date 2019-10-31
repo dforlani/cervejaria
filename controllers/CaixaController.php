@@ -166,6 +166,7 @@ class CaixaController extends Controller {
 
     public function actionFechados() {
         $searchModel = new CaixaSearch();
+        $_GET['CaixaSearch']['estado'] = 'fechado'; //só vai mostrar os caixas fechados
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('fechados', [
