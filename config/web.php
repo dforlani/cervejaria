@@ -17,11 +17,13 @@ $config = [
         '@npm' => '@vendor/npm-asset',
     ],
     'components' => [
+          
         'datecontrol' => [
             'class' => '\kartik\datecontrol\Module'
         ],
         'formatter' => [
             'class' => 'app\components\MeuFormatador',
+            'nullDisplay' => '',
             'thousandSeparator' => '.',
             'decimalSeparator' => ',',
             'currencyCode' => '',

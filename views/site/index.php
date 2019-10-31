@@ -38,7 +38,9 @@
 <div class="notasVersaoStyle">
     <a href="#" id="v132" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.3.2 (26/10/2019)</a>
     <ul id="nv132" style="display:">
-        <li><b>Vendas:</b> Correções.</li>                                           
+        <li><b>Vendas:</b> Correções.</li>   
+        <li><b>Backup:</b> Sempre que for feita uma atualização do banco, será gerado um backup.</li>   
+        <li><b>Backup:</b> Adicionado nas configurações um opção para indicar um tempo em minutos para que o sistema faça o backup automático.</li>   
     </ul>
 </div>
 

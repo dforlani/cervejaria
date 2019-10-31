@@ -83,6 +83,8 @@ use yii\widgets\ActiveForm;
     <div style="text-align: left">
         Valor Total: <?= Yii::$app->formatter->asCurrency($model->valor_total) ?> <br>
         Desconto: <?= Yii::$app->formatter->asCurrency($model->desconto) ?> <br>
+        Pago:<?php echo $model->getValorTotalPago() ?><br>
+        <?= $model->getSaldoFormatedBR() ?><br>
         <b>Valor Final</b>: <?= Yii::$app->formatter->asCurrency($model->valor_final) ?> <br>
         <div>
         </div>

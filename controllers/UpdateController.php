@@ -359,6 +359,12 @@ ALTER TABLE `caixa`
 
         //26-10-2019 Inclusão de novo tipo de item caixa
         $this->atualizaBanco("ALTER TABLE `item_caixa` CHANGE `tipo` `tipo` ENUM('Abertura de Caixa','Entrada - Recebimento de Pagamento','Saída - Pagamento de Despesa','Sangria','Complementação de Caixa') CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;", "update_novo_item_caixa", 'Update tabela item_caixa, novo item caixa');
+        
+         //30-10-2019 Inclusão de configuração para indicar de quantos em quantos minutos deve ser feito o backup automático          
+        $this->atualizaBanco("INSERT INTO CONFIGURACAO (tipo, valor) VALUES ('tempo_em_minutos_para_backup_automatico', '10');", "log_tempo_em_minutos_para_backup_automatico", 'Inicialização do tempo configurado para fazer o backup automático em 10 minutos');
+        
+         //30-10-2019 Inclusão de configuração para indicar a quantos minutos se passaram desde o último backup     
+        $this->atualizaBanco("INSERT INTO CONFIGURACAO (tipo, valor) VALUES ('dia_e_hora_desde_ultimo_backup_automatico', '2019-10-30 13:27:18');", "log_dia_e_hora_desde_ultimo_backup_automatico", 'Inicialização da configuração que indica que dia e hora foi realizado o último backup');
 
 
         echo 'Atualização do banco encerrada<br>';

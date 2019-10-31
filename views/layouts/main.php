@@ -6,11 +6,38 @@ use app\assets\AppAsset;
 use kartik\widgets\AlertBlock;
 use kartik\widgets\SideNav;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\web\View;
 use yii\widgets\Breadcrumbs;
 
 AppAsset::register($this);
 ?>
+
+<script>
+    //timer para informar ao sistema a passagem do tempo. Sempre que passar o tempo pré-definido nas configurações, o sistema irá realizar um backup automático
+    var counter = 0;
+    //efetua uma chamada na tela de backup para avisá-la de que passou 1 minuto
+    function backupAutomatico() {
+        var timer = setTimeout(function () {
+            console.log(counter++);
+          
+            var url = "<?= Url::toRoute(['configuracao/backup-automatico']);  ?>";          
+            data = null;
+            $.getJSON(url, data,
+                    function (dataResposta, textStatus, jqXHR) {
+
+                    }
+            );
+            //efetua esses aviso por 5 vezes, espara-se que a cada troca de tela isso seja repetido
+            if (counter < 3) {
+                backupAutomatico();
+            }
+        }, 1000*60);//1 minuto
+    }
+
+    backupAutomatico();
+</script>
+
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">

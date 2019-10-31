@@ -3,6 +3,8 @@
 namespace app\controllers;
 
 use app\models\Configuracao;
+use DateTime;
+use Exception;
 use Ifsnop\Mysqldump\Mysqldump;
 use Yii;
 use yii\filters\VerbFilter;
@@ -85,9 +87,27 @@ class ConfiguracaoController extends Controller {
             $dump = new Mysqldump('mysql:host=localhost;dbname=fabrica', 'root', '');
             $dump->start($pasta);
             $msg = "Backup realizado com sucesso na pasta do sistema em $pasta!";
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $msg = 'mysqldump-php error: ' . $e->getMessage();
         }
+    }
+
+    public function actionBackupAutomatico() {
+        $conf_aux = Configuracao::getConfiguracaoByTipo("tempo_em_minutos_para_backup_automatico");
+        $minutos_minimo_pro_backup = $conf_aux->valor;
+        $conf_aux = Configuracao::getConfiguracaoByTipo("dia_e_hora_desde_ultimo_backup_automatico");
+        $ultimo_backup = new DateTime($conf_aux->valor);
+        $agora = new DateTime("now");
+
+        $interval = $agora->diff($ultimo_backup);
+        $minutos_passado = $interval->format('%i');
+        if($minutos_passado >= $minutos_minimo_pro_backup){
+            $this->backup("automatico");
+            $conf_aux->valor = $agora->format("Y-m-d H:i:s");
+            $conf_aux->save();
+        }
+        echo $minutos_passado;
+        
     }
 
 }

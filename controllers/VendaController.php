@@ -172,16 +172,13 @@ class VendaController extends Controller {
 
                 $this->atualizaValoresVenda($model);
 
-                if (Configuracao::isGravarPDF())
-                    $this->gerPDFVenda($model->pk_venda);
+                $this->gerPDFVenda($model->pk_venda);
             }
         }
-
-
         return $this->redirect(['venda', 'id' => $id]);
     }
 
-    public function actionAdicionaItem($pk_venda, $pk_preco) {
+    public function actionAdicionaItemByTapList($pk_venda, $pk_preco) {
         $venda = $this->findModel($pk_venda);
         $preco = $this->findPreco($pk_preco);
 
@@ -191,23 +188,22 @@ class VendaController extends Controller {
         $itemVenda->quantidade = 1; //sempre virá apenas 1 produto
         $itemVenda->preco_unitario = $preco->preco;
         $itemVenda->preco_final = $preco->preco;
-        
+
 
         if ($itemVenda->save()) {
             $venda->atualizaValorFinal();
             $venda->save();
 
-            if (Configuracao::isGravarPDF())
-                $this->gerPDFVenda($venda->pk_venda);
+            $this->gerPDFVenda($venda->pk_venda);
             return $this->redirect(['venda', 'id' => $venda->pk_venda]);
         }
     }
-    
-      protected function atualizaValoresVenda($venda) {
+
+    protected function atualizaValoresVenda($venda) {
         $venda->atualizaValorFinal();
-        if(!$venda->save()){
-            
-            Yii::$app->session->setFlash('error', "Ocorreu um problema ao tentar atualizar os Valores da venda. ". implode(",", $venda->getErrorSummary(true)));
+        if (!$venda->save()) {
+
+            Yii::$app->session->setFlash('error', "Ocorreu um problema ao tentar atualizar os Valores da venda. " . implode(",", $venda->getErrorSummary(true)));
         }
     }
 
@@ -248,6 +244,8 @@ class VendaController extends Controller {
 
 
             if ($model->save()) {
+                $this->gerPDFVenda($model->pk_venda);
+
 
                 if (Yii::$app->request->isAjax) {
                     // JSON response is expected in case of successful save
@@ -285,12 +283,16 @@ class VendaController extends Controller {
 
     public function actionDeleteItem($id) {
         $model = $this->findModelItem($id);
+        $pk_venda = $model->fk_venda;
         $fkVenda = $model->fk_venda;
         $model->delete();
+
+
 
         $venda = $this->findModel($fkVenda);
         $this->atualizaValoresVenda($venda);
 
+        $this->gerPDFVenda($pk_venda);
 
         return $this->redirect(['venda', 'id' => $fkVenda]);
     }
@@ -351,43 +353,45 @@ class VendaController extends Controller {
      * @return type
      */
     protected function gerPDFVenda($pk_venda) {
-        $model = $this->findModel($pk_venda);
+        if (Configuracao::isGravarPDF()) {
+            $model = $this->findModel($pk_venda);
 
-        $content = $this->renderPartial('comprovante', [
-            'model' => $model,
-        ]);
+            $content = $this->renderPartial('comprovante', [
+                'model' => $model,
+            ]);
 
 
-        $pdf = new Pdf([
-            // set to use core fonts only
-            'mode' => Pdf::MODE_CORE,
-            // A4 paper format
-            'format' => Pdf::FORMAT_A4,
-            // portrait orientation
-            'orientation' => Pdf::ORIENT_PORTRAIT,
-            // stream to browser inline
-            'destination' => Pdf::DEST_FILE,
-            // your html content input
-            'content' => $content,
-            // format content from your own css file if needed or use the
-            // enhanced bootstrap css built by Krajee for mPDF formatting 
-            'cssFile' => '@vendor/kartik-v/yii2-mpdf/src/assets/kv-mpdf-bootstrap.min.css',
-            // any css to be embedded if required
-            'cssInline' => '.kv-heading-1{font-size:18px}',
-            'tempPath' => Yii::getAlias('@web/runtime/mpdf/'),
-            'filename' => '../pdf/vendas/' . @$model->cliente->nome . '-' . @$model->comanda->numero . '-' . $model->getData_Venda_Formato_Linha() . '.pdf',
-            // set mPDF properties on the fly
-            'options' => ['title' => @$model->cliente->nome . ' - ' . $model->dt_venda,
-            ],
-            // call mPDF methods on the fly
-            'methods' => [
-            // 'SetHeader' => ['Krajee Report Header'],
-            // 'SetFooter' => ['{PAGENO}'],
-            ]
-        ]);
+            $pdf = new Pdf([
+                // set to use core fonts only
+                'mode' => Pdf::MODE_CORE,
+                // A4 paper format
+                'format' => Pdf::FORMAT_A4,
+                // portrait orientation
+                'orientation' => Pdf::ORIENT_PORTRAIT,
+                // stream to browser inline
+                'destination' => Pdf::DEST_FILE,
+                // your html content input
+                'content' => $content,
+                // format content from your own css file if needed or use the
+                // enhanced bootstrap css built by Krajee for mPDF formatting 
+                'cssFile' => '@vendor/kartik-v/yii2-mpdf/src/assets/kv-mpdf-bootstrap.min.css',
+                // any css to be embedded if required
+                'cssInline' => '.kv-heading-1{font-size:18px}',
+                'tempPath' => Yii::getAlias('@web/runtime/mpdf/'),
+                'filename' => '../pdf/vendas/' . @$model->cliente->nome . '-' . @$model->comanda->numero . '-' . $model->getData_Venda_Formato_Linha() . '.pdf',
+                // set mPDF properties on the fly
+                'options' => ['title' => @$model->cliente->nome . ' - ' . $model->dt_venda,
+                ],
+                // call mPDF methods on the fly
+                'methods' => [
+                // 'SetHeader' => ['Krajee Report Header'],
+                // 'SetFooter' => ['{PAGENO}'],
+                ]
+            ]);
 
-        // return the pdf output as per the destination setting
-        return $pdf->render();
+            // return the pdf output as per the destination setting
+            return $pdf->render();
+        }
     }
 
 }

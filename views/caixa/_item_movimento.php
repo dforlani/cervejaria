@@ -19,7 +19,7 @@ use yii\widgets\Pjax;
 
 <p>
 
- 
+
 </p>    
 <div class="row">
     <div class="col-sm-8">
@@ -30,7 +30,7 @@ use yii\widgets\Pjax;
         ]);
         echo GridView::widget([
             'dataProvider' => $dataProvider,
-            'showFooter' => true,
+            'showFooter' => true,           
             'options' => ['style' => 'font-size:12px;'],
             'footerRowOptions' => ['style' => 'font-weight:bold;text-align:right;text-decoration: underline;'],
             //muda a cor da linha conforme o tipo de movimento
@@ -86,9 +86,9 @@ use yii\widgets\Pjax;
                     'format' => 'datetime',
                 ],
                 ['class' => 'yii\grid\ActionColumn',
-                    'header'=>'Ações',
+                    'header' => 'Ações',
                     'template' => '{update} {delete}',
-                    'visible'=>!$visualizar,
+                    'visible' => !$visualizar,
                     'buttons' => [
                         'update' => function ($url, $model) {
                             return Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['update', 'id' => $model->pk_item_caixa], [
@@ -100,7 +100,7 @@ use yii\widgets\Pjax;
                     'visibleButtons' =>
                     [
                         'update' => function($model) {
-                            return !$model->isEntrada() ;
+                            return !$model->isEntrada();
                         },
                         'delete' => function($model) {
                             return !$model->isEntrada();
