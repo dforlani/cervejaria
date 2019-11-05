@@ -19,6 +19,8 @@ use Yii;
  */
 class ItemVenda extends \yii\db\ActiveRecord {
 
+
+
     /**
      * {@inheritdoc}
      */
@@ -69,17 +71,16 @@ class ItemVenda extends \yii\db\ActiveRecord {
         return $this->hasOne(Preco::className(), ['pk_preco' => 'fk_preco']);
     }
 
-
     public function afterSave($insert, $changedAttributes) {
         //atualiza a quantidade de produtos disponiveis atuais
         $produto = $this->preco->produto;
         $produto->estoque_vendido = $produto->estoque_vendido + $this->quantidade * $this->preco->quantidade;
         $produto->save();
-        if($produto->estoque_minimo >= ( $produto->estoque_inicial - $produto->estoque_vendido))
-              Yii::$app->session->setFlash('error', "Estoque mínimo para o produto {$produto->nome} atingido.");
+        if ($produto->estoque_minimo >= ( $produto->estoque_inicial - $produto->estoque_vendido))
+            Yii::$app->session->setFlash('error', "Estoque mínimo para o produto {$produto->nome} atingido.");
         return parent::afterSave($insert, $changedAttributes);
     }
-    
+
     public function afterDelete() {
         $produto = $this->preco->produto;
         $produto->estoque_vendido = $produto->estoque_vendido - $this->quantidade * $this->preco->quantidade;

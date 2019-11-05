@@ -34,7 +34,8 @@
         "kartik-v/yii2-widget-switchinput": "dev-master",
         "kartik-v/yii2-field-range": "dev-master",
         "kartik-v/yii2-builder": "dev-master",
-        "ifsnop/mysqldump-php": "^2.7"
+        "ifsnop/mysqldump-php": "^2.7",
+        "nnnick/chartjs": "^2.9"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

@@ -18,7 +18,7 @@ class VendaSearch extends Venda {
     public function rules() {
         return [
             [['pk_venda', 'fk_cliente', 'fk_comanda'], 'integer'],
-            [['fk_usuario_iniciou_venda', 'fk_usuario_recebeu_pagamento', 'estado', 'dt_venda', 'dt_pagamento', 'cliente', 'produto', ], 'safe'],
+            [['fk_usuario_iniciou_venda', 'fk_usuario_recebeu_pagamento', 'estado', 'dt_venda', 'dt_pagamento', 'cliente', 'produto',], 'safe'],
             [['valor_total', 'desconto', 'valor_final'], 'number'],
         ];
     }
@@ -45,7 +45,7 @@ class VendaSearch extends Venda {
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort' => ['defaultOrder' => ['dt_venda'=>SORT_DESC, 'estado' => SORT_ASC]]
+            'sort' => ['defaultOrder' => ['dt_venda' => SORT_DESC, 'estado' => SORT_ASC]]
         ]);
 
         $this->load($params);
@@ -135,15 +135,13 @@ class VendaSearch extends Venda {
 
         $query->andWhere("dt_venda BETWEEN  '$data_inicial_convertida' AND '$data_final_convertida 23:59:59.999'");
         $query->andFilterWhere(['like', 'cliente.nome', $this->nome_cliente]);
-          $query->andFilterWhere(['like', 'produto.nome', $this->produto]);
+        $query->andFilterWhere(['like', 'produto.nome', $this->produto]);
 
         //precisa ter ao menos algo selecionado para que a consulta seja feita
         if (!($por_dia || $por_mes || $por_produto || $apenas_vendas_pagas || $por_cliente)) {
             $query->andWhere('pk_venda = -1');
         }
 
-//          print_r($query->createCommand()->sql);
-//exit();
 
         $dataProvider = new ArrayDataProvider([
             'allModels' => $query->all(),
@@ -152,5 +150,6 @@ class VendaSearch extends Venda {
 
         return $dataProvider;
     }
+
 
 }
