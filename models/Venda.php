@@ -236,6 +236,13 @@ class Venda extends ActiveRecord {
         else
             return 'Falta: ' . Yii::$app->formatter->asCurrency($saldo);
     }
+    
+    public function hasTroco(){
+        return  $this->getSaldo() < 0;
+    }
+    public function hasFalta(){
+        return  $this->getSaldo() >= 0;
+    }
 
     public function getValorTotalPago() {
         return Yii::$app->formatter->asCurrency($this->valor_pago_credito + $this->valor_pago_dinheiro + $this->valor_pago_debito);

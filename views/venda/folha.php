@@ -35,11 +35,11 @@
                 <div>
                 <?php
                 $pagamento = $venda->getSaldoFormatedBR();
+                
 
-                if (strpos($pagamento, "Falta") !== FALSE)
+                if ($venda->hasFalta())
                     echo "<b><span style='color:red'> $pagamento</span></b>";
-                else
-                if (strpos($pagamento, "Troco") !== FALSE)
+                elseif ($venda->hasTroco())
                     echo "<b><span style='color:blue'> $pagamento</span></b>";
                 else
                     echo $pagamento;
