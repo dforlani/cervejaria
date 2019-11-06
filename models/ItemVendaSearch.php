@@ -3,9 +3,10 @@
 namespace app\models;
 
 use app\models\ItemVenda;
+use DateInterval;
+use DateTime;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use yii\data\ArrayDataProvider;
 use yii\db\ActiveQuery;
 use yii\helpers\ArrayHelper;
 
@@ -75,7 +76,7 @@ class ItemVendaSearch extends ItemVenda {
         return $dataProvider;
     }
 
-    public static function searchGrafico($por_hora, $por_dia, $por_mes, $por_produto, $apenas_vendas_pagas, $por_cliente, $data_inicial, $data_final) {
+    public static function searchGrafico($por_dia, $por_hora, $por_dia_semana, $por_mes, $por_produto, $apenas_vendas_pagas, $por_cliente, $data_inicial, $data_final) {
         $query = ItemVendaSearch::find();
         $groupBy = [];
         $order = [];
@@ -89,14 +90,20 @@ class ItemVendaSearch extends ItemVenda {
             $order['HOUR(dt_inclusao)'] = SORT_ASC;
             $order['aux_quantidade'] = SORT_DESC;
         } elseif ($por_dia) {
+            $select[] = 'DATE_FORMAT(dt_inclusao, "%d/%m") as aux_temporizador';
+            $select[] = 'ROUND(SUM(item_venda.quantidade * preco.quantidade), 2) as aux_quantidade';
+            $groupBy[] = 'aux_temporizador';
+            $order['aux_temporizador'] = SORT_ASC;
+            // $order['aux_quantidade'] = SORT_DESC;
+        } elseif ($por_dia_semana) {
             $select[] = 'WEEKDAY(dt_inclusao) as aux_temporizador';
             $select[] = 'ROUND(SUM(item_venda.quantidade * preco.quantidade), 2) as aux_quantidade';
             $groupBy[] = 'WEEKDAY(dt_inclusao)';
             $order['WEEKDAY(dt_inclusao)'] = SORT_ASC;
             // $order['aux_quantidade'] = SORT_DESC;
         } elseif ($por_mes) {
-            
-             $select[] = 'ROUND(SUM(item_venda.quantidade * preco.quantidade), 2) as aux_quantidade';
+
+            $select[] = 'ROUND(SUM(item_venda.quantidade * preco.quantidade), 2) as aux_quantidade';
             $select[] = 'DATE_FORMAT(`dt_venda`, "%m" ) AS  aux_temporizador';
             $order['MONTH(dt_venda)'] = SORT_ASC;
             $groupBy[] = 'MONTH(dt_venda)';
@@ -122,7 +129,7 @@ class ItemVendaSearch extends ItemVenda {
         $query->andWhere(['like', 'unidade_medida', 'Litros']);
 
         //precisa ter ao menos algo selecionado para que a consulta seja feita
-        if (!($por_hora || $por_dia || $por_mes || $por_produto || $apenas_vendas_pagas || $por_cliente)) {
+        if (!($por_hora || $por_dia_semana || $por_dia || $por_mes || $por_produto || $apenas_vendas_pagas || $por_cliente)) {
             $query->andWhere('pk_item_venda = -1');
         }
 
@@ -153,12 +160,18 @@ class ItemVendaSearch extends ItemVenda {
             foreach ($resultado as $index => $agrupamentos) {
                 $resultado[$index] = array_replace(ItemVendaSearch::getHoras(), $agrupamentos);
             }
-        } elseif ($por_dia) {
+        }elseif ($por_dia) {
+            $dias_no_periodo = ItemVendaSearch::getDiasNoPeriodo($data_inicial_convertida, $data_final_convertida);
+            foreach ($resultado as $index => $agrupamentos) {
+                $resultado[$index] = array_replace($dias_no_periodo, $agrupamentos);
+            }
+        } 
+        elseif ($por_dia_semana) {
             $resultado = ItemVendaSearch::convertWeekDayMySQLtoDiasSemana($resultado);
             foreach ($resultado as $index => $agrupamentos) {
                 $resultado[$index] = array_replace(ItemVendaSearch::getDiasSemana(), $agrupamentos);
             }
-        }elseif($por_mes){               
+        } elseif ($por_mes) {
             foreach ($resultado as $index => $agrupamentos) {
                 $resultado[$index] = array_replace(ItemVendaSearch::getMeseDoAno(), $agrupamentos);
             }
@@ -189,6 +202,22 @@ class ItemVendaSearch extends ItemVenda {
                 $resultado[$keyAGrup][$dePara[$dayWeek]] = $item;
             }
         }
+        return $resultado;
+    }
+
+    public static function getDiasNoPeriodo($inicio, $fim) {
+        $resultado = [];
+        $d_inicio = new DateTime($inicio);
+        $d_fim = new DateTime($fim);
+        $resultado[$d_inicio->format('d/m')] = 0;
+
+        $intervalo = new DateInterval('P1D');
+        while ($d_inicio < $d_fim) {
+            $d_inicio->add($intervalo);
+            $resultado[$d_inicio->format('d/m')] = 0;
+        }
+
+
         return $resultado;
     }
 

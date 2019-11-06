@@ -17,29 +17,42 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <script>
     $(document).ready(function () {
-        //não vai permitir que por_hora, por_dia e por_mes estajam ligados ao mesmo tempo
+        //não vai permitir que por_hora, por_dia_semana e por_mes estajam ligados ao mesmo tempo
         $('#por_hora').on('switchChange.bootstrapSwitch', function (e, data) {
             if (data) {
                 $('#por_mes').bootstrapSwitch('state', !data, true);
+                $('#por_dia_semana').bootstrapSwitch('state', !data, true);
                 $('#por_dia').bootstrapSwitch('state', !data, true);
             }
 
         });
 
-        //não vai permitir que por_hora, por_dia e por_mes estajam ligados ao mesmo tempo
+        //não vai permitir que por_hora, por_dia_semana e por_mes estajam ligados ao mesmo tempo
+        $('#por_dia_semana').on('switchChange.bootstrapSwitch', function (e, data) {
+            if (data) {
+                $('#por_mes').bootstrapSwitch('state', !data, true);
+                $('#por_hora').bootstrapSwitch('state', !data, true);
+                $('#por_dia').bootstrapSwitch('state', !data, true);
+            }
+
+        });
+
+        //não vai permitir que por_hora, por_dia_semana e por_mes estajam ligados ao mesmo tempo
         $('#por_dia').on('switchChange.bootstrapSwitch', function (e, data) {
             if (data) {
                 $('#por_mes').bootstrapSwitch('state', !data, true);
                 $('#por_hora').bootstrapSwitch('state', !data, true);
+                $('#por_dia_semana').bootstrapSwitch('state', !data, true);
             }
 
         });
 
-        //não vai permitir que por_hora, por_dia e por_mes estajam ligados ao mesmo tempo
+        //não vai permitir que por_hora, por_dia_semana e por_mes estajam ligados ao mesmo tempo
         $('#por_mes').on('switchChange.bootstrapSwitch', function (e, data) {
             if (data) {
-                $('#por_dia').bootstrapSwitch('state', !data, true);
+                $('#por_dia_semana').bootstrapSwitch('state', !data, true);
                 $('#por_hora').bootstrapSwitch('state', !data, true);
+                $('#por_dia').bootstrapSwitch('state', !data, true);
             }
 
         });
@@ -73,10 +86,18 @@ $this->params['breadcrumbs'][] = $this->title;
                 echo SwitchInput::widget(['name' => 'por_hora', 'id' => 'por_hora', 'value' => $por_hora]);
                 ?>
             </div>
+
             <div class="col-md-2">
                 <?php
-                echo '<label class="control-label">Por dia da semana</label>';
+                echo '<label class="control-label">Por dia</label>';
                 echo SwitchInput::widget(['name' => 'por_dia', 'id' => 'por_dia', 'value' => $por_dia]);
+                ?>
+            </div>
+
+            <div class="col-md-3">
+                <?php
+                echo '<label class="control-label">Por dia da semana</label>';
+                echo SwitchInput::widget(['name' => 'por_dia_semana', 'id' => 'por_dia_semana', 'value' => $por_dia_semana]);
                 ?>
             </div>
 
@@ -87,9 +108,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 echo SwitchInput::widget(['name' => 'por_mes', 'id' => 'por_mes', 'value' => $por_mes]);
                 ?>
             </div>
-
-            <div class="col-md-2">
-
+        </div>
+        <br><br><br>
+        <div class="row" style="height: 40px">
+            <div class="col-md-2">                
                 <?php
                 echo '<label class="control-label">Por Produto</label>';
                 echo SwitchInput::widget(['name' => 'por_produto', 'id' => 'por_produto', 'value' => $por_produto]);
@@ -103,16 +125,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 echo SwitchInput::widget(['name' => 'por_cliente', 'id' => 'por_cliente', 'value' => $por_cliente]);
                 ?>
             </div>
-
-
-        </div>
-        <div class="row">
+        
 
             <div class="col-md-5" id='faixa_diaria'>
                 <br>
                 <?php
                 echo FieldRange::widget([
-                    'label' => 'Selecione a faixa de tempo',
+                    'label' => 'Faixa de tempo',
                     'name1' => 'data_inicial',
                     'value1' => $data_inicial,
                     'name2' => 'data_final',
@@ -123,7 +142,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ?>
             </div>
         </div>
-        <br>
+        <br><br><br>
         <?= Html::submitButton('<u>G</u>erar', ['accesskey' => 'g', 'class' => 'btn btn-success']) ?>
     </form><br>
 
@@ -136,7 +155,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
     <?php
-  
     if (!empty($resultado)) {
         echo $this->render('_grafico', ['resultado' => $resultado]);
     }
