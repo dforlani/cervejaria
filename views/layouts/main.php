@@ -77,6 +77,7 @@ AppAsset::register($this);
                                 ['label' => 'Unidades de Medida', 'url' => ['/unidade-medida']],
                                 ['options' => ['style' => 'background-color:#ddd;margin-top: 0px;']],
                                 ['label' => 'Relatórios', 'items' => [['label' => 'Vendas', 'url' => ['/relatorio/vendas']]]],
+                                ['label' => 'Graficos', 'items' => [['label' => 'Vendas', 'url' => ['/grafico/vendas']]]],
                                 ['options' => ['style' => 'background-color:#ddd;margin-top: 0px;']],
                                 ['label' => 'Configuração', 'url' => ['/configuracao']],
                                 ['label' => 'Backup', 'url' => ['/configuracao/backup']],

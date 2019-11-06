@@ -1,11 +1,9 @@
 <?php
 
-use app\components\Somatorio;
 use app\models\VendaSearch;
 use kartik\field\FieldRange;
 use kartik\widgets\SwitchInput;
 use yii\data\ActiveDataProvider;
-use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\web\View;
 
@@ -45,6 +43,20 @@ $this->params['breadcrumbs'][] = $this->title;
             }
 
         });
+
+        //não vai permitir que por_cliente e por_produto estejam selecionados ao mesmo tempo
+        $('#por_cliente').on('switchChange.bootstrapSwitch', function (e, data) {
+            if (data) {
+                $('#por_produto').bootstrapSwitch('state', !data, true);
+            }
+        });
+
+        //não vai permitir que por_cliente e por_produto estejam selecionados ao mesmo tempo
+        $('#por_produto').on('switchChange.bootstrapSwitch', function (e, data) {
+            if (data) {
+                $('#por_cliente').bootstrapSwitch('state', !data, true);
+            }
+        });
     });
 </script>
 
@@ -55,7 +67,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <form>
         <div class="row" style="height: 40px">
             <div class="col-md-2">
-            
+
                 <?php
                 echo '<label class="control-label">Por hora</label>';
                 echo SwitchInput::widget(['name' => 'por_hora', 'id' => 'por_hora', 'value' => $por_hora]);
@@ -68,48 +80,32 @@ $this->params['breadcrumbs'][] = $this->title;
                 ?>
             </div>
 
-            <div class="col-md-2">
             
-                <?php
-                echo '<label class="control-label">Por Mês</label>';
-                echo SwitchInput::widget(['name' => 'por_mes', 'id' => 'por_mes', 'value' => $por_mes]);
-                ?>
-            </div>
 
             <div class="col-md-2">
-       
+
                 <?php
                 echo '<label class="control-label">Por Produto</label>';
-                echo SwitchInput::widget(['name' => 'por_produto', 'value' => $por_produto]);
+                echo SwitchInput::widget(['name' => 'por_produto', 'id' => 'por_produto', 'value' => $por_produto]);
                 ?>
 
             </div>
 
-            <div class="col-md-2">
-               
+            <div class="col-md-2">               
                 <?php
                 echo '<label class="control-label">Por Cliente</label>';
-                echo SwitchInput::widget(['name' => 'por_cliente', 'value' => $por_cliente]);
+                echo SwitchInput::widget(['name' => 'por_cliente', 'id' => 'por_cliente', 'value' => $por_cliente]);
                 ?>
-
             </div>
 
-            
+
         </div>
         <div class="row">
-            <div class="col-md-3" style="height: 40px">
-                <br>      
-                <?php
-                echo '<label class="control-label">Apenas Vendas Pagas</label>';
-                echo SwitchInput::widget(['name' => 'apenas_vendas_pagas', 'value' => $apenas_vendas_pagas]);
-                ?>
-            </div>
+
             <div class="col-md-5" id='faixa_diaria'>
                 <br>
                 <?php
                 echo FieldRange::widget([
-                    // 'form' => $form,
-                    // 'model' => $model,
                     'label' => 'Selecione a faixa de tempo',
                     'name1' => 'data_inicial',
                     'value1' => $data_inicial,
@@ -131,7 +127,13 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <div>
- 
-    <?= $this->render('_hora', ['resultado'=>$resultado]); ?>
-    
+
+
+    <?php
+  
+    if (!empty($resultado)) {
+        echo $this->render('_hora', ['resultado' => $resultado]);
+    }
+    ?>
+
 </div>

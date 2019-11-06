@@ -14,8 +14,11 @@ use yii\helpers\ArrayHelper;
  */
 class ItemVendaSearch extends ItemVenda {
 
-    public $aux_hora;
+    public $aux_temporizador;
     public $aux_quantidade;
+    public $aux_nome_produto;
+    public $aux_nome_cliente;
+    public $aux_dia_semana;
 
     /**
      * {@inheritdoc}
@@ -76,78 +79,111 @@ class ItemVendaSearch extends ItemVenda {
         $query = ItemVendaSearch::find();
         $groupBy = [];
         $order = [];
-        $select = array();
+        $select = [];
+        $resultado = [];
 
-        //  $select[] = 'SUM(item_venda.preco_final) as pagamentos';
-        //  $select[] = 'SUM(item_venda.preco_final - preco.quantidade*produto.custo_compra_producao*item_venda.quantidade) as pagamentos_liquido';
         if ($por_hora) {
-
-            $select[] = 'DATE_FORMAT(dt_inclusao,"%H") as aux_hora';
+            $select[] = 'DATE_FORMAT(dt_inclusao,"%H") as aux_temporizador';
             $select[] = 'ROUND(SUM(item_venda.quantidade * preco.quantidade), 2) as aux_quantidade';
             $groupBy[] = 'HOUR(dt_inclusao)';
             $order['HOUR(dt_inclusao)'] = SORT_ASC;
+            $order['aux_quantidade'] = SORT_DESC;
         } elseif ($por_dia) {
-            $groupBy[] = 'DAY(dt_venda)';
-            $groupBy[] = 'MONTH(dt_venda)';
-            $groupBy[] = 'YEAR(dt_venda)';
-            $select[] = 'dt_venda';
-            $order['dt_venda'] = SORT_ASC;
+            $select[] = 'WEEKDAY(dt_inclusao) as aux_temporizador';
+            $select[] = 'ROUND(SUM(item_venda.quantidade * preco.quantidade), 2) as aux_quantidade';
+            $groupBy[] = 'WEEKDAY(dt_inclusao)';
+            $order['WEEKDAY(dt_inclusao)'] = SORT_ASC;
+           // $order['aux_quantidade'] = SORT_DESC;
         } elseif ($por_mes) {
             $groupBy[] = 'MONTH(dt_venda)';
             $groupBy[] = 'YEAR(dt_venda)';
             $select[] = 'DATE_FORMAT(`dt_venda`, "%m/%Y" ) AS  dt_venda';
             $order['dt_venda'] = SORT_ASC;
-        } elseif ($por_produto) {
-            $groupBy[] = 'fk_produto';
-            $select[] = 'produto.nome as produto';
-            $select[] = 'SUM(item_venda.quantidade * preco.quantidade) as quantidade';
-            $select[] = 'unidade_medida';
-            $order['produto.nome'] = SORT_ASC;
-        } elseif ($por_cliente) {
-            $groupBy[] = 'cliente.nome';
-            $select[] = 'cliente.nome as nome_cliente';
-            $order['cliente.nome'] = SORT_ASC;
+           // $order['aux_quantidade'] = SORT_DESC;
         }
 
-
-
-//        if ($apenas_vendas_pagas) {
-//            $query->andFilterWhere(['like', 'estado', 'paga']);
-//        }
-
-
-        $query->joinWith(['preco' => function (ActiveQuery $query) {
-                $query->joinWith(['produto' => function (ActiveQuery $query) {
-                        $query->joinWith('unidadeMedida');
-                    }]);
-            }]);
-
-
-
-        $query->select($select);
-        $query->groupBy($groupBy);
-        $query->orderBy($order);
-
+        if ($por_produto) {
+            $groupBy[] = 'fk_produto';
+            $select[] = 'produto.nome as aux_nome_produto';
+           // $order['produto.nome'] = SORT_ASC;
+        } elseif ($por_cliente) {
+            $select[] = 'cliente.nome as aux_nome_cliente';
+            $groupBy[] = 'aux_nome_cliente';
+            $order['aux_nome_cliente'] = SORT_ASC;
+        }
 
         $data_inicial_convertida = date("Y-m-d", strtotime(str_replace('/', '-', $data_inicial)));
         $data_final_convertida = date("Y-m-d", strtotime(str_replace('/', '-', $data_final)));
 
+        $query->select($select);
+
         $query->andWhere("dt_inclusao BETWEEN  '$data_inicial_convertida' AND '$data_final_convertida 23:59:59.999'");
-        //$query->andFilterWhere(['like', 'cliente.nome', $this->nome_cliente]);
-        // $query->andFilterWhere(['like', 'produto.nome', $this->produto]);
+        $query->andWhere(['like', 'unidade_medida', 'Litros']);
+
         //precisa ter ao menos algo selecionado para que a consulta seja feita
         if (!($por_hora || $por_dia || $por_mes || $por_produto || $apenas_vendas_pagas || $por_cliente)) {
             $query->andWhere('pk_item_venda = -1');
         }
 
-        $query->andWhere(['like', 'unidade_medida', 'Litros']);
+        $query->groupBy($groupBy);
+        $query->orderBy($order);
+        $query->joinWith(['preco' => function (ActiveQuery $query) {
+                $query->joinWith(['produto' => function (ActiveQuery $query) {
+                        $query->joinWith('unidadeMedida');
+                    }]);
+            }, 'venda', 'venda.cliente']);
 
-        $horas = ['00' => 0, '01' => 0, '02' => 0, '03' => 0, '04' => 0, '05' => 0, '06' => 0, '07' => 0, '08' => 0, '09' => 0, '10' => 0,
-            '11' => 0, '12' => 0, '13' => 0, '14' => 0, '15' => 0, '16' => 0, '17' => 0, '18' => 0, '19' => 0, '20' => 0, '21' => 0, '22' => 0, '23' => 0];
+  
+        //monta o array de resultado por produto, por cliente ou total  
+        if ($por_produto) {
+            foreach ($query->all() as $item) {
+                $resultado[$item->aux_nome_produto][$item->aux_temporizador] = $item->aux_quantidade;
+            }
+            
+        } elseif ($por_cliente) {
+            foreach ($query->all() as $item) {
+                $resultado[$item->aux_nome_cliente][$item->aux_temporizador] = $item->aux_quantidade;
+            }
+        } else {
+            $resultado['total'] = ArrayHelper::map($query->all(), 'aux_temporizador', 'aux_quantidade');
+        }
 
-        $resultado = ArrayHelper::map($query->all(), 'aux_hora', 'aux_quantidade');
+        
+        if ($por_hora) {
+            foreach ($resultado as $index => $agrupamentos) {
+                $resultado[$index] = array_replace(ItemVendaSearch::getHoras(), $agrupamentos);
+            }
+        } 
+        elseif($por_dia) {            
+            $resultado = ItemVendaSearch::convertWeekDayMySQLtoDiasSemana($resultado);
+            foreach ($resultado as $index => $agrupamentos) {
+                $resultado[$index] = array_replace(ItemVendaSearch::getDiasSemana(), $agrupamentos);
+            }
+        }
 
-        return array_replace($horas, $resultado);
+        return $resultado;
+    }
+
+    public static function getHoras() {
+        return ['08' => 0, '09' => 0, '10' => 0,
+            '11' => 0, '12' => 0, '13' => 0, '14' => 0, '15' => 0, '16' => 0, '17' => 0, '18' => 0, '19' => 0, '20' => 0, '21' => 0, '22' => 0, '23' => 0, '00' => 0, '01' => 0, '02' => 0, '03' => 0, '04' => 0, '05' => 0, '06' => 0, '07' => 0];
+    }
+
+    public static function getDiasSemana() {
+        return ['Seg' => 0, "Ter" => 0, "Qua" => 0, 'Qui' => 0, "Sex" => 0, "Sab" => 0, "Dom" => 0];
+    }
+    
+    public static function convertWeekDayMySQLtoDiasSemana($lista){
+        $dePara = [0=>'Seg',1=>  "Ter" ,2=> "Qua" ,3=> 'Qui',4=> "Sex",5=> "Sab",6=> "Dom"];
+        $resultado =[];
+        foreach($lista as $keyAGrup=> $agrupador){
+            $resultado[$keyAGrup] = [];
+            foreach($agrupador as $dayWeek=>$item){
+                        $resultado[$keyAGrup][$dePara[$dayWeek]] = $item;
+            }
+                        
+        }
+        return $resultado;
     }
 
 }

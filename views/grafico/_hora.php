@@ -27,6 +27,7 @@ $this->registerJsFile(
         margin-left: 40px;
         margin-right: 40px;
         margin-bottom: 40px;
+        height: 900px;
     }
     .container2 {
         display: flex;
@@ -36,25 +37,35 @@ $this->registerJsFile(
     }
 </style>
 
-
-
 <div class="container2">
 </div>
 <script>
+    var randomColorGenerator = function () {
+        return '#' + (Math.random().toString(16) + '0000000').slice(2, 8);
+    };
+
     function createConfig(position) {
         return {
             type: 'line',
             data: {
-                labels: <?= json_encode(array_keys($resultado))?>,
-                datasets: [{
-                        label: 'Por Hora',
-                        borderColor: window.chartColors.red,
-                        backgroundColor: window.chartColors.red,
-                        data: <?= json_encode(array_values($resultado))?>,
+                labels: <?= json_encode(array_keys($resultado[key($resultado)])) ?>,
+                datasets: [
+<?php
+foreach ($resultado as $index => $agrupamentos) {
+    echo "{
+                        label: '$index',
+                        borderColor: randomColorGenerator(), 
+                        backgroundColor: randomColorGenerator(), 
+                        data: " . json_encode(array_values($resultado[$index])) . ",
                         fill: false
-                    }]
+                    },";
+}
+?>
+                ]
             },
             options: {
+                maintainAspectRatio: false,
+                
                 responsive: true,
                 title: {
                     display: true,
@@ -62,8 +73,11 @@ $this->registerJsFile(
                 },
                 tooltips: {
                     position: position,
-                    mode: 'index',
+                    mode: 'nearest',
                     intersect: false,
+                },
+                legend: {
+                    position: 'bottom',
                 },
             }
         };
@@ -85,6 +99,8 @@ $this->registerJsFile(
             new Chart(ctx, config);
         });
     };
+
+
 </script>
 
 
