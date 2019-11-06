@@ -154,32 +154,33 @@ use yii\web\View;
         GridView::widget([
             'dataProvider' => $dataProviderItem,
             'layout' => '{items}{pager}{summary}',
-            'options' => ['style' => 'font-size:14px;'],
+            'options' => ['style' => 'font-size:12px;'],
             'columns' => [
                 [
                     'label' => 'Produto',
                     'value' => 'preco.nomeProdutoPlusDenominacao',
+                    'contentOptions' => ['style' => 'font-size:12px;'],
                 ],
                 [
                     'attribute' => 'quantidade',
                     'format' => 'currency',
-                    'contentOptions' => ['style' => 'text-align:right'],
+                    'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
                 ],
                 [
                     'attribute' => 'preco_unitario',
                     'format' => 'currency',
-                    'contentOptions' => ['style' => 'text-align:right'],
+                    'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
                 ],
                 [
                     'attribute' => 'preco_final',
                     'format' => 'currency',
-                    'contentOptions' => ['style' => 'text-align:right'],
+                    'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
                 ],
                 [
                     'attribute' => 'dt_inclusao',
-                    'format' => 'time',
+                    'format' => 'datetime',
                     'label' => 'Hora',
-                    'contentOptions' => ['style' => 'text-align:right'],
+                    'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
                 ],
                 [
                     'class' => 'yii\grid\ActionColumn',
