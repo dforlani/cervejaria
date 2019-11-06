@@ -4,10 +4,7 @@ use yii\web\View;
 ?>
 <?php
 $this->registerJsFile(
-        '@web/../vendor/nnnick/chartjs/dist/Chart.min.js', ['position' => View::POS_HEAD]
-);
-$this->registerJsFile(
-        '@web/../vendor/nnnick/chartjs/samples/utils.js', ['position' => View::POS_HEAD]
+        '@web/js/chartjs/Chart.min.js', ['position' => View::POS_HEAD]
 );
 ?>
 

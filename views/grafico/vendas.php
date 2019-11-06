@@ -138,7 +138,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php
   
     if (!empty($resultado)) {
-        echo $this->render('_hora', ['resultado' => $resultado]);
+        echo $this->render('_grafico', ['resultado' => $resultado]);
     }
     ?>
 
