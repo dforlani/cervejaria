@@ -36,8 +36,8 @@
 <h2>Notas de versão</h2>
 
 <div class="notasVersaoStyle">
-    <a href="#" id="v133" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.3.3 (06/11/2019)</a>
-    <ul id="nv133" style="display:">
+    <a href="#" id="v134" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.3.4 (06/11/2019)</a>
+    <ul id="nv134" style="display:">
         <li>Adicionada Tela de Gráficos.</li>           
     </ul>
 </div>
