@@ -2,9 +2,8 @@
 
 namespace app\models;
 
+use app\components\TempoUtil;
 use app\models\ItemVenda;
-use DateInterval;
-use DateTime;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
@@ -158,67 +157,27 @@ class ItemVendaSearch extends ItemVenda {
 
         if ($por_hora) {
             foreach ($resultado as $index => $agrupamentos) {
-                $resultado[$index] = array_replace(ItemVendaSearch::getHoras(), $agrupamentos);
+                $resultado[$index] = array_replace(TempoUtil::getHoras(), $agrupamentos);
             }
-        }elseif ($por_dia) {
-            $dias_no_periodo = ItemVendaSearch::getDiasNoPeriodo($data_inicial_convertida, $data_final_convertida);
+        } elseif ($por_dia) {
+            $dias_no_periodo = TempoUtil::getDiasNoPeriodo($data_inicial_convertida, $data_final_convertida);
             foreach ($resultado as $index => $agrupamentos) {
                 $resultado[$index] = array_replace($dias_no_periodo, $agrupamentos);
             }
-        } 
-        elseif ($por_dia_semana) {
-            $resultado = ItemVendaSearch::convertWeekDayMySQLtoDiasSemana($resultado);
+        } elseif ($por_dia_semana) {
+            $resultado = TempoUtil::convertWeekDayMySQLtoDiasSemana($resultado);
             foreach ($resultado as $index => $agrupamentos) {
-                $resultado[$index] = array_replace(ItemVendaSearch::getDiasSemana(), $agrupamentos);
+                $resultado[$index] = array_replace(TempoUtil::getDiasSemana(), $agrupamentos);
             }
         } elseif ($por_mes) {
             foreach ($resultado as $index => $agrupamentos) {
-                $resultado[$index] = array_replace(ItemVendaSearch::getMeseDoAno(), $agrupamentos);
+                $resultado[$index] = array_replace(TempoUtil::getMeseDoAno(), $agrupamentos);
             }
         }
 
         return $resultado;
     }
 
-    public static function getHoras() {
-        return ['08' => 0, '09' => 0, '10' => 0,
-            '11' => 0, '12' => 0, '13' => 0, '14' => 0, '15' => 0, '16' => 0, '17' => 0, '18' => 0, '19' => 0, '20' => 0, '21' => 0, '22' => 0, '23' => 0, '00' => 0, '01' => 0, '02' => 0, '03' => 0, '04' => 0, '05' => 0, '06' => 0, '07' => 0];
-    }
 
-    public static function getDiasSemana() {
-        return ['Seg' => 0, "Ter" => 0, "Qua" => 0, 'Qui' => 0, "Sex" => 0, "Sab" => 0, "Dom" => 0];
-    }
-
-    public static function getMeseDoAno() {
-        return ['01' => 0, '02' => 0, '03' => 0, '04' => 0, '05' => 0, '06' => 0, '07' => 0, '08' => 0, '09' => 0, '10' => 0, '11' => 0, '12' => 0,];
-    }
-
-    public static function convertWeekDayMySQLtoDiasSemana($lista) {
-        $dePara = [0 => 'Seg', 1 => "Ter", 2 => "Qua", 3 => 'Qui', 4 => "Sex", 5 => "Sab", 6 => "Dom"];
-        $resultado = [];
-        foreach ($lista as $keyAGrup => $agrupador) {
-            $resultado[$keyAGrup] = [];
-            foreach ($agrupador as $dayWeek => $item) {
-                $resultado[$keyAGrup][$dePara[$dayWeek]] = $item;
-            }
-        }
-        return $resultado;
-    }
-
-    public static function getDiasNoPeriodo($inicio, $fim) {
-        $resultado = [];
-        $d_inicio = new DateTime($inicio);
-        $d_fim = new DateTime($fim);
-        $resultado[$d_inicio->format('d/m')] = 0;
-
-        $intervalo = new DateInterval('P1D');
-        while ($d_inicio < $d_fim) {
-            $d_inicio->add($intervalo);
-            $resultado[$d_inicio->format('d/m')] = 0;
-        }
-
-
-        return $resultado;
-    }
 
 }
