@@ -158,7 +158,7 @@ use yii\web\View;
             'columns' => [
                 [
                     'label' => 'Produto',
-                    'value' => 'preco.nomeProdutoPlusDenominacao',
+                    'value' => 'preco.nomeProdutoPlusDenominacaoSemBarras',
                     'contentOptions' => ['style' => 'font-size:12px;'],
                 ],
                 [
