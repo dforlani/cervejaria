@@ -93,19 +93,20 @@ class ItemVendaSearch extends ItemVenda {
             $select[] = 'ROUND(SUM(item_venda.quantidade * preco.quantidade), 2) as aux_quantidade';
             $groupBy[] = 'WEEKDAY(dt_inclusao)';
             $order['WEEKDAY(dt_inclusao)'] = SORT_ASC;
-           // $order['aux_quantidade'] = SORT_DESC;
+            // $order['aux_quantidade'] = SORT_DESC;
         } elseif ($por_mes) {
+            
+             $select[] = 'ROUND(SUM(item_venda.quantidade * preco.quantidade), 2) as aux_quantidade';
+            $select[] = 'DATE_FORMAT(`dt_venda`, "%m" ) AS  aux_temporizador';
+            $order['MONTH(dt_venda)'] = SORT_ASC;
             $groupBy[] = 'MONTH(dt_venda)';
-            $groupBy[] = 'YEAR(dt_venda)';
-            $select[] = 'DATE_FORMAT(`dt_venda`, "%m/%Y" ) AS  dt_venda';
-            $order['dt_venda'] = SORT_ASC;
-           // $order['aux_quantidade'] = SORT_DESC;
+            // $order['aux_quantidade'] = SORT_DESC;
         }
 
         if ($por_produto) {
             $groupBy[] = 'fk_produto';
             $select[] = 'produto.nome as aux_nome_produto';
-           // $order['produto.nome'] = SORT_ASC;
+            // $order['produto.nome'] = SORT_ASC;
         } elseif ($por_cliente) {
             $select[] = 'cliente.nome as aux_nome_cliente';
             $groupBy[] = 'aux_nome_cliente';
@@ -133,13 +134,12 @@ class ItemVendaSearch extends ItemVenda {
                     }]);
             }, 'venda', 'venda.cliente']);
 
-  
+
         //monta o array de resultado por produto, por cliente ou total  
         if ($por_produto) {
             foreach ($query->all() as $item) {
                 $resultado[$item->aux_nome_produto][$item->aux_temporizador] = $item->aux_quantidade;
             }
-            
         } elseif ($por_cliente) {
             foreach ($query->all() as $item) {
                 $resultado[$item->aux_nome_cliente][$item->aux_temporizador] = $item->aux_quantidade;
@@ -148,16 +148,19 @@ class ItemVendaSearch extends ItemVenda {
             $resultado['total'] = ArrayHelper::map($query->all(), 'aux_temporizador', 'aux_quantidade');
         }
 
-        
+
         if ($por_hora) {
             foreach ($resultado as $index => $agrupamentos) {
                 $resultado[$index] = array_replace(ItemVendaSearch::getHoras(), $agrupamentos);
             }
-        } 
-        elseif($por_dia) {            
+        } elseif ($por_dia) {
             $resultado = ItemVendaSearch::convertWeekDayMySQLtoDiasSemana($resultado);
             foreach ($resultado as $index => $agrupamentos) {
                 $resultado[$index] = array_replace(ItemVendaSearch::getDiasSemana(), $agrupamentos);
+            }
+        }elseif($por_mes){               
+            foreach ($resultado as $index => $agrupamentos) {
+                $resultado[$index] = array_replace(ItemVendaSearch::getMeseDoAno(), $agrupamentos);
             }
         }
 
@@ -172,16 +175,19 @@ class ItemVendaSearch extends ItemVenda {
     public static function getDiasSemana() {
         return ['Seg' => 0, "Ter" => 0, "Qua" => 0, 'Qui' => 0, "Sex" => 0, "Sab" => 0, "Dom" => 0];
     }
-    
-    public static function convertWeekDayMySQLtoDiasSemana($lista){
-        $dePara = [0=>'Seg',1=>  "Ter" ,2=> "Qua" ,3=> 'Qui',4=> "Sex",5=> "Sab",6=> "Dom"];
-        $resultado =[];
-        foreach($lista as $keyAGrup=> $agrupador){
+
+    public static function getMeseDoAno() {
+        return ['01' => 0, '02' => 0, '03' => 0, '04' => 0, '05' => 0, '06' => 0, '07' => 0, '08' => 0, '09' => 0, '10' => 0, '11' => 0, '12' => 0,];
+    }
+
+    public static function convertWeekDayMySQLtoDiasSemana($lista) {
+        $dePara = [0 => 'Seg', 1 => "Ter", 2 => "Qua", 3 => 'Qui', 4 => "Sex", 5 => "Sab", 6 => "Dom"];
+        $resultado = [];
+        foreach ($lista as $keyAGrup => $agrupador) {
             $resultado[$keyAGrup] = [];
-            foreach($agrupador as $dayWeek=>$item){
-                        $resultado[$keyAGrup][$dePara[$dayWeek]] = $item;
+            foreach ($agrupador as $dayWeek => $item) {
+                $resultado[$keyAGrup][$dePara[$dayWeek]] = $item;
             }
-                        
         }
         return $resultado;
     }

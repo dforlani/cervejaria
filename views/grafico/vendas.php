@@ -80,7 +80,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 ?>
             </div>
 
-            
+            <div class="col-md-2">
+
+                <?php
+                echo '<label class="control-label">Por Mês</label>';
+                echo SwitchInput::widget(['name' => 'por_mes', 'id' => 'por_mes', 'value' => $por_mes]);
+                ?>
+            </div>
 
             <div class="col-md-2">
 

@@ -36,6 +36,13 @@
 <h2>Notas de versão</h2>
 
 <div class="notasVersaoStyle">
+    <a href="#" id="v133" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.3.3 (06/11/2019)</a>
+    <ul id="nv133" style="display:">
+        <li>Adicionada Tela de Gráficos.</li>           
+    </ul>
+</div>
+
+<div class="notasVersaoStyle">
     <a href="#" id="v132" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.3.2 (26/10/2019)</a>
     <ul id="nv132" style="display:">
         <li><b>Vendas:</b> Correções.</li>   
