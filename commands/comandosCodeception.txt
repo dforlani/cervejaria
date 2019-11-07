@@ -1,0 +1,6 @@
+c:\xampp_novo\htdocs\cervejaria\vendor\bin\codecept generate:test unit models\ContactForm2
+
+c:\xampp_novo\htdocs\cervejaria\vendor\bin\codecept run unit models\UserTest.php
+
+$output = new \Codeception\Lib\Console\Output([]);
+$output->writeln('I see NN elements');

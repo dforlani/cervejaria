@@ -149,7 +149,6 @@ use yii\web\View;
 
         </div>
 
-
         <?=
         GridView::widget([
             'dataProvider' => $dataProviderItem,

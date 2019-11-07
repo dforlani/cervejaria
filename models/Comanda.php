@@ -27,7 +27,8 @@ class Comanda extends \yii\db\ActiveRecord {
     public function rules() {
         return [
             [['pk_comanda', 'numero'], 'integer'],
-            //[['numero'], 'unique'],
+            [['numero'], 'unique'],
+            [['numero'], 'required'],
             [['pk_comanda'], 'unique'],
         ];
     }
@@ -60,9 +61,10 @@ class Comanda extends \yii\db\ActiveRecord {
 
     public function beforeSave($insert) {
         $this->numero = $this->getComandaComDigitoVerificador();
-        parent::beforeSave($insert);
+        return parent::beforeSave($insert);
     }
     
+
     public function getComandaComDigitoVerificador() {
         $multiplicador = 1;
         $soma = 0;

@@ -172,8 +172,9 @@ class Venda extends ActiveRecord {
     }
 
     public function beforeValidate() {
-        if (is_numeric($this->valor_total) && is_numeric($this->desconto))
-            $this->valor_final = $this->valor_total - $this->desconto;
+        
+        $this->atualizaValorFinal();
+        
         return parent::beforeValidate();
     }
 

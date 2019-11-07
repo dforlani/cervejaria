@@ -19,8 +19,6 @@ use Yii;
  */
 class ItemVenda extends \yii\db\ActiveRecord {
 
-
-
     /**
      * {@inheritdoc}
      */
@@ -33,7 +31,7 @@ class ItemVenda extends \yii\db\ActiveRecord {
      */
     public function rules() {
         return [
-            [['fk_venda', 'fk_preco', 'quantidade'], 'required'],
+            [['fk_venda', 'fk_preco', 'quantidade', 'preco_unitario', 'preco_final'], 'required'],
             [['fk_venda', 'fk_preco'], 'integer'],
             [['dt_inclusao'], 'safe'],
             [['preco_unitario', 'preco_final'], 'number'],
@@ -81,7 +79,13 @@ class ItemVenda extends \yii\db\ActiveRecord {
         return parent::afterSave($insert, $changedAttributes);
     }
 
+    public function beforeValidate() {
+        $this->preco_final = $this->preco_unitario * $this->quantidade;
+        return parent::beforeValidate();
+    }
+
     public function afterDelete() {
+        //retorno o valor do estoque se cancelar a venda do item
         $produto = $this->preco->produto;
         $produto->estoque_vendido = $produto->estoque_vendido - $this->quantidade * $this->preco->quantidade;
         $produto->save();

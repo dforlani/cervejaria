@@ -44,6 +44,7 @@ class VendaController extends Controller {
         $searchModel = new VendaSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+
         return $this->render('index', [
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,
@@ -167,7 +168,7 @@ class VendaController extends Controller {
 
         //insere um item
         if (!empty(Yii::$app->request->post('ItemVenda'))) {
-            $modelItem->preco_final = $modelItem->preco_unitario * $modelItem->quantidade;
+
             if ($modelItem->load(Yii::$app->request->post()) && $modelItem->save()) {
 
                 $this->atualizaValoresVenda($model);
@@ -187,22 +188,20 @@ class VendaController extends Controller {
         $itemVenda->fk_preco = $preco->pk_preco;
         $itemVenda->quantidade = 1; //sempre virá apenas 1 produto
         $itemVenda->preco_unitario = $preco->preco;
-        $itemVenda->preco_final = $preco->preco;
 
 
         if ($itemVenda->save()) {
-            $venda->atualizaValorFinal();
-            $venda->save();
+            $this->atualizaValoresVenda($venda);
 
             $this->gerPDFVenda($venda->pk_venda);
             return $this->redirect(['venda', 'id' => $venda->pk_venda]);
+        } else {
+            print_r($itemVenda->getErrors());
         }
     }
 
     protected function atualizaValoresVenda($venda) {
-        $venda->atualizaValorFinal();
         if (!$venda->save()) {
-
             Yii::$app->session->setFlash('error', "Ocorreu um problema ao tentar atualizar os Valores da venda. " . implode(",", $venda->getErrorSummary(true)));
         }
     }

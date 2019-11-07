@@ -26,7 +26,7 @@ class ItemVendaSearch extends ItemVenda {
     public function rules() {
         return [
             [['fk_venda', 'fk_preco'], 'integer'],
-            [['quantidade', 'preco_unitario', 'preco_final'], 'number'],
+            [['quantidade', 'preco_unitario', 'preco_final'], 'safe'],
         ];
     }
 
@@ -57,11 +57,12 @@ class ItemVendaSearch extends ItemVenda {
         $this->load($params);
 
 
-        if (!$this->validate()) {
+         //RETIRADO PQ DÁ CONFLITO COM O BEFOREVALIDATE, JÁ QUE O BEFORE ADICIONA UM VALOR E ISSO INFLUI NO FILTRO
+        //if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
-            return $dataProvider;
-        }
+          //  return $dataProvider;
+       // }
 
         // grid filtering conditions
         $query->andFilterWhere([
@@ -69,7 +70,7 @@ class ItemVendaSearch extends ItemVenda {
             'fk_preco' => $this->fk_preco,
             'quantidade' => $this->quantidade,
             'preco_unitario' => $this->preco_unitario,
-            'preco_final' => $this->preco_final,
+            'preco_final' => $this->preco_final, 
         ]);
 
         return $dataProvider;

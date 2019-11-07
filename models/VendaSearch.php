@@ -50,11 +50,12 @@ class VendaSearch extends Venda {
 
         $this->load($params);
 
-        if (!$this->validate()) {
+        //REMOVIDO POR QUE DÁ PROBLEMA AO USAR JUNTO DO BEFOREVALIDATE, JÁ QUE O VALIDATE ATRIBUI VALORES PARA ALGUMAS VARIÁVEIS
+        //if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
-            return $dataProvider;
-        }
+           // return $dataProvider;
+       // }
 
         // grid filtering conditions
         $query->andFilterWhere([
