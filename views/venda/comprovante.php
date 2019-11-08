@@ -84,7 +84,14 @@ use yii\widgets\ActiveForm;
         Valor Total: <?= Yii::$app->formatter->asCurrency($model->valor_total) ?> <br>
         Desconto: <?= Yii::$app->formatter->asCurrency($model->desconto) ?> <br>
         Pago:<?php echo $model->getValorTotalPago() ?><br>
-        <?= $model->getSaldoFormatedBR() ?><br>
+        <?php
+        if ($model->hasFalta())
+            echo "Falta: <b><span style='color:red'> {$model->getSaldoFormatedBR()}</span></b>";
+        elseif ($model->hasTroco())
+            echo "Troco: <b><span style='color:green'> {$model->getSaldoFormatedBR()}</span></b>";
+        else
+            echo $model->getSaldoFormatedBR();
+        ?><br>
         <b>Valor Final</b>: <?= Yii::$app->formatter->asCurrency($model->valor_final) ?> <br>
         <div>
         </div>

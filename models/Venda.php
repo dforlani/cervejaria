@@ -232,10 +232,8 @@ class Venda extends ActiveRecord {
     public function getSaldoFormatedBR() {
         //só vai ter troco se algo foi pago
         $saldo = $this->getSaldo();
-        if ($saldo < 0)
-            return 'Troco: ' . Yii::$app->formatter->asCurrency($saldo);
-        else
-            return 'Falta: ' . Yii::$app->formatter->asCurrency($saldo);
+        return Yii::$app->formatter->asCurrency($saldo);
+    
     }
     
     public function hasTroco(){

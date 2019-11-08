@@ -31,19 +31,16 @@
 
                 </div>
 
-                <div>Valor Pago: <?php echo $venda->getValorTotalPago() ?></div>
+                <div>Valor Pago: <b><span style='color:blue'> <?php echo $venda->getValorTotalPago() ?></span></b></div>
                 <div>
-                <?php
-                $pagamento = $venda->getSaldoFormatedBR();
-                
-
-                if ($venda->hasFalta())
-                    echo "<b><span style='color:red'> $pagamento</span></b>";
-                elseif ($venda->hasTroco())
-                    echo "<b><span style='color:blue'> $pagamento</span></b>";
-                else
-                    echo $pagamento;
-                ?>
+                    <?php
+                    if ($venda->hasFalta())
+                        echo "Falta: <b><span style='color:red'> {$venda->getSaldoFormatedBR()}</span></b>";
+                    elseif ($venda->hasTroco())
+                        echo "Troco: <b><span style='color:green'> {$venda->getSaldoFormatedBR()}</span></b>";
+                    else
+                        echo $venda->getSaldoFormatedBR();
+                    ?>
                 </div>
                 <br>
                 <div>

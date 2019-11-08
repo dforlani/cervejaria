@@ -74,8 +74,15 @@ use yii\widgets\Pjax;
                                 <span><?php echo $model->getValorTotalPago() ?></span>
                             </div>
 
-                            <div style=";font-size: 18px;color:red">                              
-                                <?= $model->getSaldoFormatedBR() ?>
+                            <div style=";font-size: 18px;">                              
+                                <?php
+                                if ($model->hasFalta())
+                                    echo "Falta: <b><span style='color:red'> {$model->getSaldoFormatedBR()}</span></b>";
+                                elseif ($model->hasTroco())
+                                    echo "Troco: <b><span style='color:green'> {$model->getSaldoFormatedBR()}</span></b>";
+                                else
+                                    echo $model->getSaldoFormatedBR();
+                                ?>
                             </div>
 
 
