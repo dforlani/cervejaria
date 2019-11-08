@@ -5,7 +5,7 @@ use app\models\VendaSearch;
 use kartik\field\FieldRange;
 use kartik\widgets\SwitchInput;
 use yii\data\ActiveDataProvider;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 use yii\helpers\Html;
 use yii\web\View;
 
@@ -154,10 +154,25 @@ $this->params['breadcrumbs'][] = $this->title;
         'contentOptions' => ['style' => 'text-align:right'],
         'footer' => Yii::$app->formatter->asCurrency(Somatorio::getTotal($dataProvider->models, 'pagamentos_liquido')),
     ];
+    ?>
 
-
-    echo GridView::widget([
+    
+    <?=
+    GridView::widget([
+        'panelBeforeTemplate' => "                               
+                               <div class='btn-toolbar kv-grid-toolbar ' role='toolbar'>
+                                {export}
+                                
+                                " .'<b>'
+        . '<span style="color:red">&nbsp;&nbsp;&nbsp;&nbsp;' . Somatorio::getTotal($dataProvider->models, 'itens_sem_preco_custo')
+        . ' itens nesta página não possuem preço de custo da produção/compra.</span></b></div>' ,
+        'panel' => [
+            'type' => GridView::TYPE_PRIMARY,
+            'before' => true,
+        ],
         'showFooter' => true,
+        'floatHeader' => true,
+        'floatHeaderOptions' => ['scrollingTop' => '50'],
         'footerRowOptions' => ['style' => 'font-weight:bold;text-align:right;text-decoration: underline;'],
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,

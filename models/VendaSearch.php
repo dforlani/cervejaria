@@ -11,6 +11,7 @@ use yii\data\ArrayDataProvider;
  * VendaSearch represents the model behind the search form of `app\models\Venda`.
  */
 class VendaSearch extends Venda {
+     public $itens_sem_preco_custo;
 
     /**
      * {@inheritdoc}
@@ -77,12 +78,13 @@ class VendaSearch extends Venda {
     }
 
     public function searchRelatorio($por_dia, $por_mes, $por_produto, $apenas_vendas_pagas, $por_cliente, $data_inicial, $data_final) {
-        $query = Venda::find();
+        $query = VendaSearch::find();
         $groupBy = [];
         $order = [];
 
         $select[] = 'SUM(item_venda.preco_final) as pagamentos';
         $select[] = 'SUM(item_venda.preco_final - item_venda.preco_custo_item) as pagamentos_liquido';
+        $select[] = 'SUM(if(item_venda.preco_custo_item = 0,1,0)) as itens_sem_preco_custo';
 
         if ($por_dia) {
             $groupBy[] = 'DAY(dt_venda)';

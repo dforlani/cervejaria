@@ -87,6 +87,7 @@ class Venda extends ActiveRecord {
             'estado' => 'Estado',
             'dt_venda' => 'Data Venda',
             'dt_pagamento' => 'Data Pagamento',
+            'itens_sem_preco_custo' => 'Itens Sem Preço de Custo'
         ];
     }
 
@@ -114,7 +115,6 @@ class Venda extends ActiveRecord {
         $this->valor_final = $total - $this->desconto;
 
         $this->troco = $this->getTroco();
-     
     }
 
     public static function getArrayVendasEmAberto() {
@@ -172,9 +172,9 @@ class Venda extends ActiveRecord {
     }
 
     public function beforeValidate() {
-        
+
         $this->atualizaValorFinal();
-        
+
         return parent::beforeValidate();
     }
 
@@ -216,7 +216,7 @@ class Venda extends ActiveRecord {
     }
 
     public function getTroco() {
-        
+
         $saldo = $this->getSaldo();
         if ($saldo <= 0) {
             return $saldo;
@@ -233,14 +233,14 @@ class Venda extends ActiveRecord {
         //só vai ter troco se algo foi pago
         $saldo = $this->getSaldo();
         return Yii::$app->formatter->asCurrency($saldo);
-    
     }
-    
-    public function hasTroco(){
-        return  $this->getSaldo() < 0;
+
+    public function hasTroco() {
+        return $this->getSaldo() < 0;
     }
-    public function hasFalta(){
-        return  $this->getSaldo() >= 0;
+
+    public function hasFalta() {
+        return $this->getSaldo() >= 0;
     }
 
     public function getValorTotalPago() {
