@@ -38,6 +38,7 @@
     <a href="#" id="v135" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.3.5 (08/11/2019)</a>
     <ul id="nv135" style="display:">
         <li>Alteração das cores de troco e falta.</li>           
+        <li><b> Vendas e Relatório</b> O preço de custo agora está sendo salvo nos itens vendidos, para que o relatório de vendas tenha um valor de pagamento líquido baseado no custo do momento da venda.</li>  
         <li><b>Gráfico</b> Gráficos convertidos pra linhas retas.</li>           
         <li><b>Gráfico</b> Gráficos removendo extremidades sem informação.</li>           
     </ul>
