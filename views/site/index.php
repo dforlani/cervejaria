@@ -34,6 +34,14 @@
 
 
 <h2>Notas de versão</h2>
+<div class="notasVersaoStyle">
+    <a href="#" id="v135" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.3.5 (08/11/2019)</a>
+    <ul id="nv135" style="display:">
+        <li>Alteração das cores de troco e falta.</li>           
+        <li><b>Gráfico</b> Gráficos convertidos pra linhas retas.</li>           
+        <li><b>Gráfico</b> Gráficos removendo extremidades sem informação.</li>           
+    </ul>
+</div>
 
 <div class="notasVersaoStyle">
     <a href="#" id="v134" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.3.4 (06/11/2019)</a>

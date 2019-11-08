@@ -57,20 +57,19 @@ class ItemVendaSearch extends ItemVenda {
         $this->load($params);
 
 
-         //RETIRADO PQ DÁ CONFLITO COM O BEFOREVALIDATE, JÁ QUE O BEFORE ADICIONA UM VALOR E ISSO INFLUI NO FILTRO
+        //RETIRADO PQ DÁ CONFLITO COM O BEFOREVALIDATE, JÁ QUE O BEFORE ADICIONA UM VALOR E ISSO INFLUI NO FILTRO
         //if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
-          //  return $dataProvider;
-       // }
-
+        // uncomment the following line if you do not want to return any records when validation fails
+        // $query->where('0=1');
+        //  return $dataProvider;
+        // }
         // grid filtering conditions
         $query->andFilterWhere([
             'fk_venda' => $this->fk_venda,
             'fk_preco' => $this->fk_preco,
             'quantidade' => $this->quantidade,
             'preco_unitario' => $this->preco_unitario,
-            'preco_final' => $this->preco_final, 
+            'preco_final' => $this->preco_final,
         ]);
 
         return $dataProvider;
@@ -156,6 +155,7 @@ class ItemVendaSearch extends ItemVenda {
         }
 
 
+        //faz o merge do array resultado com arrays que possuem todos os dias, horas e etc, para completar lacunas de tempo
         if ($por_hora) {
             foreach ($resultado as $index => $agrupamentos) {
                 $resultado[$index] = array_replace(TempoUtil::getHoras(), $agrupamentos);
@@ -176,9 +176,33 @@ class ItemVendaSearch extends ItemVenda {
             }
         }
 
+        self::removeExtremidades($resultado);
+
         return $resultado;
     }
 
+    public static function removeExtremidades(array &$resultado) {
+        //remove as extremidades não utilizadas
+        foreach ($resultado as $index => &$agrupamentos) {
+            //remove os itens vazios da esquerda, até encontrar algum item com valor
+            foreach ($agrupamentos as $tempo => $valor) {
+                if (empty($valor)) {
+                    unset($agrupamentos[$tempo]);
+                } else {
+                    break;
+                }
+            }
 
+            //remove os itens vazios da direita, até encontrar algum item com valor
+            $agrupamento_reverse = array_reverse($agrupamentos, true);
+            foreach ($agrupamento_reverse as $tempo => $valor) {
+                if (empty($valor)) {
+                    unset($agrupamentos[$tempo]);
+                } else {
+                    break;
+                }
+            }
+        }
+    }
 
 }

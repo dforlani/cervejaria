@@ -82,7 +82,7 @@ class VendaSearch extends Venda {
         $order = [];
 
         $select[] = 'SUM(item_venda.preco_final) as pagamentos';
-        $select[] = 'SUM(item_venda.preco_final - preco.quantidade*produto.custo_compra_producao*item_venda.quantidade) as pagamentos_liquido';
+        $select[] = 'SUM(item_venda.preco_final - item_venda.preco_custo_item) as pagamentos_liquido';
 
         if ($por_dia) {
             $groupBy[] = 'DAY(dt_venda)';

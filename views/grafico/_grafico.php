@@ -54,7 +54,8 @@ foreach ($resultado as $index => $agrupamentos) {
                         borderColor: randomColorGenerator(), 
                         backgroundColor: randomColorGenerator(), 
                         data: " . json_encode(array_values($resultado[$index])) . ",
-                        fill: false
+                        fill: false,
+                        lineTension: 0
                     },";
 }
 ?>

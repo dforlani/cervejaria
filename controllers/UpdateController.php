@@ -359,12 +359,26 @@ ALTER TABLE `caixa`
 
         //26-10-2019 Inclusão de novo tipo de item caixa
         $this->atualizaBanco("ALTER TABLE `item_caixa` CHANGE `tipo` `tipo` ENUM('Abertura de Caixa','Entrada - Recebimento de Pagamento','Saída - Pagamento de Despesa','Sangria','Complementação de Caixa') CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;", "update_novo_item_caixa", 'Update tabela item_caixa, novo item caixa');
-        
-         //30-10-2019 Inclusão de configuração para indicar de quantos em quantos minutos deve ser feito o backup automático          
+
+        //30-10-2019 Inclusão de configuração para indicar de quantos em quantos minutos deve ser feito o backup automático          
         $this->atualizaBanco("INSERT INTO CONFIGURACAO (tipo, valor) VALUES ('tempo_em_minutos_para_backup_automatico', '10');", "log_tempo_em_minutos_para_backup_automatico", 'Inicialização do tempo configurado para fazer o backup automático em 10 minutos');
-        
-         //30-10-2019 Inclusão de configuração para indicar a quantos minutos se passaram desde o último backup     
+
+        //30-10-2019 Inclusão de configuração para indicar a quantos minutos se passaram desde o último backup     
         $this->atualizaBanco("INSERT INTO CONFIGURACAO (tipo, valor) VALUES ('dia_e_hora_desde_ultimo_backup_automatico', '2019-10-30 13:27:18');", "log_dia_e_hora_desde_ultimo_backup_automatico", 'Inicialização da configuração que indica que dia e hora foi realizado o último backup');
+
+        //08-11-2019 Correção da codificação que foi utilizada no nome das coisas no início da utilização do sistema
+        $this->atualizaBanco("update produto set nome  = convert(cast(convert(nome using  latin1) as binary) using utf8);", "update_charset_produto", 'Correção de charset na tabela de produtos');
+        $this->atualizaBanco("update preco set denominacao = convert(cast(convert(denominacao using latin1) as binary) using utf8)", "update_charset_preco", 'Correção de charset na tabela de preço');
+        $this->atualizaBanco(" update cliente set nome = convert(cast(convert(nome using latin1) as binary) using utf8)", "update_charset_cliente", 'Correção de charset na tabela de cliente');
+
+        $this->atualizaBanco(" ALTER TABLE `item_venda` ADD `preco_custo_item` DECIMAL(10,2) NOT NULL AFTER `preco_final`;)", "update_add_column_preco_custo_item_table_item_venda", 'Inclusão de Preço de Custo do Item na tabela Item Venda');
+
+        $this->atualizaBanco("update item_venda 
+                                join preco on pk_preco = fk_preco
+                                join produto on pk_produto = fk_produto    
+                             set preco_custo_item = custo_compra_producao * preco.quantidade  * item_venda.quantidade", "update_column_preco_custo_item", 'Correção dos valores de preço de custo');
+
+
 
 
         echo 'Atualização do banco encerrada<br>';
@@ -376,7 +390,7 @@ ALTER TABLE `caixa`
         $conf = Configuracao::findOne(['tipo' => $nome_configuracao]);
         if (empty($conf)) {
             try {
-                ConfiguracaoController::backup("update_banco_".$nome_configuracao);//vai fazer um backup antes de cada atualização do banco
+                ConfiguracaoController::backup("update_banco_" . $nome_configuracao); //vai fazer um backup antes de cada atualização do banco
                 $posts = Yii::$app->db->createCommand($comando)->execute();
                 echo("<br>$mensagem<br>");
                 $conf = new Configuracao();

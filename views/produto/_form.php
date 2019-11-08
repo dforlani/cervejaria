@@ -16,6 +16,18 @@ use yii\widgets\ActiveForm;
 ?>
 
 
+<script>
+    $(document).ready(function () {        
+        $('#bttSubmit').click(function (event) {
+            if ($('#produto-custo_compra_producao').val() == "" || $('#produto-custo_compra_producao').val() == "0" || $('#produto-custo_compra_producao').val() == "0.00") {
+                if (!confirm('ATENÇÃO! O Preço de Custo está zerado. Sem ele, os itens vendidos não terão preço de custo e o relatório de vendas ficará errado. Deseja continuar?')) {
+                    event.preventDefault();
+                }
+            }
+        });
+    });
+</script>
+
 <div class="produto-form">
 
     <?php $form = ActiveForm::begin(); ?>
@@ -75,15 +87,14 @@ use yii\widgets\ActiveForm;
                     'pluginOptions' => [
                         'allowClear' => true
                     ],
-                    'pluginEvents' => [                                         
-                            "select2:select" =>  "function() {
+                    'pluginEvents' => [
+                        "select2:select" => "function() {
                                  $('#hlp_custo_compra_producao').text($('#select2-produto-fk_unidade_medida-container').text().substring(1));
                                  }",
-                         "select2:unselect" => "function() {
+                        "select2:unselect" => "function() {
                                  $('#hlp_custo_compra_producao').text('');
                                  }",
-
-                        ]
+                    ]
                 ])->label('Unidade de Medida');
                 ?>
             </div>
@@ -94,11 +105,10 @@ use yii\widgets\ActiveForm;
                         'prefix' => 'R$ ',
                         'suffix' => '',
                         'allowMinus' => false,
-                        
                     ],
                 ]);
                 ?>
-                <span style="color:blue;font-size:12px">Insira aqui o Preço de Custo do <b><span style="color:blue;font-weight:bold" id='hlp_custo_compra_producao'> <?= (@$model->unidadeMedida->unidade_medida)?></b>. Vai ser utilizado para calcular o preço líquido.  </span>             
+                <span style="color:blue;font-size:12px">Insira aqui o Preço de Custo do <b><span style="color:blue;font-weight:bold" id='hlp_custo_compra_producao'> <?= (@$model->unidadeMedida->unidade_medida) ?></b>. Vai ser utilizado para calcular o preço líquido.  </span>             
                 </span>
 
             </div>
@@ -155,7 +165,9 @@ use yii\widgets\ActiveForm;
 
 
     <div class="form-group">
-        <?= Html::submitButton('Salvar', ['class' => 'btn btn-success']) ?>
+        <?=
+        Html::submitButton('Salvar', ['class' => 'btn btn-success', 'id' => 'bttSubmit'])
+        ?>
     </div>
 
     <?php ActiveForm::end(); ?>
