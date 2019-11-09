@@ -9,11 +9,10 @@ use yii\widgets\ActiveForm;
 /* @var $form ActiveForm */
 ?>
 <script>
-
     window.print();
 
-
 </script>
+
 <div style='width: 150px; margin-left: 20px; font-size:10px'>
     <?= Yii::$app->formatter->asDatetime(date('Y-m-d H:i:s')); ?><br>
     <div style='text-align:center; font-size:14px'> Cervejaria Paraíso</div>
@@ -98,5 +97,22 @@ use yii\widgets\ActiveForm;
     </div>
 </div>
 <script>
-    window.close();
+    var i = 0;
+    //por algum motivo não sabido, chamar o window.close diretamente passou a fechar a tela sem esperar o print
+    //mas colocando ele dentro do setInterval, ele espera
+    var loop = setTimeout(function () {
+
+        window.close();
+
+    }, 1000);
+
+    //outra variação pra funcionar em outros browsers
+    window.onfocus = function () {
+        setTimeout(function () {
+            window.close();
+        }, 500);
+    }
+
+
+  
 </script>
