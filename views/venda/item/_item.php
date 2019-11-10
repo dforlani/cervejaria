@@ -5,8 +5,8 @@ use kartik\number\NumberControl;
 use kartik\widgets\Select2;
 use yii\grid\GridView;
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
 use yii\web\View;
+use yii\widgets\ActiveForm;
 ?>
 
 <script>
@@ -95,14 +95,15 @@ use yii\web\View;
                 </div>
                 <div class="row">
 
-                    <div class="col-sm-2" style="">  
+                    <div class="col-sm-3" style="">  
 
                         <?=
                         $form->field($modelItem, 'quantidade')->widget(NumberControl::classname(), [
                             'maskedInputOptions' => [
                                 'prefix' => '',
                                 'suffix' => '',
-                                'allowMinus' => false
+                                'allowMinus' => false,
+                                'digits' => 3,
                             ],
                         ]);
                         ?>
@@ -162,7 +163,9 @@ use yii\web\View;
                 ],
                 [
                     'attribute' => 'quantidade',
-                    'format' => 'currency',
+                    'value' => function($model) {
+                        return Yii::$app->formatter->asDecimal($model->quantidade, 3);
+                    },
                     'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
                 ],
                 [
