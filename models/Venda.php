@@ -107,12 +107,15 @@ class Venda extends ActiveRecord {
         $total = 0;
         if (!empty($precos)) {
             foreach ($precos as $preco) {
-                $total = $total + $preco->preco_final;
+                if (is_numeric($preco->preco_final))
+                    $total = $total + $preco->preco_final;
             }
         }
 
         $this->valor_total = $total;
-        $this->valor_final = $total - $this->desconto;
+        $desconto = is_numeric($this->desconto) ? $this->desconto : 0;
+        
+        $this->valor_final = $total - $desconto;
 
         $this->troco = $this->getTroco();
     }
@@ -226,7 +229,13 @@ class Venda extends ActiveRecord {
     }
 
     public function getSaldo() {
-        return $this->valor_total - ($this->valor_pago_credito + $this->valor_pago_dinheiro + $this->valor_pago_debito + $this->desconto);
+        $valor_total = is_numeric($this->valor_total) ? $this->valor_total : 0;
+        $valor_pago_credito = is_numeric($this->valor_pago_credito) ? $this->valor_pago_credito : 0;
+        $valor_pago_dinheiro = is_numeric($this->valor_pago_dinheiro) ? $this->valor_pago_dinheiro : 0;
+        $valor_pago_debito = is_numeric($this->valor_pago_debito) ? $this->valor_pago_debito : 0;
+        $desconto = is_numeric($this->desconto) ? $this->desconto : 0;
+
+        return $valor_total - ($valor_pago_credito + $valor_pago_dinheiro + $valor_pago_debito + $desconto);
     }
 
     public function getSaldoFormatedBR() {
