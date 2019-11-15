@@ -85,9 +85,9 @@ use yii\widgets\ActiveForm;
         Pago:<?php echo $model->getValorTotalPago() ?><br>
         <?php
         if ($model->hasFalta())
-            echo "Falta: <b><span style='color:red'> {$model->getSaldoFormatedBR()}</span></b>";
+            echo "Falta:  {$model->getSaldoFormatedBR()}";
         elseif ($model->hasTroco())
-            echo "Troco: <b><span style='color:green'> {$model->getSaldoFormatedBR()}</span></b>";
+            echo "Troco:{$model->getSaldoFormatedBR()}";
         else
             echo $model->getSaldoFormatedBR();
         ?><br>
