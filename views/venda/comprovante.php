@@ -91,9 +91,7 @@ use yii\widgets\ActiveForm;
         else
             echo $model->getSaldoFormatedBR();
         ?><br>
-        <b>Valor Final</b>: <?= Yii::$app->formatter->asCurrency($model->valor_final) ?> <br>
-        <div>
-        </div>
+        <b>Valor Final</b>: <?= Yii::$app->formatter->asCurrency($model->valor_final) ?> <br>    
     </div>
 </div>
 <script>
