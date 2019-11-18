@@ -89,7 +89,8 @@ use kartik\number\NumberControl;
                     'maskedInputOptions' => [
                         'prefix' => ' ',
                         'suffix' => '  ' . (!empty($model->produto->unidadeMedida) ? $model->produto->unidadeMedida->unidade_medida : 'Sem Unidade de Medida'),
-                        'allowMinus' => false
+                        'allowMinus' => false,
+                         'digits' => 3,
                     ],]);
                 ?>
                 <span style="color:blue;">Preço de Custo: <b><span style="color:blue;font-weight:bold" id='hlp_preco_custo'> <?= $model->produto->custo_compra_producao * $model->quantidade ?> </span> </b>            

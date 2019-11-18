@@ -87,16 +87,16 @@ class VendaSearch extends Venda {
         $select[] = 'SUM(if(item_venda.preco_custo_item = 0,1,0)) as itens_sem_preco_custo';
 
         if ($por_dia) {
-            $groupBy[] = 'DAY(dt_venda)';
-            $groupBy[] = 'MONTH(dt_venda)';
-            $groupBy[] = 'YEAR(dt_venda)';
-            $select[] = 'dt_venda';
-            $order['dt_venda'] = SORT_ASC;
+            $groupBy[] = 'DAY(dt_pagamento)';
+            $groupBy[] = 'MONTH(dt_pagamento)';
+            $groupBy[] = 'YEAR(dt_pagamento)';
+            $select[] = 'dt_pagamento';
+            $order['dt_pagamento'] = SORT_ASC;
         } elseif ($por_mes) {
-            $groupBy[] = 'MONTH(dt_venda)';
-            $groupBy[] = 'YEAR(dt_venda)';
-            $select[] = 'DATE_FORMAT(`dt_venda`, "%m/%Y" ) AS  dt_venda';
-            $order['dt_venda'] = SORT_ASC;
+            $groupBy[] = 'MONTH(dt_pagamento)';
+            $groupBy[] = 'YEAR(dt_pagamento)';
+            $select[] = 'DATE_FORMAT(`dt_pagamento`, "%m/%Y" ) AS  dt_pagamento';
+            $order['dt_pagamento'] = SORT_ASC;
         }
 
         if ($por_produto) {
@@ -136,7 +136,7 @@ class VendaSearch extends Venda {
         $data_inicial_convertida = date("Y-m-d", strtotime(str_replace('/', '-', $data_inicial)));
         $data_final_convertida = date("Y-m-d", strtotime(str_replace('/', '-', $data_final)));
 
-        $query->andWhere("dt_venda BETWEEN  '$data_inicial_convertida' AND '$data_final_convertida 23:59:59.999'");
+        $query->andWhere("dt_pagamento BETWEEN  '$data_inicial_convertida' AND '$data_final_convertida 23:59:59.999'");
         $query->andFilterWhere(['like', 'cliente.nome', $this->nome_cliente]);
         $query->andFilterWhere(['like', 'produto.nome', $this->produto]);
 

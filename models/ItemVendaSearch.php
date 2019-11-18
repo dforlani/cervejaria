@@ -148,7 +148,7 @@ class ItemVendaSearch extends ItemVenda {
             }
         } elseif ($por_cliente) {
             foreach ($query->all() as $item) {
-                $resultado[$item->aux_nome_cliente][$item->aux_temporizador] = $item->aux_quantidade;
+                $resultado[!empty($item->aux_nome_cliente) ? $item->aux_nome_cliente:"Sem Identificação" ][$item->aux_temporizador] = $item->aux_quantidade;
             }
         } else {
             $resultado['total'] = ArrayHelper::map($query->all(), 'aux_temporizador', 'aux_quantidade');

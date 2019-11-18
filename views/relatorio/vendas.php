@@ -73,8 +73,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
             <div class="col-md-3">
                 <?php
-                echo '<label class="control-label">Apenas Vendas Pagas</label>';
-                echo SwitchInput::widget(['name' => 'apenas_vendas_pagas', 'value' => $apenas_vendas_pagas]);
+               // echo '<label class="control-label">Apenas Vendas Pagas</label>';
+               // echo SwitchInput::widget(['name' => 'apenas_vendas_pagas', 'value' => $apenas_vendas_pagas]);
                 ?>
             </div>
         </div>
@@ -157,15 +157,16 @@ $this->params['breadcrumbs'][] = $this->title;
     ?>
 
     
-    <?=
+    <?php
+    $itens_problema = Somatorio::getTotal($dataProvider->models, 'itens_sem_preco_custo');
+    echo 
     GridView::widget([
         'panelBeforeTemplate' => "                               
                                <div class='btn-toolbar kv-grid-toolbar ' role='toolbar'>
                                 {export}
-                                
+                                <b>&nbsp; É considerado para afeito de cálculo a data do fechamento do pagamento</b><br>
                                 " .'<b>'
-        . '<span style="color:red">&nbsp;&nbsp;&nbsp;&nbsp;' . Somatorio::getTotal($dataProvider->models, 'itens_sem_preco_custo')
-        . ' itens nesta página não possuem preço de custo da produção/compra.</span></b></div>' ,
+        . '<span style="color:red">&nbsp;&nbsp;' . ( $itens_problema > 0? $itens_problema.' itens nesta página não possuem preço de custo da produção/compra':''). '</span></b></div>' ,
         'panel' => [
             'type' => GridView::TYPE_PRIMARY,
             'before' => true,

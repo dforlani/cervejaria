@@ -116,8 +116,18 @@ $this->params['breadcrumbs'][] = 'Update';
                 'columns' => [
                     ['class' => 'yii\grid\SerialColumn'],
                     'denominacao',
-                    'preco:currency',
-                    'quantidade:currency',
+                    [
+                        'attribute' => 'preco',
+                        'format' => 'currency',
+                        'contentOptions' => ['style' => 'text-align:right;'],
+                    ],
+                    [
+                        'attribute' => 'quantidade',
+                        'value' => function($model) {
+                            return Yii::$app->formatter->asDecimal($model->quantidade, 3);
+                        },
+                        'contentOptions' => ['style' => 'text-align:right;'],
+                    ],
                     [
                         'class' => 'yii\grid\ActionColumn',
                         'header' => 'Ações',

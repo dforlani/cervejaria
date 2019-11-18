@@ -17,7 +17,7 @@ use yii\widgets\ActiveForm;
 
 
 <script>
-    $(document).ready(function () {        
+    $(document).ready(function () {
         $('#bttSubmit').click(function (event) {
             if ($('#produto-custo_compra_producao').val() == "" || $('#produto-custo_compra_producao').val() == "0" || $('#produto-custo_compra_producao').val() == "0.00") {
                 if (!confirm('ATENÇÃO! O Preço de Custo está zerado. Sem ele, os itens vendidos não terão preço de custo e o relatório de vendas ficará errado. Deseja continuar?')) {
@@ -43,7 +43,8 @@ use yii\widgets\ActiveForm;
                     'maskedInputOptions' => [
                         'prefix' => ' ',
                         'suffix' => '',
-                        'allowMinus' => false
+                        'allowMinus' => false,
+                        'digits' => 3,
                     ],
                 ]);
                 ?>
@@ -55,7 +56,8 @@ use yii\widgets\ActiveForm;
                     'maskedInputOptions' => [
                         'prefix' => ' ',
                         'suffix' => '',
-                        'allowMinus' => false
+                        'allowMinus' => false,
+                        'digits' => 3,
                     ],
                 ]);
                 ?>
@@ -72,7 +74,8 @@ use yii\widgets\ActiveForm;
                     'maskedInputOptions' => [
                         'prefix' => ' ',
                         'suffix' => '',
-                        'allowMinus' => false
+                        'allowMinus' => false,
+                         'digits'=>3,
                     ],
                 ]);
                 ?>

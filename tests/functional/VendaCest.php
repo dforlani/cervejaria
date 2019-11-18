@@ -23,18 +23,16 @@ class ContactFormCest {
         $I->see('Itens', 'h3');
     }
 
-    public function submitPagarForm(FunctionalTester $I) {
-         $venda = Venda::find()->one(); //busca uma venda pra servir de teste
-        $output = new Output([]);
-        $output->writeln('Testando a venda id=' . $venda->pk_venda);
-        $I->amOnRoute('venda/venda', ['id' => $venda->pk_venda]);
-        
-        $I->click('h3 > button'); //botão pagar
-        
-        $I->see('Valor');
-        
-        
-    }
+//    public function submitPagarForm(FunctionalTester $I) {
+//        $venda = Venda::find()->one(); //busca uma venda pra servir de teste
+//       // $output = new Output([]);
+//      //  $output->writeln('Testando a venda id=' . $venda->pk_venda);
+//        $I->amOnRoute('venda/venda', ['id' => $venda->pk_venda]);
+//
+//        $I->click('h3 > button'); //botão pagar
+//
+//        $I->see('Valor');
+//    }
 
 //    public function submitPagarForm(FunctionalTester $I)
 //    {

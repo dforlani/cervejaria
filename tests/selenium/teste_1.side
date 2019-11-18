@@ -1,0 +1,279 @@
+{
+  "id": "1cc1c149-b24b-4ee9-8039-10bfa8fb6ee5",
+  "version": "2.0",
+  "name": "teste",
+  "url": "http://localhost",
+  "tests": [{
+    "id": "89278426-2e8e-433f-9607-7825c1cf2c31",
+    "name": "cervejaria",
+    "commands": [{
+      "id": "ba6a8aa6-3ffd-4686-be1b-1a8a828bdd4a",
+      "comment": "",
+      "command": "open",
+      "target": "/cervejaria/web/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "38929bb1-94b9-4989-a426-2e76de5ea111",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1936x1066",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "1afc5789-30a6-4ae3-8917-8f9403dbe028",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Balcão",
+      "targets": [
+        ["linkText=Balcão", "linkText"],
+        ["css=.kv-sidenav > li:nth-child(1) > a", "css:finder"],
+        ["xpath=//a[contains(@href, '/cervejaria/web/venda/venda')]", "xpath:href"],
+        ["xpath=//a", "xpath:position"],
+        ["xpath=//a[contains(.,'Balcão')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "6527101b-4279-4b06-88f1-3a71be8bf193",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Tap List",
+      "targets": [
+        ["linkText=Tap List", "linkText"],
+        ["css=li:nth-child(4) > a", "css:finder"],
+        ["xpath=//a[contains(text(),'Tap List')]", "xpath:link"],
+        ["xpath=//a[contains(@href, '/cervejaria/web/produto/tap-list')]", "xpath:href"],
+        ["xpath=//li[4]/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Tap List')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "3fe8875d-88eb-42e9-90d3-2574103f1402",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Todas as Vendas",
+      "targets": [
+        ["linkText=Todas as Vendas", "linkText"],
+        ["css=li:nth-child(6) > a", "css:finder"],
+        ["xpath=//a[contains(text(),'Todas as Vendas')]", "xpath:link"],
+        ["xpath=(//a[contains(@href, '/cervejaria/web/venda')])[3]", "xpath:href"],
+        ["xpath=//li[6]/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Todas as Vendas')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "52c51e1b-f0a6-48a8-abff-8ca56e763f1f",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Clientes",
+      "targets": [
+        ["linkText=Clientes", "linkText"],
+        ["css=.nav > li:nth-child(7) > a", "css:finder"],
+        ["xpath=//a[contains(@href, '/cervejaria/web/cliente')]", "xpath:href"],
+        ["xpath=//li[7]/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Clientes')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "eb4a6b1d-ec9a-483e-aa44-27a23659c59b",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Balcão",
+      "targets": [
+        ["linkText=Balcão", "linkText"],
+        ["css=.kv-sidenav > li:nth-child(1) > a", "css:finder"],
+        ["xpath=//a[contains(@href, '/cervejaria/web/venda/venda')]", "xpath:href"],
+        ["xpath=//a", "xpath:position"],
+        ["xpath=//a[contains(.,'Balcão')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "abe96860-f896-4504-b92a-4760d62862a5",
+      "comment": "",
+      "command": "click",
+      "target": "id=select2-venda-fk_cliente-container",
+      "targets": [
+        ["css=.select2-container--below .select2-selection__arrow", "css:finder"],
+        ["xpath=//form[@id='w0']/div/div/div/div/span/span/span/span[2]", "xpath:idRelative"],
+        ["xpath=//span/span[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "d2b7e830-a0ab-494c-b933-d5b69ef0c66e",
+      "comment": "",
+      "command": "click",
+      "target": "css=.select2-selection__arrow",
+      "targets": [
+        ["id=btn_submit", "id"],
+        ["css=#btn_submit", "css:finder"],
+        ["xpath=//button[@id='btn_submit']", "xpath:attributes"],
+        ["xpath=//form[@id='w0']/div/div/div[3]/button", "xpath:idRelative"],
+        ["xpath=//button", "xpath:position"],
+        ["xpath=//button[contains(.,'Nova Venda')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "477ea45e-1ad0-479d-909c-98775c66f9b3",
+      "comment": "",
+      "command": "click",
+      "target": "css=tr:nth-child(1) > td > a",
+      "targets": [
+        ["css=tr:nth-child(1) > td > a", "css:finder"],
+        ["xpath=//div[@id='w2']/table/tbody/tr/td[4]/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, '/cervejaria/web/venda/adiciona-item-by-tap-list?pk_venda=276&pk_preco=17')]", "xpath:href"],
+        ["xpath=//td[4]/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "46c55782-acc4-41ef-a953-2ee47f87bf70",
+      "comment": "",
+      "command": "click",
+      "target": "css=tr:nth-child(2) a",
+      "targets": [
+        ["css=tr:nth-child(2) a", "css:finder"],
+        ["xpath=//div[@id='w2']/table/tbody/tr[2]/td[4]/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, '/cervejaria/web/venda/adiciona-item-by-tap-list?pk_venda=276&pk_preco=24')]", "xpath:href"],
+        ["xpath=//tr[2]/td[4]/a", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "261eef39-4b8f-4241-9d91-6dfcec075fa4",
+      "comment": "",
+      "command": "click",
+      "target": "id=select2-itemvenda-fk_preco-container",
+      "targets": [
+        ["id=select2-itemvenda-fk_preco-container", "id"],
+        ["css=#select2-itemvenda-fk_preco-container", "css:finder"],
+        ["xpath=//span[@id='select2-itemvenda-fk_preco-container']", "xpath:attributes"],
+        ["xpath=//form[@id='w0']/div/div/div/div/span/span/span/span", "xpath:idRelative"],
+        ["xpath=//form/div/div/div/div/span/span/span/span", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "518b6afc-a16a-4d87-992e-a48dcf50f9b0",
+      "comment": "",
+      "command": "click",
+      "target": "id=itemvenda-quantidade-disp",
+      "targets": [
+        ["id=itemvenda-quantidade-disp", "id"],
+        ["name=itemvenda-quantidade-disp", "name"],
+        ["css=#itemvenda-quantidade-disp", "css:finder"],
+        ["xpath=//input[@id='itemvenda-quantidade-disp']", "xpath:attributes"],
+        ["xpath=//form[@id='w0']/div/div[2]/div/div/input", "xpath:idRelative"],
+        ["xpath=//div[2]/div/div/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "9871b6ef-fd10-4479-86f5-e762eae92bcf",
+      "comment": "",
+      "command": "click",
+      "target": "id=btn_incluir",
+      "targets": [
+        ["id=btn_incluir", "id"],
+        ["css=#btn_incluir", "css:finder"],
+        ["xpath=//button[@id='btn_incluir']", "xpath:attributes"],
+        ["xpath=//form[@id='w0']/div/div[2]/div[4]/button", "xpath:idRelative"],
+        ["xpath=//button", "xpath:position"],
+        ["xpath=//button[contains(.,'Incluir')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "d8c00011-871d-4da3-9f45-4c841c49fa8a",
+      "comment": "",
+      "command": "click",
+      "target": "css=.btn-primary:nth-child(1)",
+      "targets": [
+        ["css=.btn-primary:nth-child(1)", "css:finder"],
+        ["xpath=//button[@type='button']", "xpath:attributes"],
+        ["xpath=//h3/button", "xpath:position"],
+        ["xpath=//button[contains(.,'Pagar')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "fa73dc78-c150-40ec-9c24-cb9952f4e1a0",
+      "comment": "",
+      "command": "chooseCancelOnNextConfirmation",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "a46c6746-1506-4993-a7cc-088c6780583a",
+      "comment": "",
+      "command": "click",
+      "target": "id=fechar_venda",
+      "targets": [
+        ["id=fechar_venda", "id"],
+        ["css=#fechar_venda", "css:finder"],
+        ["xpath=//button[@id='fechar_venda']", "xpath:attributes"],
+        ["xpath=//form[@id='teste']/div[4]/div[2]/button", "xpath:idRelative"],
+        ["xpath=//div[2]/button", "xpath:position"],
+        ["xpath=//button[contains(.,'Fechar Venda')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "fd893522-f458-4f5b-ac29-2f425f25e35f",
+      "comment": "",
+      "command": "assertConfirmation",
+      "target": "Tem certeza que deseja fechar a venda com valor de pagamento menor que o valor final?",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "3d70efa0-2f8c-4f58-9a3f-9da405cb8fd2",
+      "comment": "",
+      "command": "webdriverChooseCancelOnVisibleConfirmation",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "93ab937f-968e-4495-a690-4d6c2bd3808b",
+      "comment": "",
+      "command": "click",
+      "target": "id=bt_salvar_pre_pagamento",
+      "targets": [
+        ["id=bt_salvar_pre_pagamento", "id"],
+        ["css=#bt_salvar_pre_pagamento", "css:finder"],
+        ["xpath=//button[@id='bt_salvar_pre_pagamento']", "xpath:attributes"],
+        ["xpath=//form[@id='teste']/div[4]/div[2]/button[2]", "xpath:idRelative"],
+        ["xpath=//button[2]", "xpath:position"],
+        ["xpath=//button[contains(.,'Salvar Pré-Pagamento')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "8c24e377-ea7e-4832-bb5a-992e93be0d90",
+      "comment": "",
+      "command": "click",
+      "target": "css=.btn-primary:nth-child(1)",
+      "targets": [
+        ["css=.btn-primary:nth-child(1)", "css:finder"],
+        ["xpath=//button[@type='button']", "xpath:attributes"],
+        ["xpath=//h3/button", "xpath:position"],
+        ["xpath=//button[contains(.,'Pagar')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "99b52088-d51f-4536-a7ff-810550271943",
+      "comment": "",
+      "command": "click",
+      "target": "id=fechar_venda",
+      "targets": [
+        ["id=fechar_venda", "id"],
+        ["css=#fechar_venda", "css:finder"],
+        ["xpath=//button[@id='fechar_venda']", "xpath:attributes"],
+        ["xpath=//form[@id='teste']/div[4]/div[2]/button", "xpath:idRelative"],
+        ["xpath=//div[2]/button", "xpath:position"],
+        ["xpath=//button[contains(.,'Fechar Venda')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "4b3c4ade-a603-4dd2-b671-630a25777be6",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["89278426-2e8e-433f-9607-7825c1cf2c31"]
+  }],
+  "urls": ["http://localhost/"],
+  "plugins": []
+}

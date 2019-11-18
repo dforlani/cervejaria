@@ -1,0 +1,67 @@
+{
+  "id": "661afb2e-3ed5-493f-bdbc-5ff797269da8",
+  "version": "2.0",
+  "name": "cervejaria",
+  "url": "http://localhost",
+  "tests": [{
+    "id": "196c7646-7631-4e87-b695-339785d5bccc",
+    "name": "tt",
+    "commands": [{
+      "id": "a703026f-0beb-4d72-abff-9762cc51f5fd",
+      "comment": "",
+      "command": "open",
+      "target": "/cervejaria/web/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "db529118-f7b2-40c8-b3fa-5d92b47af2cf",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1936x1066",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "36f030ce-9123-4ec5-af06-d8462ea04df4",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Balcão",
+      "targets": [
+        ["linkText=Balcão", "linkText"],
+        ["css=.kv-sidenav > li:nth-child(1) > a", "css:finder"],
+        ["xpath=//a[contains(@href, '/cervejaria/web/venda/venda')]", "xpath:href"],
+        ["xpath=//a", "xpath:position"],
+        ["xpath=//a[contains(.,'Balcão')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "ffd5184e-d1b6-4a46-889a-67fa94dd7bc6",
+      "comment": "",
+      "command": "click",
+      "target": "id=select2-pk_venda_aberta-container",
+      "targets": [
+        ["id=select2-pk_venda_aberta-container", "id"],
+        ["css=#select2-pk_venda_aberta-container", "css:finder"],
+        ["xpath=//span[@id='select2-pk_venda_aberta-container']", "xpath:attributes"],
+        ["xpath=//div[3]/span/span/span/span", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "8ea65a37-1175-4150-b1a5-55a7d49267af",
+      "comment": "",
+      "command": "clickAt",
+      "target": "css=.select2-results__options li:first-of-type",
+      "targets": [],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "f750fbb4-690a-4680-bf6b-10a30bd05de8",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["196c7646-7631-4e87-b695-339785d5bccc"]
+  }],
+  "urls": ["http://localhost/"],
+  "plugins": []
+}
