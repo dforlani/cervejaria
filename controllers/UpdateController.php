@@ -379,6 +379,32 @@ ALTER TABLE `caixa`
                              set preco_custo_item = custo_compra_producao * preco.quantidade  * item_venda.quantidade", "update_column_preco_custo_item", 'Correção dos valores de preço de custo');
 
 
+        //21-11-2019
+        $this->atualizaBanco("       create table pedido_app(
+    pk_pedido_app int not null PRIMARY KEY AUTO_INCREMENT,
+    fk_cliente int not null,
+    status enum('Enviado', 'Em Atendimento', 'Pronto', 'Erro', 'Cancelado pelo Cliente', 'Cancelado pelo Atendente'),
+    FOREIGN KEY (fk_cliente)
+    	REFERENCES cliente(pk_cliente)
+    	ON UPDATE CASCADE
+    	ON DELETE CASCADE    
+    )", "create_table_pedido_app", 'Criação da tabela de pedido_app');
+
+        $this->atualizaBanco("  create table item_pedido_app(
+    pk_item_pedido_app INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    fk_pedido_app int not null,
+    fk_preco int not null,
+    quantidade int not null,
+    FOREIGN KEY (fk_pedido_app)
+    	REFERENCES pedido_app(pk_pedido_app)
+    	ON UPDATE CASCADE
+    	ON DELETE CASCADE,
+     FOREIGN KEY (fk_preco)
+    	REFERENCES preco(pk_preco)
+    	ON UPDATE CASCADE
+    	ON DELETE CASCADE    
+    )", "create_table_item_pedido_app", 'Criação da tabela de item_pedido_app');
+
 
 
         echo 'Atualização do banco encerrada<br>';

@@ -5,6 +5,7 @@
 use app\assets\AppAsset;
 use kartik\widgets\AlertBlock;
 use kartik\widgets\SideNav;
+use yii\bootstrap\Modal;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\View;
@@ -20,8 +21,8 @@ AppAsset::register($this);
     function backupAutomatico() {
         var timer = setTimeout(function () {
             console.log(counter++);
-          
-            var url = "<?= Url::toRoute(['configuracao/backup-automatico']);  ?>";          
+
+            var url = "<?= Url::toRoute(['configuracao/backup-automatico']); ?>";
             data = null;
             $.getJSON(url, data,
                     function (dataResposta, textStatus, jqXHR) {
@@ -32,11 +33,13 @@ AppAsset::register($this);
             if (counter < 3) {
                 backupAutomatico();
             }
-        }, 1000*60);//1 minuto
+        }, 1000 * 60);//1 minuto
     }
 
     backupAutomatico();
 </script>
+
+
 
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -49,11 +52,24 @@ AppAsset::register($this);
         <title><?= Html::encode($this->title) ?></title>
         <?php $this->head() ?>
     </head>
+    <script>
+        $(document).ready(function () {
+            $.post("<?= Url::to(['pedidoapp/pedidos-esperando']); ?>", {'_csrf': '<?= Yii::$app->request->csrfToken ?>'})
+                    .done(function (data) {
+                        $('#divPedidos').html(data);
+                    });
+        });
+
+    </script>
+    <style>
+        .container {width:1400px;margin:0 auto;}
+    </style>
     <body>
         <?php $this->beginBody() ?>
         <div class="content">
             <div class="container">                
                 <div class="row">
+
                     <div class="col-md-2">
                         <?php
                         echo SideNav::widget([
@@ -90,7 +106,7 @@ AppAsset::register($this);
                         ?>
 
                     </div>
-                    <div class="col-md-10">
+                    <div class="col-md-8">
                         <div class="panel panel-default">
 
                             <?=
@@ -103,27 +119,17 @@ AppAsset::register($this);
                                 'useSessionFlash' => true,
                                 'type' => AlertBlock::TYPE_ALERT,
                                 'delay' => 10000,
-                                //'titleOptions' => ['icon' => 'info-sign'],
-                                "alertSettings" => [
-//                                    'settings' => [
-//                                        'pluginOptions' => [
-//                                            'showProgressbar' => true,
-//                                            'icon_type' => 'image',
-//                                            'placement' => [
-//                                                'from' => 'top',
-//                                                'align' => 'right',
-//                                            ],
-//                                        ]
-//                                    ]
-                                ]
                                     ]
                             );
                             ?>
-                            <?php // Alert::widget() ?>
+
                             <?= $content ?>
+
                         </div>
                     </div>
+                    <div id='divPedidos'  class="col-md-2">
 
+                    </div>
                 </div>
             </div>
         </div>
@@ -131,3 +137,4 @@ AppAsset::register($this);
     </body>
 </html>
 <?php $this->endPage() ?>
+
