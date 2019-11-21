@@ -145,6 +145,40 @@ class PedidoappController extends Controller {
     }
 
     /**
+     * O sistema ao ser informado que o pedido tá pronto, busca uma venda aberta do cliente
+     * adiciona os itens na comanda dele e fecha
+     * atualiza o pedido como pronto
+     * 
+     * @return type
+     */
+    public function actionConvertePedidoVenda(){
+          Yii::$app->response->format = Response::FORMAT_JSON;
+          
+        $id_pedido = &$_POST['id'];
+        $pedido = \app\models\PedidoApp::findOne($id_pedido);
+        if(!empty($pedido)){
+            $venda = \app\models\Venda::find()->where(['estado = "aberta" AND cliente.nome = :nome'], [':nome'=>$pedido->cliente->nome])->one();
+            if(!empty($venda)){
+                foreach($pedido->itemPedidoApps as $item_pedido){
+                    $item_venda = new \app\models\ItemVenda();
+                    $item_venda->fk_venda = $venda->pk_venda;
+                    $item_venda->fk_preco = $item_pedido->fk_preco;
+                    $item_venda->quantidade = $item_pedido->quantidade;
+                    $item_venda->save();
+                }
+                
+                $venda->save();//atualizar os totais
+                
+                $pedido->status = \app\models\PedidoApp::$CONST_STATUS_PRONTO;
+                $pedido->save();
+            }
+        }
+        
+        return ['success'=>'true', 'id_venda'=>0];
+    }
+    
+    
+    /**
      * Finds the Caixa model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id

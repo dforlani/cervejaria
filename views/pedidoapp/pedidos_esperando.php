@@ -15,8 +15,8 @@ if (!empty($pedidos)) {
                 <h3 class="panel-title">Pedido</h3>
             </div>
             <div class="panel-body" style='background-color: #ff704d'>
-                    <?php foreach ($pedidos as $pedido) { ?>
-                    <div id_pedido='<?= $pedido->pk_pedido_app ?>' type="button"  class="btn btn-default" data-toggle="modal" data-target="#modalPedido" style='margin: 5px;text-align: left;min-width: 100px;min-height:100px; '>
+                <?php foreach ($pedidos as $pedido) { ?>
+                    <div id_pedido='<?= $pedido->pk_pedido_app ?>' type="button"  class="btn btn-default btn-pedido" data-toggle="modal" data-target="#modalPedido" style='margin: 5px;text-align: left;max-width: 200px;min-height:100px; '>
                         <b><?= $pedido->status ?></b><br>    
                         <b><?= $pedido->cliente->nome; ?></b> <br>
                         <?php
@@ -51,20 +51,32 @@ if (!empty($pedidos)) {
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                <button type="button" class="btn btn-primary">Pronto</button>
-                <button type="button" class="btn btn-danger">Cancelar</button>
+                <button type="button" id_pedido="" id="btn_pedido_pronto" class="btn btn-primary">Pronto</button>
+                <button type="button"  class="btn btn-danger">Cancelar Pedido</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    $(".btn.btn-default").click(function () {
+    $(".btn-pedido").click(function () {
         id = $(this).attr('id_pedido');
         console.log(id);
         $.get("<?= Url::to(['pedidoapp/pedido-atendimento']); ?>", {'id': id, '_csrf': '<?= Yii::$app->request->csrfToken ?>'})
                 .done(function (data) {
                     $('#divPedidoAtendimento').html(data);
+                    $('#btn_pedido_pronto').attr('id_pedido', id);
+                });
+    });
+
+    $("#btn_pedido_pronto").click(function () {
+        id = $(this).attr('id_pedido');
+        
+        $.post("<?= Url::to(['pedidoapp/converte-pedido-venda']); ?>", {'id': id, '_csrf': '<?= Yii::$app->request->csrfToken ?>'})
+                .done(function (data) {
+                    if(data.success){
+                        window.location='./venda?id='.data.id_venda; 
+                    }
                 });
     });
 </script>
