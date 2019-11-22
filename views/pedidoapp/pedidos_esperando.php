@@ -75,11 +75,15 @@ if (!empty($pedidos)) {
 
         $("#btn_pedido_pronto").click(function () {
             id_venda = $(this).attr('id_venda');
+            id_pedido = $(this).attr('id_pedido');
 
-            $.post("<?= Url::to(['pedidoapp/converte-pedido-venda']); ?>", {'id_venda': id_venda, '_csrf': '<?= Yii::$app->request->csrfToken ?>'})
+            $.post("<?= Url::to(['pedidoapp/converte-pedido-venda']); ?>", {'id_venda': id_venda,  'id_pedido': id_pedido, '_csrf': '<?= Yii::$app->request->csrfToken ?>'})
                     .done(function (data) {
-                        if (data.success) {
-                              window.location.href = "<?= Url::to(['venda/venda']); ?>?id="+id_venda;
+                        if (data.success == 'true') {
+                            window.location.href = "<?= Url::to(['venda/venda']); ?>?id=" + id_venda;
+                        }else{
+                            alert('Ocorreu um erro durante a conversão. Confira a venda!!!!!!!!!');
+                            window.location.href = "<?= Url::to(['venda/venda']); ?>?id=" + id_venda;
                         }
                     });
         });

@@ -2,8 +2,12 @@
 
 namespace app\controllers;
 
-use app\models\Cliente;
 use app\models\ItemCaixa;
+use app\models\ItemPedidoApp;
+use app\models\ItemVenda;
+use app\models\PedidoApp;
+use app\models\Preco;
+use app\models\Venda;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -38,7 +42,7 @@ class PedidoappController extends Controller {
     public function actionCardapio() {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        $cardapio = \app\models\Preco::find()->where("is_tap_list = 1", null)->orderBy('pos_tap_list')->all();
+        $cardapio = Preco::find()->where("is_tap_list = 1", null)->orderBy('pos_tap_list')->all();
 
         $retorno = [];
         if (!empty($cardapio)) {
@@ -71,20 +75,20 @@ class PedidoappController extends Controller {
             if (!empty($itens)) {
                 //primeiro cria um novo pedido
 
-                $pedido = new \app\models\PedidoApp();
+                $pedido = new PedidoApp();
                 $pedido->fk_cliente = $cliente_id;
-                $pedido->status = \app\models\PedidoApp::$CONST_STATUS_ENVIADO;
+                $pedido->status = PedidoApp::$CONST_STATUS_ENVIADO;
                 if ($pedido->save()) {
 
                     //agora inclui os itens solicitados
                     foreach ($itens as $fk_preco => $quantidade) {
-                        $item_pedido = new \app\models\ItemPedidoApp();
+                        $item_pedido = new ItemPedidoApp();
                         $item_pedido->fk_pedido_app = $pedido->pk_pedido_app;
                         $item_pedido->fk_preco = $fk_preco;
                         $item_pedido->quantidade = $quantidade;
 
                         if (!$item_pedido->save()) {
-                            $pedido->status = \app\models\PedidoApp::$CONST_STATUS_ERRO;
+                            $pedido->status = PedidoApp::$CONST_STATUS_ERRO;
                             $pedido->save();
 
                             return "Ocorreu um erro ao enviar o seu pedido. Dirija-se ao caixa";
@@ -107,7 +111,7 @@ class PedidoappController extends Controller {
     public function actionStatus() {
         Yii::$app->response->format = Response::FORMAT_JSON;
         $id = &$_POST['id'];
-        $model = \app\models\PedidoApp::findOne($id);
+        $model = PedidoApp::findOne($id);
         if (!empty($model)) {
             return ['status' => $model->status];
         } else {
@@ -118,30 +122,29 @@ class PedidoappController extends Controller {
     public function actionTeste() {
         return $this->render('teste_pedir');
     }
-    
+
     /**
      * Vai vir uma requisição ajax de qualquer página e sera mostrado uma tela se tiver algum pedido esperando
      * 
      * @return type
      */
-    public function actionPedidoAtendimento($id){
-        $model = \app\models\PedidoApp::findOne($id);
-        $model->status = \app\models\PedidoApp::$CONST_STATUS_EM_ATENDIMENTO;
+    public function actionPedidoAtendimento($id) {
+        $model = PedidoApp::findOne($id);
+        $model->status = PedidoApp::$CONST_STATUS_EM_ATENDIMENTO;
         $model->save();
-        return $this->renderAjax('pedido_atendimento', ['model'=>$model]);
+        return $this->renderAjax('pedido_atendimento', ['model' => $model]);
     }
-    
-      
+
     /**
      * Vai vir uma requisição ajax de qualquer página e sera mostrado uma tela se tiver algum pedido esperando
      * 
      * @return type
      */
-    public function actionPedidosEsperando(){
-        $status = \app\models\PedidoApp::$CONST_STATUS_PRONTO;
-        $pedidos = \app\models\PedidoApp::find()->where("status  not like '{$status}' order by pk_pedido_app ")->all();
-        
-        return $this->renderAjax('pedidos_esperando', ['pedidos'=>$pedidos]);
+    public function actionPedidosEsperando() {
+        $status = PedidoApp::$CONST_STATUS_PRONTO;
+        $pedidos = PedidoApp::find()->where("status  not like '{$status}' order by pk_pedido_app ")->all();
+
+        return $this->renderAjax('pedidos_esperando', ['pedidos' => $pedidos]);
     }
 
     /**
@@ -151,33 +154,47 @@ class PedidoappController extends Controller {
      * 
      * @return type
      */
-    public function actionConvertePedidoVenda(){
-          Yii::$app->response->format = Response::FORMAT_JSON;
-          
-        $id_pedido = &$_POST['id'];
-        $pedido = \app\models\PedidoApp::findOne($id_pedido);
-        if(!empty($pedido)){
-            $venda = \app\models\Venda::find()->where(['estado = "aberta" AND cliente.nome = :nome'], [':nome'=>$pedido->cliente->nome])->one();
-            if(!empty($venda)){
-                foreach($pedido->itemPedidoApps as $item_pedido){
-                    $item_venda = new \app\models\ItemVenda();
+    public function actionConvertePedidoVenda() {
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $id_venda = &$_POST['id_venda'];
+        $id_pedido = &$_POST['id_pedido'];
+        $pedido = PedidoApp::findOne($id_pedido);
+        $connection = \Yii::$app->db;
+        $transaction = $connection->beginTransaction();
+        $salvoTodos = true;
+
+        if (!empty($pedido)) {
+            $venda = Venda::findOne($id_venda);
+            if (!empty($venda)) {
+                foreach ($pedido->itensPedidoApp as $item_pedido) {
+
+                    $item_venda = new ItemVenda();
                     $item_venda->fk_venda = $venda->pk_venda;
                     $item_venda->fk_preco = $item_pedido->fk_preco;
                     $item_venda->quantidade = $item_pedido->quantidade;
-                    $item_venda->save();
+                    $item_venda->preco_unitario = $item_pedido->preco->preco;
+                    $salvoTodos = $salvoTodos && $item_venda->save();
                 }
-                
-                $venda->save();//atualizar os totais
-                
-                $pedido->status = \app\models\PedidoApp::$CONST_STATUS_PRONTO;
-                $pedido->save();
+
+                $salvoTodos = $salvoTodos && $venda->save(); //atualizar os totais
+
+                $pedido->status = PedidoApp::$CONST_STATUS_PRONTO;
+                $salvoTodos = $salvoTodos && $pedido->save();
+                if ($salvoTodos) {
+                    $transaction->commit();
+                    return ['success' => 'true'];
+                } else {
+                    $transaction->rollBack();
+                    return ['success' => 'false'];
+                }
             }
         }
-        
-        return ['success'=>'true', 'id_venda'=>0];
+        $transaction->rollBack();
+        return ['success' => 'false'];
     }
-    
-    
+
     /**
      * Finds the Caixa model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
