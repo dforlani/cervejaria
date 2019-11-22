@@ -383,11 +383,16 @@ ALTER TABLE `caixa`
         $this->atualizaBanco("       create table pedido_app(
     pk_pedido_app int not null PRIMARY KEY AUTO_INCREMENT,
     fk_cliente int not null,
+    fk_venda int not null,
     status enum('Enviado', 'Em Atendimento', 'Pronto', 'Erro', 'Cancelado pelo Cliente', 'Cancelado pelo Atendente'),
     FOREIGN KEY (fk_cliente)
     	REFERENCES cliente(pk_cliente)
     	ON UPDATE CASCADE
-    	ON DELETE CASCADE    
+    	ON DELETE CASCADE,
+        FOREIGN KEY (fk_venda)
+    	REFERENCES venda(pk_venda)
+    	ON UPDATE CASCADE
+    	ON DELETE CASCADE 
     )", "create_table_pedido_app", 'Criação da tabela de pedido_app');
 
         $this->atualizaBanco("  create table item_pedido_app(

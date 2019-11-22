@@ -18,9 +18,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('Novo Produto', ['create'], ['class' => 'btn btn-success']) ?>&nbsp;&nbsp;<?= Html::a('Gerar PDF de Códigos de Barra', ['gerar-pdf'], ['class' => 'btn btn-warning']) ?>
     </p>
-    
+
     <?=
     GridView::widget([
+        'options' => ['style' => 'text-align:right;font-size:12px;'],
+        'headerRowOptions' =>  ['style' => 'text-align:right;font-size:12px;'],
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'rowOptions' => function ($model, $index, $widget, $grid) {
@@ -32,42 +34,52 @@ $this->params['breadcrumbs'][] = $this->title;
             }
         },
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-            // 'pk_produto',
-            'nome',
+            [
+                'attribute' => 'nome',
+                'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
+            ],
             [
                 'attribute' => 'estoque_inicial',
                 'format' => 'currency',
-                'contentOptions' => ['style' => 'text-align:right'],
+                'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
             ],
             [
                 'attribute' => 'estoque_vendido',
                 'format' => 'currency',
-                'contentOptions' => ['style' => 'text-align:right'],
+                'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
             ],
             [
                 'label' => 'Estoque Atual',
                 'format' => 'currency',
-                'contentOptions' => ['style' => 'text-align:right'],
+                'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
                 'value' => function($model) {
                     return $model->estoque_inicial - $model->estoque_vendido;
                 }
-            ]
-            ,
+            ],
             [
                 'attribute' => 'estoque_minimo',
                 'format' => 'currency',
-                'contentOptions' => ['style' => 'text-align:right'],
+                'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
             ],
-            'unidadeMedida.unidade_medida',
-            'dt_fabricacao:date',
-            'dt_vencimento:date',
+            [
+                'attribute' => 'unidadeMedida.unidade_medida',
+                'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
+            ],
+            [
+                'attribute' => 'dt_fabricacao',
+                'format' => 'date',
+                'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
+            ],
+            [
+                'attribute' => 'dt_vencimento',
+                'format' => 'date',
+                'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
+            ],
             [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => 'Ações',
                 'headerOptions' => ['style' => 'color:#337ab7'],
                 'template' => '{update} {delete}',
-               
             ],
         ],
     ]);

@@ -155,6 +155,7 @@ use yii\widgets\ActiveForm;
             'dataProvider' => $dataProviderItem,
             'layout' => '{items}{pager}{summary}',
             'options' => ['style' => 'font-size:12px;'],
+            'headerRowOptions' => ['style' => 'font-size:12px;'],
             'columns' => [
                 [
                     'label' => 'Produto',

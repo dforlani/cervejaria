@@ -17,7 +17,6 @@ $config = [
         '@npm' => '@vendor/npm-asset',
     ],
     'components' => [
-          
         'datecontrol' => [
             'class' => '\kartik\datecontrol\Module'
         ],
@@ -43,6 +42,9 @@ $config = [
             'bundles' => [
                 'yii\web\JqueryAsset' => [
                     'jsOptions' => ['position' => \yii\web\View::POS_HEAD],
+                ],
+                'yii\bootstrap\BootstrapAsset' => [
+                    'js' => ['js/bootstrap.js'],
                 ],
             ],
         ],
