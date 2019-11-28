@@ -22,7 +22,7 @@ class PedidoappController extends Controller {
     /**
      * {@inheritdoc}
      */
-    public function behaviors() {
+    public function behaviors1kjfkdnkfjdnkfnk() {
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),
@@ -47,6 +47,7 @@ class PedidoappController extends Controller {
         $retorno = [];
         if (!empty($cardapio)) {
             foreach ($cardapio as $item) {
+				
                 $retorno[$item->pk_preco] = $item->getNomeProdutoPlusDenominacaoSemBarras();
             }
         }
@@ -64,6 +65,26 @@ class PedidoappController extends Controller {
      * ]
      */
 
+/**
+ * @inheritdoc
+ */
+public function beforeAction($action)
+{            
+
+        $this->enableCsrfValidation = false;
+   
+
+    return parent::beforeAction($action);
+}
+public function actionTest(){
+	
+	 Yii::$app->response->format = Response::FORMAT_JSON;
+	 $_REQUEST['oi']=	'preprogramadonoservidor';
+	// return  [file_get_contents( 'php://input' ) => 'kmlklmklm'];
+	//return getallheaders();
+	$_POST['opopo'] = 99;
+	return $_POST;
+}
     public function actionPedir() {
         Yii::$app->response->format = Response::FORMAT_JSON;
 

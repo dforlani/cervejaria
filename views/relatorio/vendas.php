@@ -105,14 +105,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
     if ($por_dia) {
         $colunas[] = [
-            'attribute' => 'dt_venda',
+            'attribute' => 'dt_pagamento',
             'format' => 'date',
             'footer' => 'Total',
             'filter' => false,
         ];
     } elseif ($por_mes) {
         $colunas[] = [
-            'attribute' => 'dt_venda',
+            'attribute' => 'dt_pagamento',
             'footer' => 'Total',
             'filter' => false,
         ];
