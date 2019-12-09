@@ -62,15 +62,21 @@ class ProdutoController extends Controller {
     public function actionAlteraPreco($id) {
         $model = $this->findModelPreco($id);
         Yii::$app->response->format = Response::FORMAT_JSON;
-        $model->load(Yii::$app->request->post());
-       //print_r($_REQUEST);
+        if (isset($_GET['grid'])) {//temos duas telas que enviam de formas diferentes a requisição
+          //  $preco['Preco'] = array_shift($_POST['Preco']);
+            $preco['Preco']['preco'] = $_POST['preco']; 
+            $model->load($preco);
+        } else {
+            $model->load(Yii::$app->request->post());
+        }
+      //  print_r($preco);
         if ($model->save()) {
             return ['output' => Yii::$app->formatter->asCurrency($model->preco), 'message' => ''];
         } else {
             return ['output' => 'Zicou e não salvou', 'message' => ''];
         }
     }
-    
+
     /**
      * Creates a new Produto model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -179,15 +185,14 @@ class ProdutoController extends Controller {
                 $model->pos_tap_list = $_POST['Preco'][$_POST['editableIndex']]['pos_tap_list'];
                 $model->save();
                 $mensagem = '';
-           
-                if(!empty($model->getErrors())){
+
+                if (!empty($model->getErrors())) {
                     $mensagem = implode(', ', $model->getErrorSummary(true));
                 }
-                    
-                echo Json::encode(['output' => $model->pos_tap_list, 'message' => $mensagem]);
-                
-                return;
 
+                echo Json::encode(['output' => $model->pos_tap_list, 'message' => $mensagem]);
+
+                return;
             }
         } else {
             $model = new Preco();
