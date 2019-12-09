@@ -1,6 +1,8 @@
 <?php
 
 use app\models\Produto;
+use kartik\editable\Editable;
+use kartik\number\NumberControl;
 use lo\widgets\modal\ModalAjax;
 use yii\grid\GridView;
 use yii\helpers\Html;
@@ -100,7 +102,7 @@ $this->params['breadcrumbs'][] = 'Update';
 
             </p>
 
-            
+
             <?php
             Pjax::begin([
                 'id' => 'grid-company-pjax',
@@ -115,9 +117,33 @@ $this->params['breadcrumbs'][] = 'Update';
                     ['class' => 'yii\grid\SerialColumn'],
                     'denominacao',
                     [
-                        'attribute' => 'preco',
-                        'format' => 'currency',
                         'contentOptions' => ['style' => 'text-align:right;'],
+                        'attribute' => 'preco',
+                        'value' => function($model) {
+                            return Editable::widget([
+                                        // 'inputType' => Editable::INPUT_HIDDEN,
+                                        'model' => $model,
+                                        'value' => Yii::$app->formatter->asCurrency($model->preco),
+                                        'asPopover' => true,
+                                        'size' => 'md',
+                                        'name' => 'aux',
+                                        'inputType' => Editable::INPUT_HIDDEN,
+                                        'formOptions' => ['action' => ['altera-preco', 'id' => $model->pk_preco, 'grid' => 'tela_produto']],
+                                        'beforeInput' => NumberControl::widget([
+                                            'name' => 'preco',
+                                            'options' => ['id' => 'preco-dip-' . $model->pk_preco],
+                                            'value' => Yii::$app->formatter->asCurrency($model->preco),
+                                            'maskedInputOptions' => [
+                                                'prefix' => '',
+                                                'suffix' => '',
+                                                'allowMinus' => false,
+                                                'digits' => 2,
+                                            ],
+                                        ])
+                                            ]
+                            );
+                        },
+                        'format' => 'raw'
                     ],
                     [
                         'attribute' => 'quantidade',
@@ -157,7 +183,6 @@ $this->params['breadcrumbs'][] = 'Update';
                 ],
             ]);
             Pjax::end();
-           
             ?>
         </div>
     </div>

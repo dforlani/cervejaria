@@ -69,7 +69,7 @@ class ProdutoController extends Controller {
         } else {
             $model->load(Yii::$app->request->post());
         }
-      //  print_r($preco);
+      // print_r($_REQUEST);
         if ($model->save()) {
             return ['output' => Yii::$app->formatter->asCurrency($model->preco), 'message' => ''];
         } else {
