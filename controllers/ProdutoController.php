@@ -62,14 +62,13 @@ class ProdutoController extends Controller {
     public function actionAlteraPreco($id) {
         $model = $this->findModelPreco($id);
         Yii::$app->response->format = Response::FORMAT_JSON;
-        if (isset($_GET['grid'])) {//temos duas telas que enviam de formas diferentes a requisição
-          //  $preco['Preco'] = array_shift($_POST['Preco']);
+        if (isset($_GET['grid'])) {//temos duas telas que enviam de formas diferentes a requisição          
             $preco['Preco']['preco'] = $_POST['preco']; 
             $model->load($preco);
         } else {
             $model->load(Yii::$app->request->post());
         }
-      // print_r($_REQUEST);
+      
         if ($model->save()) {
             return ['output' => Yii::$app->formatter->asCurrency($model->preco), 'message' => ''];
         } else {
