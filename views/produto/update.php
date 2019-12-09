@@ -1,10 +1,8 @@
 <?php
 
 use app\models\Produto;
-use kartik\editable\Editable;
-use kartik\grid\GridView;
-use kartik\number\NumberControl;
 use lo\widgets\modal\ModalAjax;
+use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\JsExpression;
@@ -118,37 +116,10 @@ $this->params['breadcrumbs'][] = 'Update';
                 'columns' => [
                     ['class' => 'yii\grid\SerialColumn'],
                     'denominacao',
-               
-                    [//se for alterar aqui, lembrar de alterar a tela de produto também
-                        'class' => 'kartik\grid\EditableColumn',
+                    [
                         'attribute' => 'preco',
-                        'editableOptions' =>
-                        function ($model, $key, $index) {
-                            return [
-                                'header' => 'Preço',
-                                'formOptions' => [
-                                    'action' => ['altera-preco', 'id' => $model->pk_preco, 'grid' => 'index']
-                                ],
-                                'inputType' => Editable::INPUT_HIDDEN,
-                                'beforeInput' => '' .
-                                NumberControl::widget([
-                                    'name' => 'preco',
-                                    'value' => $model->preco,
-                                    'options' => ['id' => 'preco-dip-' . $model->pk_preco],
-                                    'maskedInputOptions' => [
-                                        'prefix' => '',
-                                        'suffix' => '',
-                                        'allowMinus' => false,
-                                        'digits' => 3,
-                                    ],
-                                ])
-
-                            ];
-                        },
-                        'hAlign' => 'right',
-                        'vAlign' => 'middle',
-                        'width' => '7%',
-                        'format' => ['decimal', 2],
+                        'format' => 'currency',
+                        'contentOptions' => ['style' => 'text-align:right;'],
                     ],
                     [
                         'attribute' => 'quantidade',
