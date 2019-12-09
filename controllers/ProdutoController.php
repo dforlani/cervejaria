@@ -72,7 +72,7 @@ class ProdutoController extends Controller {
         if ($model->save()) {
             return ['output' => Yii::$app->formatter->asCurrency($model->preco), 'message' => ''];
         } else {
-            return ['output' => 'Zicou e não salvou', 'message' => ''];
+            return ['output' => '', 'message' => 'Zicou e não salvou'];
         }
     }
 
