@@ -100,9 +100,7 @@ $this->params['breadcrumbs'][] = 'Update';
 
             </p>
 
-            <?php // echo $this->render('_search', ['model' => $searchModel]);     ?>
-
-
+            
             <?php
             Pjax::begin([
                 'id' => 'grid-company-pjax',
@@ -159,6 +157,7 @@ $this->params['breadcrumbs'][] = 'Update';
                 ],
             ]);
             Pjax::end();
+           
             ?>
         </div>
     </div>
