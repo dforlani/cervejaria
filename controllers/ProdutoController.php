@@ -59,6 +59,18 @@ class ProdutoController extends Controller {
         ]);
     }
 
+    public function actionAlteraPreco($id) {
+        $model = $this->findModelPreco($id);
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $model->load(Yii::$app->request->post());
+       //print_r($_REQUEST);
+        if ($model->save()) {
+            return ['output' => Yii::$app->formatter->asCurrency($model->preco), 'message' => ''];
+        } else {
+            return ['output' => 'Zicou e não salvou', 'message' => ''];
+        }
+    }
+    
     /**
      * Creates a new Produto model.
      * If creation is successful, the browser will be redirected to the 'view' page.
