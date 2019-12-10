@@ -12,6 +12,7 @@ use Yii;
  * @property double $quantidade
  * @property string $preco_unitario
  * @property string $preco_final
+ * @property boolean $is_desconto_promocional
  *
  * @property Venda $fkVenda
  * @property Preco $fkPreco
@@ -75,7 +76,7 @@ class ItemVenda extends \yii\db\ActiveRecord {
         $produto = $this->preco->produto;
         $produto->estoque_vendido = $produto->estoque_vendido + $this->quantidade * $this->preco->quantidade;
         $produto->save();
-        if ($produto->estoque_minimo >= ( $produto->estoque_inicial - $produto->estoque_vendido)){
+        if ($produto->estoque_minimo >= ( $produto->estoque_inicial - $produto->estoque_vendido)) {
             Yii::$app->session->setFlash('error', "Estoque mínimo para o produto {$produto->nome} atingido.");
         }
         return parent::afterSave($insert, $changedAttributes);
@@ -84,7 +85,9 @@ class ItemVenda extends \yii\db\ActiveRecord {
     public function beforeValidate() {
         $this->preco_final = $this->preco_unitario * $this->quantidade;
         if (!empty($this->preco) && !empty($this->preco->produto)) {
-            $this->preco_custo_item = $this->preco->produto->custo_compra_producao *  $this->preco->quantidade * $this->quantidade;
+            if(!$this->is_desconto_promocional){
+              $this->preco_custo_item = $this->preco->produto->custo_compra_producao * $this->preco->quantidade * $this->quantidade;
+            }
         } else {
             $this->preco_custo_item = 0;
         }

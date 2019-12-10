@@ -52,6 +52,10 @@ class ItemVendaSearch extends ItemVenda {
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+             'sort'=> ['defaultOrder' => [
+                 'is_desconto_promocional'=>SORT_ASC, 
+                 'dt_inclusao'=>SORT_DESC
+                 ]]
         ]);
 
         $this->load($params);
@@ -84,25 +88,25 @@ class ItemVendaSearch extends ItemVenda {
 
         if ($por_hora) {
             $select[] = 'DATE_FORMAT(dt_inclusao,"%H") as aux_temporizador';
-            $select[] = 'ROUND(SUM(item_venda.quantidade * preco.quantidade), 2) as aux_quantidade';
+            $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)), 2) as aux_quantidade';
             $groupBy[] = 'HOUR(dt_inclusao)';
             $order['HOUR(dt_inclusao)'] = SORT_ASC;
             $order['aux_quantidade'] = SORT_DESC;
         } elseif ($por_dia) {
             $select[] = 'DATE_FORMAT(dt_inclusao, "%d/%m") as aux_temporizador';
-            $select[] = 'ROUND(SUM(item_venda.quantidade * preco.quantidade), 2) as aux_quantidade';
+            $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)), 2) as aux_quantidade';
             $groupBy[] = 'aux_temporizador';
             $order['aux_temporizador'] = SORT_ASC;
             // $order['aux_quantidade'] = SORT_DESC;
         } elseif ($por_dia_semana) {
             $select[] = 'WEEKDAY(dt_inclusao) as aux_temporizador';
-            $select[] = 'ROUND(SUM(item_venda.quantidade * preco.quantidade), 2) as aux_quantidade';
+            $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)), 2) as aux_quantidade';
             $groupBy[] = 'WEEKDAY(dt_inclusao)';
             $order['WEEKDAY(dt_inclusao)'] = SORT_ASC;
             // $order['aux_quantidade'] = SORT_DESC;
         } elseif ($por_mes) {
 
-            $select[] = 'ROUND(SUM(item_venda.quantidade * preco.quantidade), 2) as aux_quantidade';
+            $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)), 2) as aux_quantidade';
             $select[] = 'DATE_FORMAT(`dt_venda`, "%m" ) AS  aux_temporizador';
             $order['MONTH(dt_venda)'] = SORT_ASC;
             $groupBy[] = 'MONTH(dt_venda)';

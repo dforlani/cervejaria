@@ -412,7 +412,15 @@ ALTER TABLE `caixa`
 
 
 
-        echo 'Atualização do banco encerrada<br>';
+        // 10/12/2019 incluído mecanismo de inclusão de desconto promocional
+        $this->atualizaBanco("ALTER TABLE `item_venda` ADD `is_desconto_promocional` BOOLEAN NOT NULL DEFAULT FALSE AFTER `dt_inclusao`;", "update_item_venda_is_desconto_promocional", 'Incluído mecanismo de desconto promocional');
+        $this->atualizaBanco("ALTER TABLE `preco` ADD `promocao_quantidade_atingir` INT NOT NULL AFTER `pos_tap_list`, ADD `promocao_desconto_aplicar` DECIMAL(10,2) NOT NULL AFTER `promocao_quantidade_atingir`, ADD `is_promocao_ativa` BOOLEAN NOT NULL DEFAULT FALSE AFTER `promocao_desconto_aplicar`;", "update_preco_desconto_promocional", 'Incluído mecanismo de desconto promocional na tabela de preços');
+        
+        // 10/12/2019 correção da não atualização na dt_pagamento
+        $this->atualizaBanco("update venda set dt_pagamento = dt_venda  WHERE dt_pagamento is null  AND estado = 'paga'", "update_dt_pagamento_correcao", 'Correção nas datas de pagamentos que não estavam funcionando');
+
+        
+        echo '<br><br>ATUALIZAÇÃO DO BANCO ENCERRADA<br>';
     }
 
     public function atualizaBanco($comando, $nome_configuracao, $mensagem) {

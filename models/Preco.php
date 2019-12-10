@@ -14,7 +14,9 @@ use Yii;
  * @property string $denominacao
  * @property string $preco
  * @property double $quantidade
- *
+ * @property double $promocao_quantidade_atingir
+ * @property double $promocao_desconto_aplicar
+ * @property boolean $is_promocao_ativa
  * @property ItemVenda[] $itemVendas
  * @property Produto $fkProduto
  */
@@ -34,9 +36,11 @@ class Preco extends \yii\db\ActiveRecord {
         return [
             [['fk_produto',], 'required'],
             [['pk_preco', 'fk_produto', 'codigo_barras'], 'integer'],
-            [['preco', 'quantidade'], 'number'],
+            [['preco', 'quantidade', 'promocao_quantidade_atingir', 'promocao_desconto_aplicar'], 'number'],
             [['denominacao'], 'string', 'max' => 100],
+            [['promocao_desconto_aplicar'], 'number', 'max' => 0.0000001, 'tooBig'=>'O Valor do Desconto deve ser negativo'],            
             [['codigo_barras'], 'number', 'min' => 100000000001, 'max' => 999999999999,],
+            [['is_promocao_ativa'], 'boolean'],
             [['pk_preco'], 'unique'],
             // [['pos_tap_list'], 'integer'],
             [['is_tap_list',], 'safe'],
@@ -95,7 +99,10 @@ class Preco extends \yii\db\ActiveRecord {
             'quantidade' => 'Quantidade',
             'codigo_barras' => 'Código de Barras',
             'is_tap_list' => 'Colocar na Tap List?',
-            'pos_tap_list' => 'Posição na Tap List'
+            'pos_tap_list' => 'Posição na Tap List',
+            'promocao_quantidade_atingir' => 'Quantidade Comprada pra Atingir',
+            'promocao_desconto_aplicar' => 'Desconto a Aplicar',
+            'is_promocao_ativa' => 'Promoção está Ativa?',
         ];
     }
 

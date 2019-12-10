@@ -111,7 +111,7 @@ class VendaController extends Controller {
 
         $tapListProvider = $precoModelItem->search(['PrecoSearch' => ['is_tap_list' => true]], true);
 
-        if (empty($id)) {
+        if (empty($id)) { //venda não iniciada
             $model = new Venda();
             $model->estado = 'aberta';
             $model->valor_final = 0;
@@ -123,14 +123,10 @@ class VendaController extends Controller {
             $searchModelItem = null;
         } else {
             $model = $this->findModel($id);
-
             $modelItem = new ItemVenda();
             $modelItem->fk_venda = $model->pk_venda;
             $modelItem->quantidade = 1;
             $searchModelItem = new ItemVendaSearch();
-            //adiciona como padrão o sort invertido para a data de inclusão dos itens
-            if (!isset($_GET['dp-1-sort']))
-                $_GET['dp-1-sort'] = '-dt_inclusao';
 
             $dataProviderItem = $searchModelItem->search(['ItemVendaSearch' => ['fk_venda' => $model->pk_venda]]);
         }

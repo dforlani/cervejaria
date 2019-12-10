@@ -58,8 +58,9 @@ use yii\web\View;
             ]);
             ?>
         </div>
+         Use Alt + número em # para adicionar o Produto
     </div>
+   
 </div>
 
 
-Use Alt + número em # para adicionar

@@ -3,6 +3,7 @@
 use app\models\Produto;
 use kartik\editable\Editable;
 use kartik\number\NumberControl;
+use kartik\switchinput\SwitchInput;
 use lo\widgets\modal\ModalAjax;
 use yii\grid\GridView;
 use yii\helpers\Html;
@@ -151,6 +152,29 @@ $this->params['breadcrumbs'][] = 'Update';
                             return Yii::$app->formatter->asDecimal($model->quantidade, 3);
                         },
                         'contentOptions' => ['style' => 'text-align:right;'],
+                    ],
+                    [
+                        'contentOptions' => ['style' => 'text-align:right;'],
+                        'attribute' => 'is_promocao_ativa',
+                        'value' => function($model) {
+                            return Editable::widget([
+                                         'inputType' => Editable::INPUT_HIDDEN,
+                                        'model' => $model,
+                                        'value' => Yii::$app->formatter->asCurrency($model->is_promocao_ativa),
+                                        'asPopover' => true,
+                                        'size' => 'md',
+                                        'name' => 'aux',
+                                        'inputType' => Editable::INPUT_HIDDEN,
+                                        'formOptions' => ['action' => ['altera-promocao-ativa', 'id' => $model->pk_preco, 'grid' => 'tela_produto']],
+                                        'beforeInput' => SwitchInput::widget([
+                                             'options' => ['id' => 'is_promocao-dip-' . $model->pk_preco],
+                                            'name' => 'is_promocao_ativa',
+                                            'value'=>$model->is_promocao_ativa
+                                        ])
+                                            ]
+                            );
+                        },
+                        'format' => 'raw'
                     ],
                     [
                         'class' => 'yii\grid\ActionColumn',

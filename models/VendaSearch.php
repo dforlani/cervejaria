@@ -84,7 +84,7 @@ class VendaSearch extends Venda {
 
         $select[] = 'SUM(item_venda.preco_final) as pagamentos';
         $select[] = 'SUM(item_venda.preco_final - item_venda.preco_custo_item) as pagamentos_liquido';
-        $select[] = 'SUM(if(item_venda.preco_custo_item = 0,1,0)) as itens_sem_preco_custo';
+        $select[] = 'SUM(if(is_desconto_promocional = FALSE AND item_venda.preco_custo_item = 0,1,0)) as itens_sem_preco_custo';
 
         if ($por_dia) {
             $groupBy[] = 'DAY(dt_pagamento)';
@@ -102,7 +102,7 @@ class VendaSearch extends Venda {
         if ($por_produto) {
             $groupBy[] = 'fk_produto';
             $select[] = 'produto.nome as produto';
-            $select[] = 'SUM(item_venda.quantidade * preco.quantidade) as quantidade';
+            $select[] = 'SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)) as quantidade';
             $select[] = 'unidade_medida';
             $order['produto.nome'] = SORT_ASC;
         }

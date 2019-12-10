@@ -2,7 +2,7 @@ c:\xampp_novo\htdocs\cervejaria\vendor\bin\codecept generate:test unit models\Co
 
 Entrar em D:\xampp\htdocs\cervejaria> para executar os comandos abaixo
 c:\xampp_novo\htdocs\cervejaria\vendor\bin\codecept run unit models\UserTest.php
-c:\xampp\htdocs\cervejaria\vendor\bin\codecept run unit
+c:\xampp_novo\htdocs\cervejaria\vendor\bin\codecept run unit
 c:\xampp_novo\htdocs\cervejaria\vendor\bin\codecept run acceptance
 c:\xampp_novo\htdocs\cervejaria\vendor\bin\codecept run functional
 

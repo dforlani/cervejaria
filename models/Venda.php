@@ -102,8 +102,11 @@ class Venda extends ActiveRecord {
         return $this->estado == 'paga';
     }
 
-    public function atualizaValorFinal() {
-        $precos = $this->itensVenda;
+    public function atualizaValorFinal() {       
+
+        //fiz a consulta pq se buscar usando o alias ->itensVenda, não retornava todos os descontos, por estes terem sido buscados anteriormente
+        //e a atualização ter sido feita depois (Lazy Loading)
+        $precos = ItemVenda::findAll(['fk_venda'=>$this->pk_venda]);
         $total = 0;
         if (!empty($precos)) {
             foreach ($precos as $preco) {
@@ -114,10 +117,55 @@ class Venda extends ActiveRecord {
 
         $this->valor_total = $total;
         $desconto = is_numeric($this->desconto) ? $this->desconto : 0;
-        
+
         $this->valor_final = $total - $desconto;
 
         $this->troco = $this->getTroco();
+    }
+
+    /**
+     * Inclui descontos para itens em promoção que atingiram um valor indicado
+     */
+    public function verificaItensEmPromocao() {
+        $qtdItensPromocao = [];
+
+        foreach ($this->itensVenda as $item) {
+            //remove todos pra depois inserir novamente
+            if ($item->is_desconto_promocional) {
+                $item->delete();
+            } else {
+                
+                if ($item->preco->is_promocao_ativa) {
+                    if (!isset($qtdItensPromocao[$item->preco->pk_preco])) {
+                        $qtdItensPromocao[$item->preco->pk_preco]['qtd_atingida'] = $item->quantidade;
+                        $qtdItensPromocao[$item->preco->pk_preco]['model'] = $item;
+                    } else {
+                        $qtdItensPromocao[$item->preco->pk_preco]['qtd_atingida'] = $qtdItensPromocao[$item->preco->pk_preco]['qtd_atingida'] +  $item->quantidade;
+                    }
+                }
+            }
+        }
+
+        foreach ($qtdItensPromocao as $pk_preco => $itemPromocao) {
+            //echo $itemPromocao['qtd_atingida'] . '<br>';
+            //echo $itemPromocao['model']->preco->promocao_quantidade_atingir . '<br>';
+            //echo (int) ($itemPromocao['qtd_atingida'] / $itemPromocao['model']->preco->promocao_quantidade_atingir);
+            //exit();
+            $qtd_promocao = (int) ($itemPromocao['qtd_atingida'] / $itemPromocao['model']->preco->promocao_quantidade_atingir);
+            if($qtd_promocao > 0){
+                $itemVenda = new ItemVenda();
+                $itemVenda->fk_preco = $pk_preco;
+                $itemVenda->fk_venda = $this->pk_venda;
+                $itemVenda->quantidade = $qtd_promocao;
+                $itemVenda->preco_unitario = 0;
+                $itemVenda->is_desconto_promocional = true;
+                $itemVenda->preco_final = $qtd_promocao  * $itemPromocao['model']->preco->promocao_desconto_aplicar;
+                $itemVenda->preco_unitario = $itemPromocao['model']->preco->promocao_desconto_aplicar;
+                if (!$itemVenda->save()) {
+                    exit();
+                }
+            }
+        }
     }
 
     public static function getArrayVendasEmAberto() {
@@ -175,8 +223,12 @@ class Venda extends ActiveRecord {
     }
 
     public function beforeValidate() {
-
+        $this->verificaItensEmPromocao();
         $this->atualizaValorFinal();
+        
+        if($this->isPaga()){
+            $this->dt_pagamento =  new \yii\db\Expression('NOW()');
+        }
 
         return parent::beforeValidate();
     }

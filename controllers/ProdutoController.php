@@ -59,6 +59,11 @@ class ProdutoController extends Controller {
         ]);
     }
 
+    /**
+     * Altera o preço utilizando o componente do kartik Editable
+     * @param type $id
+     * @return type
+     */
     public function actionAlteraPreco($id) {
         $model = $this->findModelPreco($id);
         Yii::$app->response->format = Response::FORMAT_JSON;
@@ -71,6 +76,32 @@ class ProdutoController extends Controller {
       
         if ($model->save()) {
             return ['output' => Yii::$app->formatter->asCurrency($model->preco), 'message' => ''];
+        } else {
+            return ['output' => '', 'message' => 'Zicou e não salvou'];
+        }
+    }
+    
+    /**
+     * Altera se a promoção está ativa usando o componete Editable do kartik
+     * @param type $id
+     * @return type
+     */
+    public function actionAlteraPromocaoAtiva($id) {
+        $model = $this->findModelPreco($id);
+        Yii::$app->response->format = Response::FORMAT_JSON;
+      
+//        print_r($_REQUEST);
+//        exit();
+        if (isset($_GET['grid'])) {//temos duas telas que enviam de formas diferentes a requisição          
+            $is_promocao_ativa['Preco']['is_promocao_ativa'] = Yii::$app->request->post('is_promocao_ativa', 0);
+            
+            $model->load($is_promocao_ativa);
+        } else {
+            $model->load(Yii::$app->request->post());
+        }
+      
+        if ($model->save()) {
+            return ['output' => $model->is_promocao_ativa, 'message' => ''];
         } else {
             return ['output' => '', 'message' => 'Zicou e não salvou'];
         }
