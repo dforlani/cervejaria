@@ -48,22 +48,17 @@ class PedidoappController extends Controller {
         if (!empty($cardapio)) {
             foreach ($cardapio as $item) {
 				
-                $retorno[$item->pk_preco] = $item->getNomeProdutoPlusDenominacaoSemBarras();
+                $retorno[] = ['pk_preco'=>$item->pk_preco,
+				'denominacao'=>$item->getNomeProdutoPlusDenominacaoSemBarras(),
+				'quantidade' => 0
+				];
             }
         }
 
         return $retorno;
     }
 
-    /*
-     * Recebe um pedido no formato JSON do app cliente
-     * Vai ter o codigo do cliente, os itens e suas quantidades
-     * 
-     * ['id'=>id_cliente, 
-     *  'itens' =>
-     *      ['34'=>1] (código do preco e quantidade pedida
-     * ]
-     */
+    
 
 /**
  * @inheritdoc
@@ -85,40 +80,59 @@ public function actionTest(){
 	$_POST['opopo'] = 99;
 	return $_POST;
 }
-    public function actionPedir() {
+
+
+
+
+/*
+     * Recebe um pedido no formato JSON do app cliente
+     * Vai ter o codigo do cliente, os itens e suas quantidades
+     * 
+     * ['pk_venda'=>pk_venda, 
+     *  'itens' =>
+     *      [
+	 ['pk_preco'=>pk_preco,
+	*		 'denominacao'=>denominacao
+	*		'quantidade'=>quantidade],
+	 *] (código do preco e quantidade pedida
+     * ]
+     */
+    public function actionPedir($pk_venda) {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        $cliente_id = &$_POST['id'];
-
-        if (!empty($cliente_id)) {
+        if (!empty($pk_venda)) {
 
             $itens = &$_POST['itens'];
+			
             if (!empty($itens)) {
                 //primeiro cria um novo pedido
 
                 $pedido = new PedidoApp();
-                $pedido->fk_cliente = $cliente_id;
+                $pedido->fk_cliente = 23;
+				$pedido->fk_venda = $pk_venda;
+				
                 $pedido->status = PedidoApp::$CONST_STATUS_ENVIADO;
+				
                 if ($pedido->save()) {
 
                     //agora inclui os itens solicitados
-                    foreach ($itens as $fk_preco => $quantidade) {
+                    foreach ($itens as $fk_preco => $item) {
                         $item_pedido = new ItemPedidoApp();
                         $item_pedido->fk_pedido_app = $pedido->pk_pedido_app;
-                        $item_pedido->fk_preco = $fk_preco;
-                        $item_pedido->quantidade = $quantidade;
+                        $item_pedido->fk_preco = $item['pk_preco'];
+                        $item_pedido->quantidade = $item['quantidade'];
 
                         if (!$item_pedido->save()) {
                             $pedido->status = PedidoApp::$CONST_STATUS_ERRO;
-                            $pedido->save();
-
-                            return "Ocorreu um erro ao enviar o seu pedido. Dirija-se ao caixa";
+							$pedido->save();
+							return "Ocorreu um erro ao adicionar os itens do pedido. Dirija-se ao caixa".implode(',', $item_pedido->getErrorSummary(true));
+                            
                         }
                     }
 
                     return ['id' => $pedido->pk_pedido_app, 'status' => $pedido->status];
                 } else {
-                    return "Não foi possível salvar o pedido. Dirija-se ao caixa";
+                    return "Não foi possível salvar o pedido. Dirija-se ao caixa".implode(',', $pedido->getErrorSummary(true));
                 }
             }
         }
