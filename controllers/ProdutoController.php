@@ -301,11 +301,10 @@ class ProdutoController extends Controller {
                     // JSON response is expected in case of successful save
                     Yii::$app->response->format = Response::FORMAT_JSON;
                     return ['success' => true];
+                } else {//se não for requisição ajax, volta direto para a listagem de produtos
+                    return $this->redirect(['/produto']);
+                    //return $this->redirect(['update', 'id' => $model->fk_produto]);
                 }
-                else{//se não for requisição ajax, volta direto para a listagem de produtos
-                return $this->redirect(['/produto']);
-                }
-                //return $this->redirect(['update', 'id' => $model->fk_produto]);
             }
         }
 
