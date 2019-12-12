@@ -17,7 +17,8 @@ use Yii;
  * @property Preco[] $precos
  */
 class Produto extends \yii\db\ActiveRecord {
-
+    public $auxHasPromocao;
+    
     /**
      * {@inheritdoc}
      */
@@ -40,10 +41,14 @@ class Produto extends \yii\db\ActiveRecord {
             [['dt_vencimento'], 'default'],
             [['is_vendavel'], 'required'],
             [['dt_fabricacao', 'dt_vencimento'], 'validateData'],
+       
 
         ];
     }
 
+  
+    
+    
     public function validateData($attribute, $params) {
         //cria uma data 10 anos no passado para comparação
         $date = new \DateTime();
@@ -102,6 +107,17 @@ class Produto extends \yii\db\ActiveRecord {
 
     public function beforeSave($insert) {
         return parent::beforeSave($insert);
+    }
+    
+    public function hasPromocaoAtiva(){
+        $precos = $this->precos;
+        if(!empty($precos)){
+            foreach($precos as $preco){
+                if($preco->is_promocao_ativa)
+                    return 'Sim';
+            }
+        }
+        return 'Não';
     }
 
 }

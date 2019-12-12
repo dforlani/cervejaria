@@ -14,6 +14,7 @@ use kartik\widgets\SwitchInput;
             <th>Preço</th>
             <th >Quantidade</th>
             <th >Promoção Ativa?</th>
+            <th >Promoção</th>
         </tr>
         <?php foreach ($model->precos as $preco) { ?>
             <tr>
@@ -24,7 +25,7 @@ use kartik\widgets\SwitchInput;
                                 'inputType' => Editable::INPUT_HIDDEN,
                                 'model' => $preco,
                                 'value' => Yii::$app->formatter->asCurrency($preco->preco),
-                                'asPopover' => true,
+                                'asPopover' => false,
                                 'size' => 'md',
                                 'name' => 'aux',
                                 'formOptions' => ['action' => ['altera-preco', 'id' => $preco->pk_preco]],
@@ -50,17 +51,23 @@ use kartik\widgets\SwitchInput;
                     $editable = Editable::begin([
                                 'inputType' => Editable::INPUT_HIDDEN,
                                 'model' => $preco,
-                                'value' => $preco->is_promocao_ativa,
-                                'asPopover' => true,
+                                'value' => Yii::$app->formatter->asBoolean($preco->is_promocao_ativa),
+                                'asPopover' => false,
                                 'size' => 'md',
                                 'name' => 'aux',
                                 'formOptions' => ['action' => ['altera-promocao-ativa', 'id' => $preco->pk_preco]],
                     ]);
                     $form = $editable->getForm();
-                    $editable->beforeInput = '' . $form->field($preco, 'is_promocao_ativa')->widget(SwitchInput::classname(), [ ]);
+                    $editable->beforeInput = '' . $form->field($preco, 'is_promocao_ativa')->widget(SwitchInput::classname(), ['options' => ['id' => 'promocao-dip-' . $preco->pk_preco]]);
                     ;
                     Editable::end();
                     ?> 
+                </td>
+                <td>
+                    <?php
+                        echo "A cada $preco->promocao_quantidade_atingir desconta R$ ".Yii::$app->formatter->asCurrency($preco->promocao_desconto_aplicar)                               
+ 
+                    ?>
                 </td>
 
             </tr>

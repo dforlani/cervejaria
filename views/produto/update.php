@@ -125,7 +125,7 @@ $this->params['breadcrumbs'][] = 'Update';
                                         // 'inputType' => Editable::INPUT_HIDDEN,
                                         'model' => $model,
                                         'value' => Yii::$app->formatter->asCurrency($model->preco),
-                                        'asPopover' => true,
+                                        'asPopover' => false,
                                         'size' => 'md',
                                         'name' => 'aux',
                                         'inputType' => Editable::INPUT_HIDDEN,
@@ -158,23 +158,29 @@ $this->params['breadcrumbs'][] = 'Update';
                         'attribute' => 'is_promocao_ativa',
                         'value' => function($model) {
                             return Editable::widget([
-                                         'inputType' => Editable::INPUT_HIDDEN,
+                                        'inputType' => Editable::INPUT_HIDDEN,
                                         'model' => $model,
-                                        'value' => Yii::$app->formatter->asCurrency($model->is_promocao_ativa),
-                                        'asPopover' => true,
+                                        'value' => Yii::$app->formatter->asBoolean($model->is_promocao_ativa),
+                                        'asPopover' => false,
                                         'size' => 'md',
                                         'name' => 'aux',
                                         'inputType' => Editable::INPUT_HIDDEN,
                                         'formOptions' => ['action' => ['altera-promocao-ativa', 'id' => $model->pk_preco, 'grid' => 'tela_produto']],
                                         'beforeInput' => SwitchInput::widget([
-                                             'options' => ['id' => 'is_promocao-dip-' . $model->pk_preco],
+                                            'options' => ['id' => 'is_promocao-dip-' . $model->pk_preco],
                                             'name' => 'is_promocao_ativa',
-                                            'value'=>$model->is_promocao_ativa
+                                            'value' => $model->is_promocao_ativa
                                         ])
                                             ]
                             );
                         },
                         'format' => 'raw'
+                    ],
+                    [
+                        'label' => 'Promoção',
+                        'value' => function($model) {
+                            return "A cada $model->promocao_quantidade_atingir desconta R$ ".Yii::$app->formatter->asCurrency($model->promocao_desconto_aplicar);
+                        }
                     ],
                     [
                         'class' => 'yii\grid\ActionColumn',

@@ -38,7 +38,7 @@ class Preco extends \yii\db\ActiveRecord {
             [['pk_preco', 'fk_produto', 'codigo_barras'], 'integer'],
             [['preco', 'quantidade', 'promocao_quantidade_atingir', 'promocao_desconto_aplicar'], 'number'],
             [['denominacao'], 'string', 'max' => 100],
-            [['promocao_desconto_aplicar'], 'number', 'max' => 0.0000001, 'tooBig'=>'O Valor do Desconto deve ser negativo'],            
+            [['promocao_desconto_aplicar'], 'number', 'max' => 0.0000001, 'tooBig' => 'O Valor do Desconto deve ser negativo'],
             [['codigo_barras'], 'number', 'min' => 100000000001, 'max' => 999999999999,],
             [['is_promocao_ativa'], 'boolean'],
             [['pk_preco'], 'unique'],
@@ -47,7 +47,21 @@ class Preco extends \yii\db\ActiveRecord {
             [['codigo_barras'], 'unique'],
             [['pos_tap_list'], 'validateValorUnicoSeTapList'],
             [['fk_produto'], 'exist', 'skipOnError' => true, 'targetClass' => Produto::className(), 'targetAttribute' => ['fk_produto' => 'pk_produto']],
+            [['is_promocao_ativa'], 'validatePromocao']
         ];
+    }
+
+    /**
+     * Valida se tem valores caso tenha ativa a promoção
+     * @param type $attribute
+     * @param type $params
+     */
+    public function validatePromocao($attribute, $params) {
+        if ($this->is_promocao_ativa) {            
+            if (($this->promocao_desconto_aplicar == 0) || ($this->promocao_quantidade_atingir == 0)) {
+                $this->addError($attribute, 'Para a promoção ficar ativa, "Quantidade a Atingir" e "Desconto a Aplicar" não podem estar em branco.');
+            }
+        }
     }
 
     public function validateValorUnicoSeTapList($attribute, $params) {

@@ -18,7 +18,7 @@ class ProdutoSearch extends Produto
     {
         return [
             [['pk_produto'], 'integer'],
-            [['nome',], 'safe'],
+            [['nome', 'auxHasPromocao',], 'safe'],
             [['estoque_vendido'], 'number'],
         ];
     }
@@ -51,6 +51,7 @@ class ProdutoSearch extends Produto
         ]);
 
         $this->load($params);
+        $query->joinWith('precos');
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
@@ -62,6 +63,7 @@ class ProdutoSearch extends Produto
         $query->andFilterWhere([
             'pk_produto' => $this->pk_produto,
             'estoque_vendido' => $this->estoque_vendido,
+            'is_promocao_ativa' =>$this->auxHasPromocao
         ]);
 
         $query->andFilterWhere(['like', 'nome', $this->nome]);   

@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
             }
         },
         'columns' => [
-             [
+            [
                 'class' => 'kartik\grid\ExpandRowColumn',
                 'width' => '50px',
                 'value' => function ($model, $key, $index, $column) {
@@ -52,7 +52,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'nome',
                 'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
             ],
-           
             [
                 'attribute' => 'estoque_inicial',
                 'format' => 'currency',
@@ -89,6 +88,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'dt_vencimento',
                 'format' => 'date',
                 'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
+            ],
+            [
+                'attribute' => 'auxHasPromocao',
+                'label' => 'Promoção?',
+                'value' => function($model) {
+                    return $model->hasPromocaoAtiva();
+                },
+                'filter' => [1 => 'Sim', 0 => 'Não']
             ],
             [
                 'class' => 'yii\grid\ActionColumn',

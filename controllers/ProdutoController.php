@@ -90,8 +90,6 @@ class ProdutoController extends Controller {
         $model = $this->findModelPreco($id);
         Yii::$app->response->format = Response::FORMAT_JSON;
       
-//        print_r($_REQUEST);
-//        exit();
         if (isset($_GET['grid'])) {//temos duas telas que enviam de formas diferentes a requisição          
             $is_promocao_ativa['Preco']['is_promocao_ativa'] = Yii::$app->request->post('is_promocao_ativa', 0);
             
@@ -101,9 +99,9 @@ class ProdutoController extends Controller {
         }
       
         if ($model->save()) {
-            return ['output' => $model->is_promocao_ativa, 'message' => ''];
+            return ['output' => Yii::$app->formatter->asBoolean($model->is_promocao_ativa), 'message' => ''];
         } else {
-            return ['output' => '', 'message' => 'Zicou e não salvou'];
+            return ['output' => '', 'message' => 'Não salvou: '.implode(',', $model->getErrorSummary(true))];
         }
     }
 
