@@ -36,9 +36,9 @@
 <h2>Notas de versão</h2>
 <div class="notasVersaoStyle">
     <a href="#" id="v136" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.3.6 (09/12/2019)</a>
-    <ul id="nv135" style="display:">
-        <li>Alteração das cores de troco e falta.</li>           
+    <ul id="nv136" style="display:">        
         <li><b>Produtos</b>Adicionado mecanismo de expansão na grid pra facilitar a alteração dos preços dos produtos.</li>            
+        <li><b>Produtos</b>Adicionado mecanismo inclusão de promoções.</li>            
     </ul>
 </div>
 
