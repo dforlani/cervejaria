@@ -3,6 +3,7 @@
 use kartik\editable\Editable;
 use kartik\number\NumberControl;
 use kartik\widgets\SwitchInput;
+use yii\helpers\Html;
 ?>
 
 <table class="table table-bordered table-condensed table-hover small kv-table">
@@ -10,21 +11,22 @@ use kartik\widgets\SwitchInput;
             <th colspan="4" class="text-left text-danger">Formas de Venda</th>
         </tr>
         <tr class="active">
-            <th >Denominação</th>
+            <th> Denominação</th>
             <th>Preço</th>
             <th >Quantidade</th>
             <th >Promoção Ativa?</th>
+            <th >Promoção</th>
         </tr>
         <?php foreach ($model->precos as $preco) { ?>
             <tr>
-                <td><?= $preco->denominacao ?></td>
+                <td> <?= Html::a($preco->denominacao, ['/produto/update-preco', 'pk_preco'=>$preco->pk_preco] ) ?></td>
                 <td class="text-right">
                     <?php
                     $editable = Editable::begin([
                                 'inputType' => Editable::INPUT_HIDDEN,
                                 'model' => $preco,
                                 'value' => Yii::$app->formatter->asCurrency($preco->preco),
-                                'asPopover' => true,
+                                'asPopover' => false,
                                 'size' => 'md',
                                 'name' => 'aux',
                                 'formOptions' => ['action' => ['altera-preco', 'id' => $preco->pk_preco]],
@@ -50,17 +52,23 @@ use kartik\widgets\SwitchInput;
                     $editable = Editable::begin([
                                 'inputType' => Editable::INPUT_HIDDEN,
                                 'model' => $preco,
-                                'value' => $preco->is_promocao_ativa,
-                                'asPopover' => true,
+                                'value' => Yii::$app->formatter->asBoolean($preco->is_promocao_ativa),
+                                'asPopover' => false,
                                 'size' => 'md',
                                 'name' => 'aux',
                                 'formOptions' => ['action' => ['altera-promocao-ativa', 'id' => $preco->pk_preco]],
                     ]);
                     $form = $editable->getForm();
-                    $editable->beforeInput = '' . $form->field($preco, 'is_promocao_ativa')->widget(SwitchInput::classname(), [ ]);
+                    $editable->beforeInput = '' . $form->field($preco, 'is_promocao_ativa')->widget(SwitchInput::classname(), ['options' => ['id' => 'promocao-dip-' . $preco->pk_preco]]);
                     ;
                     Editable::end();
                     ?> 
+                </td>
+                <td>
+                    <?php
+                        echo "A cada $preco->promocao_quantidade_atingir desconta R$ ".Yii::$app->formatter->asCurrency($preco->promocao_desconto_aplicar)                               
+ 
+                    ?>
                 </td>
 
             </tr>

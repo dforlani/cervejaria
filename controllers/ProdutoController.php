@@ -68,19 +68,19 @@ class ProdutoController extends Controller {
         $model = $this->findModelPreco($id);
         Yii::$app->response->format = Response::FORMAT_JSON;
         if (isset($_GET['grid'])) {//temos duas telas que enviam de formas diferentes a requisição          
-            $preco['Preco']['preco'] = $_POST['preco']; 
+            $preco['Preco']['preco'] = $_POST['preco'];
             $model->load($preco);
         } else {
             $model->load(Yii::$app->request->post());
         }
-      
+
         if ($model->save()) {
             return ['output' => Yii::$app->formatter->asCurrency($model->preco), 'message' => ''];
         } else {
             return ['output' => '', 'message' => 'Zicou e não salvou'];
         }
     }
-    
+
     /**
      * Altera se a promoção está ativa usando o componete Editable do kartik
      * @param type $id
@@ -89,21 +89,19 @@ class ProdutoController extends Controller {
     public function actionAlteraPromocaoAtiva($id) {
         $model = $this->findModelPreco($id);
         Yii::$app->response->format = Response::FORMAT_JSON;
-      
-//        print_r($_REQUEST);
-//        exit();
+
         if (isset($_GET['grid'])) {//temos duas telas que enviam de formas diferentes a requisição          
             $is_promocao_ativa['Preco']['is_promocao_ativa'] = Yii::$app->request->post('is_promocao_ativa', 0);
-            
+
             $model->load($is_promocao_ativa);
         } else {
             $model->load(Yii::$app->request->post());
         }
-      
+
         if ($model->save()) {
-            return ['output' => $model->is_promocao_ativa, 'message' => ''];
+            return ['output' => Yii::$app->formatter->asBoolean($model->is_promocao_ativa), 'message' => ''];
         } else {
-            return ['output' => '', 'message' => 'Zicou e não salvou'];
+            return ['output' => '', 'message' => 'Não salvou: ' . implode(',', $model->getErrorSummary(true))];
         }
     }
 
@@ -303,8 +301,10 @@ class ProdutoController extends Controller {
                     // JSON response is expected in case of successful save
                     Yii::$app->response->format = Response::FORMAT_JSON;
                     return ['success' => true];
+                } else {//se não for requisição ajax, volta direto para a listagem de produtos
+                    return $this->redirect(['/produto']);
+                    //return $this->redirect(['update', 'id' => $model->fk_produto]);
                 }
-                return $this->redirect(['update', 'id' => $model->fk_produto]);
             }
         }
 
@@ -318,26 +318,6 @@ class ProdutoController extends Controller {
                         'model' => $model,
             ]);
         }
-    }
-
-    /**
-     * Updates an existing Preco model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdatePrecobkp($pk_preco = null) {
-
-        $model = $this->findModelPreco($pk_preco);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['update', 'id' => $model->fk_produto]);
-        }
-
-        return $this->render('preco/update', [
-                    'model' => $model,
-        ]);
     }
 
     public function actionDeletePreco($pk_preco) {
