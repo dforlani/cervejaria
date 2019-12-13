@@ -159,7 +159,11 @@ use yii\widgets\ActiveForm;
             'columns' => [
                 [
                     'label' => 'Produto',
-                    'value' => 'preco.nomeProdutoPlusDenominacaoSemBarras',
+                    'value' =>function($model){
+                        $texto = $model->is_desconto_promocional ? "Desconto - ":"";
+                        return  $texto.$model->preco->getNomeProdutoPlusDenominacaoSemBarras();
+                    },
+                    //'value' => 'preco.nomeProdutoPlusDenominacaoSemBarras',
                     'contentOptions' => ['style' => 'font-size:12px;'],
                 ],
                 [
