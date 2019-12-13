@@ -12,6 +12,7 @@ use Yii;
  * @property string $telefone
  * @property string $cpf
  * @property string $dt_nascimento
+ * @property string $codigo_cliente_app
  *
  * @property Venda[] $vendas
  */
@@ -36,6 +37,8 @@ class Cliente extends \yii\db\ActiveRecord {
             [['telefone'], 'string', 'max' => 14],
             [['cpf'], 'string', 'max' => 14],
             [['pk_cliente'], 'unique'],
+            [['codigo_cliente_app'], 'unique'],
+            [['codigo_cliente_app'], 'string', 'max' => 4],
             [['dt_nascimento'], 'default']
         ];
     }
@@ -50,6 +53,7 @@ class Cliente extends \yii\db\ActiveRecord {
             'telefone' => 'Telefone',
             'cpf' => 'CPF',
             'dt_nascimento' => 'Data de Nascimento',
+            'codigo_cliente_app' => 'Código do Cliente para o Aplicativo',
         ];
     }
 

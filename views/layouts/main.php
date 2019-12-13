@@ -14,30 +14,7 @@ use yii\widgets\Breadcrumbs;
 AppAsset::register($this);
 ?>
 
-<script>
-    //timer para informar ao sistema a passagem do tempo. Sempre que passar o tempo pré-definido nas configurações, o sistema irá realizar um backup automático
-    var counter = 0;
-    //efetua uma chamada na tela de backup para avisá-la de que passou 1 minuto
-    function backupAutomatico() {
-        var timer = setTimeout(function () {
-            console.log(counter++);
 
-            var url = "<?= Url::toRoute(['configuracao/backup-automatico']); ?>";
-            data = null;
-            $.getJSON(url, data,
-                    function (dataResposta, textStatus, jqXHR) {
-
-                    }
-            );
-            //efetua esses aviso por 5 vezes, espara-se que a cada troca de tela isso seja repetido
-            if (counter < 3) {
-                backupAutomatico();
-            }
-        }, 1000 * 60);//1 minuto
-    }
-
-    backupAutomatico();
-</script>
 
 
 
@@ -53,12 +30,53 @@ AppAsset::register($this);
         <?php $this->head() ?>
     </head>
     <script>
+        //timer para informar ao sistema a passagem do tempo. Sempre que passar o tempo pré-definido nas configurações, o sistema irá realizar um backup automático
+        var counter = 0;
+        //efetua uma chamada na tela de backup para avisá-la de que passou 1 minuto
+        function backupAutomatico() {
+            var timer = setTimeout(function () {
+
+                var url = "<?= Url::toRoute(['configuracao/backup-automatico']); ?>";
+                data = null;
+                $.getJSON(url, data,
+                        function (dataResposta, textStatus, jqXHR) {
+
+                        }
+                );
+                //efetua esses aviso por 5 vezes, espara-se que a cada troca de tela isso seja repetido
+                if (counter < 3) {
+                    backupAutomatico();
+                }
+            }, 1000 * 60);//1 minuto
+        }
+
+
+
+
+        backupAutomatico();
+
+
+
         $(document).ready(function () {
-            $.post("<?= Url::to(['pedidoapp/pedidos-esperando']); ?>", {'_csrf': '<?= Yii::$app->request->csrfToken ?>'})
-                    .done(function (data) {
-                        $('#divPedidos').html(data);
-                    });
+            /**
+             * Busca os pedidos esperando a cada 15 segundos
+             * @returns {undefined}
+             */
+            function conferePedidosEsperando() {
+                
+                var timer = setTimeout(function () {
+                    $.post("<?= Url::to(['pedidoapp/pedidos-esperando']); ?>", {'_csrf': '<?= Yii::$app->request->csrfToken ?>'})
+                            .done(function (data) {
+                                $('#divPedidos').html(data);
+                            });
+                    conferePedidosEsperando();
+                }, 1000 * 15); //15 segundos
+
+            }
+            conferePedidosEsperando();
         });
+
+
 
     </script>
     <style>
@@ -127,6 +145,7 @@ AppAsset::register($this);
 
                         </div>
                     </div>
+                    <!--Local que serão inseridos os pedidos por AJAX-->
                     <div id='divPedidos'  class="col-md-2">
 
                     </div>

@@ -35,6 +35,15 @@
 
 <h2>Notas de versão</h2>
 <div class="notasVersaoStyle">
+    <a href="#" id="v137" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.3.7 (13/12/2019)</a>
+    <ul id="nv137" style="display:">        
+        <li><b>Clientes</b>Incluído mecanismo de geração de códigos para o aplicativo dos clientes.</li>            
+        <li><b>Aplicativo</b>Atualização automática da atualização de pedidos dos clientes.</li>            
+                   
+    </ul>
+</div>
+
+<div class="notasVersaoStyle">
     <a href="#" id="v136" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.3.6 (09/12/2019)</a>
     <ul id="nv136" style="display:">        
         <li><b>Produtos</b>Adicionado mecanismo de expansão na grid pra facilitar a alteração dos preços dos produtos.</li>            

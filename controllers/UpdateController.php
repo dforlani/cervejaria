@@ -418,6 +418,10 @@ ALTER TABLE `caixa`
         
         // 10/12/2019 correção da não atualização na dt_pagamento
         $this->atualizaBanco("update venda set dt_pagamento = dt_venda  WHERE dt_pagamento is null  AND estado = 'paga'", "update_dt_pagamento_correcao", 'Correção nas datas de pagamentos que não estavam funcionando');
+        
+        // 13/12/2019 inclusão de coluna para codigo_cliente_app
+        $this->atualizaBanco("ALTER TABLE `cliente` ADD `codigo_cliente_app` CHAR(4) NULL;", "alter_cliente_add_codigo_app", 'Incluído coluna de código do aplicativo na tabela de Cliente');
+        
 
         
         echo '<br><br>ATUALIZAÇÃO DO BANCO ENCERRADA<br>';
