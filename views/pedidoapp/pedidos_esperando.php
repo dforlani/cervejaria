@@ -17,8 +17,9 @@ if (!empty($pedidos)) {
             <div class="panel-body" style='background-color: red'>
                 <?php foreach ($pedidos as $pedido) { ?>
                     <div id_pedido='<?= $pedido->pk_pedido_app ?>'  id_venda='<?= $pedido->fk_venda ?>'   type="button"  class="btn btn-default btn-pedido" data-toggle="modal" data-target="#modalPedido" style='margin: 5px;text-align: left;max-width: 200px;min-height:100px; '>
-                        <b><?= $pedido->status ?></b><br>    
                         <b><?= $pedido->cliente->nome; ?></b> <br>
+                        <b><?= $pedido->status ?></b><br>                          
+                        <b><?= Yii::$app->formatter->asDatetime($pedido->dt_pedido); ?></b> <br>
                         <?php
                         if (!empty($pedido->itensPedidoApp)) {
                             foreach ($pedido->itensPedidoApp as $item) {
