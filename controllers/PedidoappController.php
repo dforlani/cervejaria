@@ -47,105 +47,118 @@ class PedidoappController extends Controller {
         $retorno = [];
         if (!empty($cardapio)) {
             foreach ($cardapio as $item) {
-				
-                $retorno[] = ['pk_preco'=>$item->pk_preco,
-				'denominacao'=>$item->getNomeProdutoPlusDenominacaoSemBarras(),
-				'quantidade' => 0
-				];
+
+                $retorno[] = ['pk_preco' => $item->pk_preco,
+                    'denominacao' => $item->getNomeProdutoPlusDenominacaoSemBarras(),
+                    'quantidade' => 0
+                ];
             }
         }
 
         return $retorno;
     }
 
-    
-
-/**
- * @inheritdoc
- */
-public function beforeAction($action)
-{            
+    /**
+     * @inheritdoc
+     */
+    public function beforeAction($action) {
 
         $this->enableCsrfValidation = false;
-   
-
-    return parent::beforeAction($action);
-}
-public function actionTest(){
-	
-	 Yii::$app->response->format = Response::FORMAT_JSON;
-	 $_REQUEST['oi']=	'preprogramadonoservidor';
-	// return  [file_get_contents( 'php://input' ) => 'kmlklmklm'];
-	//return getallheaders();
-	$_POST['opopo'] = 99;
-	return $_POST;
-}
 
 
+        return parent::beforeAction($action);
+    }
 
+    public function actionTest() {
 
-/*
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $_REQUEST['oi'] = 'preprogramadonoservidor';
+        // return  [file_get_contents( 'php://input' ) => 'kmlklmklm'];
+        //return getallheaders();
+        $_POST['opopo'] = 99;
+        return $_POST;
+    }
+
+    public function actionCancelaPedidoAplicativo() {
+         Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $id_venda = &$_POST['id_venda'];
+        $id_pedido = &$_POST['id_pedido'];
+        $pedido = PedidoApp::findOne($id_pedido);      
+       
+
+        if (!empty($pedido)) {
+            $pedido->status = PedidoApp::$CONST_STATUS_CANCELADO_PELO_ATENDENTE;
+            if($pedido->save())
+                return ['success' => 'true'];
+            
+        }
+        
+        return ['success' => 'false'];
+        
+    }
+
+    /*
      * Recebe um pedido no formato JSON do app cliente
      * Vai ter o codigo do cliente, os itens e suas quantidades
      * 
      * ['pk_venda'=>pk_venda, 
      *  'itens' =>
      *      [
-	 ['pk_preco'=>pk_preco,
-	*		 'denominacao'=>denominacao
-	*		'quantidade'=>quantidade],
-	 *] (código do preco e quantidade pedida
+      ['pk_preco'=>pk_preco,
+     * 		 'denominacao'=>denominacao
+     * 		'quantidade'=>quantidade],
+     * ] (código do preco e quantidade pedida
      * ]
      */
+
     public function actionPedir($codigo_cliente) {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         if (!empty($codigo_cliente)) {
-			
-			//verifica se o cliente tem uma comanda aberta
-			$venda = Venda::find()->joinWith('cliente')->where(['codigo_cliente' => $codigo_cliente, 'estado' => 'aberta'])->one();
-			if(!empty($venda)){
-			
 
-				$itens = &$_POST['itens'];
-			
-				if (!empty($itens)) {
-					//primeiro cria um novo pedido
+            //verifica se o cliente tem uma comanda aberta
+            $venda = Venda::find()->joinWith('cliente')->where(['codigo_cliente' => $codigo_cliente, 'estado' => 'aberta'])->one();
+            if (!empty($venda)) {
 
-					$pedido = new PedidoApp();
-					$pedido->fk_cliente = $venda->fk_cliente;
-					$pedido->fk_venda = $venda->pk_venda;
-					
-					$pedido->status = PedidoApp::$CONST_STATUS_ENVIADO;
-					
-					if ($pedido->save()) {
 
-						//agora inclui os itens solicitados
-						foreach ($itens as $fk_preco => $item) {
-							$item_pedido = new ItemPedidoApp();
-							$item_pedido->fk_pedido_app = $pedido->pk_pedido_app;
-							$item_pedido->fk_preco = $item['pk_preco'];
-							$item_pedido->quantidade = $item['quantidade'];
+                $itens = &$_POST['itens'];
 
-							if (!$item_pedido->save()) {
-								$pedido->status = PedidoApp::$CONST_STATUS_ERRO;
-								$pedido->save();
-								return "Ocorreu um erro ao adicionar os itens do pedido. Dirija-se ao caixa".implode(',', $item_pedido->getErrorSummary(true));
-								
-							}
-						}
+                if (!empty($itens)) {
+                    //primeiro cria um novo pedido
 
-						return ['pk_pedido_app' => $pedido->pk_pedido_app, 'status' => $pedido->status];
-					} else {
-						return "Não foi possível salvar o pedido. Dirija-se ao caixa".implode(',', $pedido->getErrorSummary(true));
-					}
-				}
-			}else{
-				return ['pk_pedido_app' => -1, 'status' => "É preciso ter uma comanda aberta para iniciar os pedidos. Dirija-se ao caixa."];
-			}
+                    $pedido = new PedidoApp();
+                    $pedido->fk_cliente = $venda->fk_cliente;
+                    $pedido->fk_venda = $venda->pk_venda;
+
+                    $pedido->status = PedidoApp::$CONST_STATUS_ENVIADO;
+
+                    if ($pedido->save()) {
+
+                        //agora inclui os itens solicitados
+                        foreach ($itens as $fk_preco => $item) {
+                            $item_pedido = new ItemPedidoApp();
+                            $item_pedido->fk_pedido_app = $pedido->pk_pedido_app;
+                            $item_pedido->fk_preco = $item['pk_preco'];
+                            $item_pedido->quantidade = $item['quantidade'];
+
+                            if (!$item_pedido->save()) {
+                                $pedido->status = PedidoApp::$CONST_STATUS_ERRO;
+                                $pedido->save();
+                                return "Ocorreu um erro ao adicionar os itens do pedido. Dirija-se ao caixa" . implode(',', $item_pedido->getErrorSummary(true));
+                            }
+                        }
+
+                        return ['pk_pedido_app' => $pedido->pk_pedido_app, 'status' => $pedido->status];
+                    } else {
+                        return "Não foi possível salvar o pedido. Dirija-se ao caixa" . implode(',', $pedido->getErrorSummary(true));
+                    }
+                }
+            } else {
+                return ['pk_pedido_app' => -1, 'status' => "É preciso ter uma comanda aberta para iniciar os pedidos. Dirija-se ao caixa."];
+            }
         }
     }
-	
 
     /*
      * Verifica o status do pedido e retorna 
@@ -154,7 +167,7 @@ public function actionTest(){
 
     public function actionVerificarStatusPedido($pk_pedido_app) {
         Yii::$app->response->format = Response::FORMAT_JSON;
-       
+
         $model = PedidoApp::findOne($pk_pedido_app);
         if (!empty($model)) {
             return ['pk_pedido_app' => $model->pk_pedido_app, 'status' => $model->status];
@@ -162,8 +175,8 @@ public function actionTest(){
             return ['status' => 'Não encontrado'];
         }
     }
-	
-	    /*
+
+    /*
      * Verifica o status do pedido e retorna 
      * 
      */
@@ -201,9 +214,10 @@ public function actionTest(){
      * @return type
      */
     public function actionPedidosEsperando() {
-        $status = PedidoApp::$CONST_STATUS_PRONTO;
-        $pedidos = PedidoApp::find()->where("status  not like '{$status}' order by pk_pedido_app ")->all();
-
+        $enviado = PedidoApp::$CONST_STATUS_ENVIADO;
+        $atendimento = PedidoApp::$CONST_STATUS_EM_ATENDIMENTO;
+        $pedidos = PedidoApp::find()->where("status  like '{$enviado}' OR status like '{$atendimento}' order by pk_pedido_app ")->all();
+        
         return $this->renderAjax('pedidos_esperando', ['pedidos' => $pedidos]);
     }
 

@@ -63,7 +63,7 @@ AppAsset::register($this);
              * @returns {undefined}
              */
             function conferePedidosEsperando() {
-                
+
                 var timer = setTimeout(function () {
                     $.post("<?= Url::to(['pedidoapp/pedidos-esperando']); ?>", {'_csrf': '<?= Yii::$app->request->csrfToken ?>'})
                             .done(function (data) {
@@ -73,7 +73,48 @@ AppAsset::register($this);
                 }, 1000 * 15); //15 segundos
 
             }
-            conferePedidosEsperando();
+             conferePedidosEsperando();
+
+            /**
+             * botão de pedido pronto para alterar o status do pedido pra pronto, adiciona os itens na comando do cliente e abre a tela de vendas
+             */
+            $("#btn_pedido_pronto").click(function () {
+                id_venda = $(this).attr('id_venda');
+                id_pedido = $(this).attr('id_pedido');
+
+                $.post("<?= Url::to(['pedidoapp/converte-pedido-venda']); ?>", {'id_venda': id_venda, 'id_pedido': id_pedido, '_csrf': '<?= Yii::$app->request->csrfToken ?>'})
+                        .done(function (data) {
+                            if (data.success == 'true') {
+                                window.location.href = "<?= Url::to(['venda/venda']); ?>?id=" + id_venda;
+                            } else {
+                                alert('Ocorreu um erro durante a conversão. Confira a venda!!!!!!!!!');
+                                window.location.href = "<?= Url::to(['venda/venda']); ?>?id=" + id_venda;
+                            }
+                        });
+            });
+
+            /**
+             * botão de pedido pronto para alterar o status do pedido pra pronto, adiciona os itens na comando do cliente e abre a tela de vendas
+             */
+            $("#btn-cancelar-pedido").click(function () {
+
+                if (confirm("Deseja realmente cancelar esse pedido?")) {
+                    id_venda = $(this).attr('id_venda');
+                    id_pedido = $(this).attr('id_pedido');
+                    $.post("<?= Url::to(['pedidoapp/cancela-pedido-aplicativo']); ?>", {'id_venda': id_venda, 'id_pedido': id_pedido, '_csrf': '<?= Yii::$app->request->csrfToken ?>'})
+                            .done(function (data) {
+                                if (data.success == 'true') {
+                                    window.location.href = "<?= Url::to(['venda/venda']); ?>?id=" + id_venda;
+                                } else {
+                                    alert('Ocorreu um erro durante o cancelamento do pedido. Confira a venda!!!!!!!!!');
+                                    window.location.href = "<?= Url::to(['venda/venda']); ?>?id=" + id_venda;
+                                }
+                            });
+                }
+            });
+            
+     
+           
         });
 
 
@@ -156,4 +197,26 @@ AppAsset::register($this);
     </body>
 </html>
 <?php $this->endPage() ?>
+
+<!-- Modal Pedido -->
+<div class="modal fade" id="modalPedido" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Pedido</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id='divPedidoAtendimento'>
+
+            </div>
+            <div class="modal-footer">               
+                <button type="button" id_venda=""  id_pedido=""  id="btn_pedido_pronto" class="btn btn-primary">Pronto</button>
+                <button type="button"  id_venda=""  id_pedido="" class="btn btn-danger" id="btn-cancelar-pedido">Cancelar Pedido</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
