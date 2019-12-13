@@ -55,6 +55,7 @@ class PedidoApp extends \yii\db\ActiveRecord{
             'pk_pedido_app' => 'Pk Pedido App',
             'fk_cliente' => 'Fk Cliente',
             'status' => 'Status',
+            'dt_pedido' =>'Data do Pedido'
         ];
     }
 
@@ -72,5 +73,22 @@ class PedidoApp extends \yii\db\ActiveRecord{
     public function getCliente()
     {
         return $this->hasOne(Cliente::className(), ['pk_cliente' => 'fk_cliente']);
+    }
+    
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getVenda()
+    {
+        return $this->hasOne(Venda::className(), ['pk_venda' => 'fk_venda']);
+    }
+    
+    public static function getTiposStatus(){
+        return [PedidoApp::$CONST_STATUS_PRONTO=>PedidoApp::$CONST_STATUS_PRONTO, 
+             PedidoApp::$CONST_STATUS_EM_ATENDIMENTO=> PedidoApp::$CONST_STATUS_EM_ATENDIMENTO,
+              PedidoApp::$CONST_STATUS_ENVIADO=>  PedidoApp::$CONST_STATUS_ENVIADO,
+             PedidoApp::$CONST_STATUS_CANCELADO_PELO_CLIENTE=> PedidoApp::$CONST_STATUS_CANCELADO_PELO_CLIENTE,
+             PedidoApp::$CONST_STATUS_ERRO=> PedidoApp::$CONST_STATUS_ERRO,
+            PedidoApp::$CONST_STATUS_CANCELADO_PELO_ATENDENTE => PedidoApp::$CONST_STATUS_CANCELADO_PELO_ATENDENTE, ];
     }
 }

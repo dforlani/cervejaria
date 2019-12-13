@@ -6,6 +6,7 @@ use app\models\ItemCaixa;
 use app\models\ItemPedidoApp;
 use app\models\ItemVenda;
 use app\models\PedidoApp;
+use app\models\PedidoAppSearch;
 use app\models\Preco;
 use app\models\Venda;
 use Yii;
@@ -160,6 +161,22 @@ class PedidoappController extends Controller {
         }
     }
 
+    
+    
+    /**
+     * Lists all Comanda models.
+     * @return mixed
+     */
+    public function actionIndex() {
+        $searchModel = new PedidoAppSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('index', [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
+        ]);
+    }
+    
     /*
      * Verifica o status do pedido e retorna 
      * 

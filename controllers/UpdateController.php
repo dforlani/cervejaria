@@ -422,6 +422,9 @@ ALTER TABLE `caixa`
         // 13/12/2019 inclusão de coluna para codigo_cliente_app
         $this->atualizaBanco("ALTER TABLE `cliente` ADD `codigo_cliente_app` CHAR(4) NULL;", "alter_cliente_add_codigo_app", 'Incluído coluna de código do aplicativo na tabela de Cliente');
         
+        // 13/12/2019 inclusão de coluna para codigo_cliente_app
+        $this->atualizaBanco("ALTER TABLE `pedido_app` ADD `dt_pedido` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ;", "alter_pedido_app_add_dt_pedido", 'Incluído coluna de data do pedido');
+        
 
         
         echo '<br><br>ATUALIZAÇÃO DO BANCO ENCERRADA<br>';

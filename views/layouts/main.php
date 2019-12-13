@@ -64,16 +64,17 @@ AppAsset::register($this);
              */
             function conferePedidosEsperando() {
 
+                $.post("<?= Url::to(['pedidoapp/pedidos-esperando']); ?>", {'_csrf': '<?= Yii::$app->request->csrfToken ?>'})
+                        .done(function (data) {
+                            $('#divPedidos').html(data);
+                        });
                 var timer = setTimeout(function () {
-                    $.post("<?= Url::to(['pedidoapp/pedidos-esperando']); ?>", {'_csrf': '<?= Yii::$app->request->csrfToken ?>'})
-                            .done(function (data) {
-                                $('#divPedidos').html(data);
-                            });
+
                     conferePedidosEsperando();
                 }, 1000 * 15); //15 segundos
 
             }
-             conferePedidosEsperando();
+            conferePedidosEsperando();
 
             /**
              * botão de pedido pronto para alterar o status do pedido pra pronto, adiciona os itens na comando do cliente e abre a tela de vendas
@@ -112,9 +113,9 @@ AppAsset::register($this);
                             });
                 }
             });
-            
-     
-           
+
+
+
         });
 
 
@@ -150,6 +151,7 @@ AppAsset::register($this);
                                 ['label' => 'Comandas', 'url' => ['/comanda']],
                                 ['label' => 'Produtos', 'url' => ['/produto']],
                                 ['label' => 'Unidades de Medida', 'url' => ['/unidade-medida']],
+                                ['label' => 'Pedidos Aplicativo', 'url' => ['/pedidoapp']],
                                 ['options' => ['style' => 'background-color:#ddd;margin-top: 0px;']],
                                 ['label' => 'Relatórios', 'items' => [['label' => 'Vendas', 'url' => ['/relatorio/vendas']]]],
                                 ['label' => 'Graficos', 'items' => [['label' => 'Vendas', 'url' => ['/grafico/vendas']]]],
