@@ -8,7 +8,7 @@ use yii\helpers\Html;
 
 <table class="table table-bordered table-condensed table-hover small kv-table">
     <tbody><tr class="danger">
-            <th colspan="4" class="text-left text-danger">Formas de Venda</th>
+            <th colspan="5" class="text-left text-danger">Formas de Venda</th>
         </tr>
         <tr class="active">
             <th> Denominação</th>
