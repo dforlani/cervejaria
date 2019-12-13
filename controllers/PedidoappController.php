@@ -97,48 +97,73 @@ public function actionTest(){
 	 *] (código do preco e quantidade pedida
      * ]
      */
-    public function actionPedir($pk_venda) {
+    public function actionPedir($codigo_cliente) {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        if (!empty($pk_venda)) {
-
-            $itens = &$_POST['itens'];
+        if (!empty($codigo_cliente)) {
 			
-            if (!empty($itens)) {
-                //primeiro cria um novo pedido
+			//verifica se o cliente tem uma comanda aberta
+			$venda = Venda::find()->joinWith('cliente')->where(['codigo_cliente' => $codigo_cliente, 'estado' => 'aberta'])->one();
+			if(!empty($venda)){
+			
 
-                $pedido = new PedidoApp();
-                $pedido->fk_cliente = 23;
-				$pedido->fk_venda = $pk_venda;
-				
-                $pedido->status = PedidoApp::$CONST_STATUS_ENVIADO;
-				
-                if ($pedido->save()) {
+				$itens = &$_POST['itens'];
+			
+				if (!empty($itens)) {
+					//primeiro cria um novo pedido
 
-                    //agora inclui os itens solicitados
-                    foreach ($itens as $fk_preco => $item) {
-                        $item_pedido = new ItemPedidoApp();
-                        $item_pedido->fk_pedido_app = $pedido->pk_pedido_app;
-                        $item_pedido->fk_preco = $item['pk_preco'];
-                        $item_pedido->quantidade = $item['quantidade'];
+					$pedido = new PedidoApp();
+					$pedido->fk_cliente = $venda->fk_cliente;
+					$pedido->fk_venda = $venda->pk_venda;
+					
+					$pedido->status = PedidoApp::$CONST_STATUS_ENVIADO;
+					
+					if ($pedido->save()) {
 
-                        if (!$item_pedido->save()) {
-                            $pedido->status = PedidoApp::$CONST_STATUS_ERRO;
-							$pedido->save();
-							return "Ocorreu um erro ao adicionar os itens do pedido. Dirija-se ao caixa".implode(',', $item_pedido->getErrorSummary(true));
-                            
-                        }
-                    }
+						//agora inclui os itens solicitados
+						foreach ($itens as $fk_preco => $item) {
+							$item_pedido = new ItemPedidoApp();
+							$item_pedido->fk_pedido_app = $pedido->pk_pedido_app;
+							$item_pedido->fk_preco = $item['pk_preco'];
+							$item_pedido->quantidade = $item['quantidade'];
 
-                    return ['id' => $pedido->pk_pedido_app, 'status' => $pedido->status];
-                } else {
-                    return "Não foi possível salvar o pedido. Dirija-se ao caixa".implode(',', $pedido->getErrorSummary(true));
-                }
-            }
+							if (!$item_pedido->save()) {
+								$pedido->status = PedidoApp::$CONST_STATUS_ERRO;
+								$pedido->save();
+								return "Ocorreu um erro ao adicionar os itens do pedido. Dirija-se ao caixa".implode(',', $item_pedido->getErrorSummary(true));
+								
+							}
+						}
+
+						return ['pk_pedido_app' => $pedido->pk_pedido_app, 'status' => $pedido->status];
+					} else {
+						return "Não foi possível salvar o pedido. Dirija-se ao caixa".implode(',', $pedido->getErrorSummary(true));
+					}
+				}
+			}else{
+				return ['pk_pedido_app' => -1, 'status' => "É preciso ter uma comanda aberta para iniciar os pedidos. Dirija-se ao caixa."];
+			}
         }
     }
+	
 
     /*
+     * Verifica o status do pedido e retorna 
+     * 
+     */
+
+    public function actionVerificarStatusPedido($pk_pedido_app) {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+       
+        $model = PedidoApp::findOne($pk_pedido_app);
+        if (!empty($model)) {
+            return ['pk_pedido_app' => $model->pk_pedido_app, 'status' => $model->status];
+        } else {
+            return ['status' => 'Não encontrado'];
+        }
+    }
+	
+	    /*
      * Verifica o status do pedido e retorna 
      * 
      */
