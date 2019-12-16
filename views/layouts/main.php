@@ -15,9 +15,6 @@ AppAsset::register($this);
 ?>
 
 
-
-
-
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
@@ -123,6 +120,13 @@ AppAsset::register($this);
     </script>
     <style>
         .container {width:1400px;margin:0 auto;}
+        .painel-pedido-red{
+            background-color: red
+        }
+
+        .painel-pedido-yellow{
+            background-color: yellow
+        }   
     </style>
     <body>
         <?php $this->beginBody() ?>
@@ -221,4 +225,32 @@ AppAsset::register($this);
         </div>
     </div>
 </div>
+
+<script>
+    var pedidos = {};
+    var myVar = setInterval(myTimer, 1000);
+    var d, displayDate;
+    function myTimer() {
+        pedidos.forEach(minusDate);
+        $('#div-painel-pedido').toggleClass('painel-pedido-red');
+        $('#div-painel-pedido').toggleClass('painel-pedido-yellow');
+    }
+
+    function minusDate(value, index, array) {
+
+        d = new Date();
+        d.setDate(d.getDate() - value.dia);
+        d.setMonth(d.getMonth() - value.mes);
+        d.setYear(d.getYear() - value.ano);
+        d.setHours(d.getHours() - value.hora);
+        d.setMinutes(d.getMinutes() - value.minuto);
+        d.setSeconds(d.getSeconds() - value.segundo);
+        if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+            displayDate = d.toLocaleTimeString('pt-BR');
+        } else {
+            displayDate = d.toLocaleTimeString('pt-BR', {timeZone: 'America/Belem'});
+        }
+        document.getElementById("espera" + value.pk_pedido_app).innerHTML = displayDate;
+    }
+</script>
 

@@ -100,6 +100,10 @@ class Preco extends \yii\db\ActiveRecord {
     public function getNomeProdutoPlusDenominacaoSemBarras() {
         return $this->produto->nome . ' - ' . $this->denominacao;
     }
+    
+    public function getNomeProdutoPlusDenominacaoSemBarrasLimitado($limit) {
+        return substr($this->getNomeProdutoPlusDenominacaoSemBarras(), 0, $limit);
+    }
 
     /**
      * {@inheritdoc}
