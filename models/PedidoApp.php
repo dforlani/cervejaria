@@ -2,7 +2,8 @@
 
 namespace app\models;
 
-use Yii;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "pedido_app".
@@ -10,11 +11,13 @@ use Yii;
  * @property int $pk_pedido_app
  * @property int $fk_cliente
  * @property string $status
+ * @property string $dt_pedido
+ * 
  *
  * @property ItemPedidoApp[] $itemPedidoApps
  * @property Cliente $fkCliente
  */
-class PedidoApp extends \yii\db\ActiveRecord{
+class PedidoApp extends ActiveRecord{
     public static $CONST_STATUS_ERRO = "Erro";
     public static $CONST_STATUS_EM_ATENDIMENTO = "Em Atendimento";
     public static $CONST_STATUS_ENVIADO = "Enviado";
@@ -60,7 +63,7 @@ class PedidoApp extends \yii\db\ActiveRecord{
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getItensPedidoApp()
     {
@@ -68,7 +71,7 @@ class PedidoApp extends \yii\db\ActiveRecord{
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getCliente()
     {
@@ -76,7 +79,7 @@ class PedidoApp extends \yii\db\ActiveRecord{
     }
     
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getVenda()
     {
@@ -90,5 +93,15 @@ class PedidoApp extends \yii\db\ActiveRecord{
              PedidoApp::$CONST_STATUS_CANCELADO_PELO_CLIENTE=> PedidoApp::$CONST_STATUS_CANCELADO_PELO_CLIENTE,
              PedidoApp::$CONST_STATUS_ERRO=> PedidoApp::$CONST_STATUS_ERRO,
             PedidoApp::$CONST_STATUS_CANCELADO_PELO_ATENDENTE => PedidoApp::$CONST_STATUS_CANCELADO_PELO_ATENDENTE, ];
+    }
+    
+    public function getDtPedidoExploded(){
+        return json_encode(['dia'=>date('d',strtotime($this->dt_pedido)), //dia        
+        'mes'=>date('n',strtotime($this->dt_pedido)), //dia        
+        'ano'=>date('Y',strtotime($this->dt_pedido)), //dia        
+        'hora'=>date('H',strtotime($this->dt_pedido)), //dia        
+        'minuto'=>date('i',strtotime($this->dt_pedido)), //dia        
+        'segundo'=>date('s',strtotime($this->dt_pedido)), 
+        'pk_pedido_app'=>$this->pk_pedido_app]); //dia              
     }
 }

@@ -81,22 +81,20 @@ class PedidoappController extends Controller {
     }
 
     public function actionCancelaPedidoAplicativo() {
-         Yii::$app->response->format = Response::FORMAT_JSON;
+        Yii::$app->response->format = Response::FORMAT_JSON;
 
         $id_venda = &$_POST['id_venda'];
         $id_pedido = &$_POST['id_pedido'];
-        $pedido = PedidoApp::findOne($id_pedido);      
-       
+        $pedido = PedidoApp::findOne($id_pedido);
+
 
         if (!empty($pedido)) {
             $pedido->status = PedidoApp::$CONST_STATUS_CANCELADO_PELO_ATENDENTE;
-            if($pedido->save())
+            if ($pedido->save())
                 return ['success' => 'true'];
-            
         }
-        
+
         return ['success' => 'false'];
-        
     }
 
     /*
@@ -161,8 +159,6 @@ class PedidoappController extends Controller {
         }
     }
 
-    
-    
     /**
      * Lists all Comanda models.
      * @return mixed
@@ -176,7 +172,7 @@ class PedidoappController extends Controller {
                     'dataProvider' => $dataProvider,
         ]);
     }
-    
+
     /*
      * Verifica o status do pedido e retorna 
      * 
@@ -234,8 +230,10 @@ class PedidoappController extends Controller {
         $enviado = PedidoApp::$CONST_STATUS_ENVIADO;
         $atendimento = PedidoApp::$CONST_STATUS_EM_ATENDIMENTO;
         $pedidos = PedidoApp::find()->where("status  like '{$enviado}' OR status like '{$atendimento}' order by pk_pedido_app ")->all();
-        
-        return $this->renderAjax('pedidos_esperando', ['pedidos' => $pedidos]);
+        if (count($pedidos) > 0)
+            return $this->renderAjax('pedidos_esperando', ['pedidos' => $pedidos]);
+        else
+            return "";
     }
 
     /**
