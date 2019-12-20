@@ -425,7 +425,14 @@ ALTER TABLE `caixa`
         // 13/12/2019 inclusão de coluna para codigo_cliente_app
         $this->atualizaBanco("ALTER TABLE `pedido_app` ADD `dt_pedido` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ;", "alter_pedido_app_add_dt_pedido", 'Incluído coluna de data do pedido');
         
+        //26-10-2019 Inclusão de novo tipo de item caixa
+        $this->atualizaBanco("ALTER TABLE `item_caixa` CHANGE `tipo` `tipo` ENUM('Abertura de Caixa','Entrada - Recebimento de Pagamento','Saída - Pagamento de Despesa','Sangria','Complementação de Caixa') CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;", "update_novo_item_caixa", 'Update tabela item_caixa, novo item caixa');
 
+        
+        //26-10-2019 Inclusão de novo tipo de item caixa
+        $this->atualizaBanco("ALTER TABLE `preco` CHANGE `promocao_quantidade_atingir` `promocao_quantidade_atingir` INT(11) NULL;        ALTER TABLE `preco` CHANGE `promocao_desconto_aplicar` `promocao_desconto_aplicar` DECIMAL(10,2) NULL;        ALTER TABLE `preco` CHANGE `is_promocao_ativa` `is_promocao_ativa` TINYINT(1) NULL DEFAULT '0';", "update_promocoes_null", 'Update tabela preco pra promoções');
+        
+        
         
         echo '<br><br>ATUALIZAÇÃO DO BANCO ENCERRADA<br>';
     }
