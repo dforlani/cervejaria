@@ -97,6 +97,13 @@ class Venda extends ActiveRecord {
     public function getItensVenda() {
         return $this->hasMany(ItemVenda::className(), ['fk_venda' => 'pk_venda']);
     }
+	
+	   /**
+     * @return ActiveQuery
+     */
+    public function getPedidosApp() {
+        return $this->hasMany(PedidoApp::className(), ['fk_venda' => 'pk_venda'])->orderBy('dt_pedido DESC');
+    }
 
     public function isPaga() {
         return $this->estado == 'paga';
