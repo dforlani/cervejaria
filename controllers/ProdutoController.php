@@ -221,11 +221,11 @@ class ProdutoController extends Controller {
         ]);
     }
 
-   public function actionAlteraProdutoIsVendavel($id) {
+    public function actionAlteraProdutoIsVendavel($id) {
         $model = $this->findModel($id);
         Yii::$app->response->format = Response::FORMAT_JSON;
         $index = array_shift($_POST['Produto']);
-        $model->is_vendavel = $index['is_vendavel'];  
+        $model->is_vendavel = $index['is_vendavel'];
 
         if ($model->save()) {
             return ['output' => Yii::$app->formatter->asBoolean($model->is_vendavel), 'message' => ''];
@@ -405,9 +405,15 @@ class ProdutoController extends Controller {
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id) {
+        $model = $this->findModel($id);
+        $is_cerveja = $model->isCerveja();
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        if ($is_cerveja) {
+            return $this->redirect(['cerveja']);
+        } else {
+            return $this->redirect(['index']);
+        }
     }
 
     public function actionRemoverTapList($id) {

@@ -128,4 +128,7 @@ class Produto extends \yii\db\ActiveRecord {
         return ['Cerveja'=>'Cerveja', 'Outro'=>'Outro'];                
     }
 
+    public function isCerveja(){
+        return $this->tipo_produto == 'Cerveja';
+    }
 }
