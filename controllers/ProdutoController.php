@@ -39,9 +39,25 @@ class ProdutoController extends Controller {
      */
     public function actionIndex() {
         $searchModel = new ProdutoSearch();
+        $_GET['ProdutoSearch']['tipo_produto'] = 'Outro';
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
+     * Lists all Produto models.
+     * @return mixed
+     */
+    public function actionCerveja() {
+        $searchModel = new ProdutoSearch();
+        $_GET['ProdutoSearch']['tipo_produto'] = 'Cerveja';
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('cerveja/index', [
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,
         ]);
@@ -124,6 +140,21 @@ class ProdutoController extends Controller {
         ]);
     }
 
+    public function actionCreateCerveja() {
+        $model = new Produto();
+        $model->is_vendavel = true;
+        $model->tipo_produto = 'Cerveja';
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->session->setFlash('warning', "Cerveja inserida, cadastre as formas de venda.");
+            $this->redirect(['update-cerveja', 'id' => $model->pk_produto]);
+        }
+
+        return $this->render('cerveja/create', [
+                    'model' => $model,
+        ]);
+    }
+
     public function actionGerarPdf() {
         $precos = Preco::find()->where('is_vendavel IS TRUE AND (dt_vencimento >= CURDATE() OR dt_vencimento IS NULL) AND codigo_barras IS NOT NULL AND codigo_barras != "" ')->joinWith('produto')->orderBy('nome, denominacao')->all();
         $codigos = array();
@@ -190,6 +221,39 @@ class ProdutoController extends Controller {
         ]);
     }
 
+   public function actionAlteraProdutoIsVendavel($id) {
+        $model = $this->findModel($id);
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $index = array_shift($_POST['Produto']);
+        $model->is_vendavel = $index['is_vendavel'];  
+
+        if ($model->save()) {
+            return ['output' => Yii::$app->formatter->asBoolean($model->is_vendavel), 'message' => ''];
+        } else {
+            return ['output' => '', 'message' => 'Não salvou: ' . implode(',', $model->getErrorSummary(true))];
+        }
+    }
+
+    public function actionUpdateCerveja($id) {
+
+        $model = $this->findModel($id);
+
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['cerveja']);
+        }
+
+        $searchModelPreco = new PrecoSearch();
+        $dataProviderPreco = $searchModelPreco->search(['PrecoSearch' => ['fk_produto' => $model->pk_produto]]);
+
+
+        return $this->render('cerveja/update', [
+                    'model' => $model,
+                    'searchModelPreco' => $searchModelPreco,
+                    'dataProviderPreco' => $dataProviderPreco,
+        ]);
+    }
+
     public function actionTapList() {
 
         if (!empty($_POST['Preco'])) {
@@ -206,7 +270,7 @@ class ProdutoController extends Controller {
                     $model->is_tap_list = 1;
                     $model->pos_tap_list = $pos + 1;
                 }
-            }else
+            } else
             if (isset($_POST['editableKey'])) {
                 $model = $this->findModelPreco($_POST['editableKey']);
 

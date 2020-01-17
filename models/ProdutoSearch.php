@@ -2,23 +2,23 @@
 
 namespace app\models;
 
+use app\models\Produto;
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Produto;
 
 /**
  * ProdutoSearch represents the model behind the search form of `app\models\Produto`.
  */
-class ProdutoSearch extends Produto
-{
+class ProdutoSearch extends Produto {
+
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['pk_produto'], 'integer'],
-            [['nome', 'auxHasPromocao',], 'safe'],
+            [['nome', 'auxHasPromocao', 'tipo_produto','is_vendavel'], 'safe'],
             [['estoque_vendido'], 'number'],
         ];
     }
@@ -26,8 +26,7 @@ class ProdutoSearch extends Produto
     /**
      * {@inheritdoc}
      */
-    public function scenarios()
-    {
+    public function scenarios() {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
@@ -39,15 +38,14 @@ class ProdutoSearch extends Produto
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
-    {
+    public function search($params) {
         $query = Produto::find();
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-             'sort'=> ['defaultOrder' => ['nome'=>SORT_ASC]]
+            'sort' => ['defaultOrder' => ['nome' => SORT_ASC]]
         ]);
 
         $this->load($params);
@@ -63,11 +61,14 @@ class ProdutoSearch extends Produto
         $query->andFilterWhere([
             'pk_produto' => $this->pk_produto,
             'estoque_vendido' => $this->estoque_vendido,
-            'is_promocao_ativa' =>$this->auxHasPromocao
+            'is_promocao_ativa' => $this->auxHasPromocao,
+            'is_vendavel' => $this->is_vendavel,
         ]);
 
-        $query->andFilterWhere(['like', 'nome', $this->nome]);   
-
+        $query->andFilterWhere(['like', 'nome', $this->nome]);
+        $query->andFilterWhere(['like', 'tipo_produto', $this->tipo_produto]);
+    
         return $dataProvider;
     }
+
 }

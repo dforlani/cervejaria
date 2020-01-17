@@ -147,3 +147,4 @@ use yii\web\View;
         <?php ActiveForm::end(); ?>
 
     </div>
+</div>

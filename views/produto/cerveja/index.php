@@ -3,6 +3,7 @@
 use app\models\ProdutoSearch;
 use kartik\editable\Editable;
 use kartik\grid\GridView;
+use kartik\widgets\SwitchInput;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
 use yii\web\View;
@@ -11,7 +12,7 @@ use yii\web\View;
 /* @var $searchModel ProdutoSearch */
 /* @var $dataProvider ActiveDataProvider */
 
-$this->title = 'Produtos';
+$this->title = 'Cervejas';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -20,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Novo Produto', ['create'], ['class' => 'btn btn-success']) ?>&nbsp;&nbsp;<?= Html::a('Gerar PDF de Códigos de Barra', ['gerar-pdf'], ['class' => 'btn btn-warning']) ?>
+        <?= Html::a('Nova Cerveja', ['create-cerveja'], ['class' => 'btn btn-success']) ?>&nbsp;&nbsp;<?= Html::a('Gerar PDF de Códigos de Barra', ['gerar-pdf'], ['class' => 'btn btn-warning']) ?>
     </p>
 
     <?=
@@ -52,23 +53,25 @@ $this->params['breadcrumbs'][] = $this->title;
                 'headerOptions' => ['class' => 'kartik-sheet-style'],
                 'expandOneOnly' => true
             ],
-            [           
+            [
                 'class' => 'kartik\grid\EditableColumn',
+                 'filter'=>[1=>'Sim', 0=>'Não'],
                 'attribute' => 'is_vendavel',
-                'filter'=>[1=>'Sim', 0=>'Não'],
-                'value' => function($model) {
+                'value' => function($model){
                     return Yii::$app->formatter->asBoolean($model->is_vendavel);
                 },
                 'editableOptions' => function ($model, $key, $index) {
                     return [
-                        'header' => 'Pra Vender?',
-                        'inputType' => Editable::INPUT_SWITCH,
-                        'formOptions' => ['action' => ['altera-produto-is-vendavel', 'id' => $model->pk_produto]],
-                    ];
+                    'header' => 'Pra Vender?',
+                    'inputType' => Editable::INPUT_SWITCH,
+                      'formOptions' => ['action' => ['altera-produto-is-vendavel', 'id' => $model->pk_produto]],
+                ];
+                            
                 },
                 'hAlign' => 'right',
                 'vAlign' => 'middle',
             ],
+           
             [
                 'attribute' => 'nome',
                 'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
@@ -123,6 +126,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'header' => 'Ações',
                 'headerOptions' => ['style' => 'color:#337ab7'],
                 'template' => '{update} {delete}',
+                'buttons' => [
+                    'update' => function ($url, $model) {
+                        return Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['update-cerveja', 'id' => $model->pk_produto], [
+                                    'class' => 'update',
+                                    'title' => 'Atualizar',
+                        ]);
+                    },
+                ],
             ],
         ],
     ]);

@@ -432,6 +432,11 @@ ALTER TABLE `caixa`
         //26-10-2019 Inclusão de novo tipo de item caixa
         $this->atualizaBanco("ALTER TABLE `preco` CHANGE `promocao_quantidade_atingir` `promocao_quantidade_atingir` INT(11) NULL;        ALTER TABLE `preco` CHANGE `promocao_desconto_aplicar` `promocao_desconto_aplicar` DECIMAL(10,2) NULL;        ALTER TABLE `preco` CHANGE `is_promocao_ativa` `is_promocao_ativa` TINYINT(1) NULL DEFAULT '0';", "update_promocoes_null", 'Update tabela preco pra promoções');
         
+        //17-01-2020 Inclusão de tipo de produto
+        $this->atualizaBanco("ALTER TABLE `produto` ADD `tipo_produto` ENUM('Cerveja','Outro') NOT NULL DEFAULT 'Outro'", "add_tipo_produto_table_produto", 'Update tabela produto pra diferenciar cervejas de outros');       
+        
+        //17-01-2020 Inclusão de IBU e teor alcoolico
+        $this->atualizaBanco("ALTER TABLE `produto` ADD `teor_alcoolico` DECIMAL(10,3) NOT NULL AFTER `tipo_produto`, ADD `ibu` DECIMAL(10,3) NOT NULL AFTER `teor_alcoolico`;", "add_teor_alcoolico_e_ibu_produto", 'Update tabela produto pra adicionar teor alcoolico e ibu');       
         
         
         echo '<br><br>ATUALIZAÇÃO DO BANCO ENCERRADA<br>';

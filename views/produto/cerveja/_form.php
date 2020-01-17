@@ -39,6 +39,34 @@ use yii\widgets\ActiveForm;
         <div class="row">
             <div class="col-sm-3" > 
                 <?=
+                $form->field($model, 'teor_alcoolico')->widget(NumberControl::classname(), [
+                    'maskedInputOptions' => [
+                        'prefix' => ' ',
+                        'suffix' => '',
+                        'allowMinus' => false,
+                        'digits' => 3,
+                    ],
+                ]);
+                ?>
+
+            </div>
+            <div class="col-sm-3" style=";"> 
+                <?=
+                $form->field($model, 'ibu')->widget(NumberControl::classname(), [
+                    'maskedInputOptions' => [
+                        'prefix' => ' ',
+                        'suffix' => '',
+                        'allowMinus' => false,
+                        'digits' => 3,
+                    ],
+                ]);
+                ?>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3" > 
+                <?=
                 $form->field($model, 'estoque_inicial')->widget(NumberControl::classname(), [
                     'maskedInputOptions' => [
                         'prefix' => ' ',
@@ -101,18 +129,7 @@ use yii\widgets\ActiveForm;
                 ])->label('Unidade de Medida');
                 ?>
             </div>
-             <div class="col-sm-3" >  
-                <br>
-                <?php
-                echo $form->field($model, 'tipo_produto')->widget(Select2::classname(), [
-                    'data' => Produto::getTiposProdutos(),
-                    'options' => ['placeholder' => 'Selecione um tipo de produto'],
-                    'pluginOptions' => [
-                        'allowClear' => true
-                    ],                    
-                ])->label('Tipo de Produto');
-                ?>
-            </div>
+            
             <div class="col-sm-3" >  
                 <?php
                 echo $form->field($model, 'custo_compra_producao')->widget(NumberControl::classname(), [
@@ -127,9 +144,41 @@ use yii\widgets\ActiveForm;
                 </span>
 
             </div>
+             <div class="col-sm-3" >  
+                <br>
+                <?php
+                echo $form->field($model, 'tipo_produto')->widget(Select2::classname(), [
+                    'data' => Produto::getTiposProdutos(),
+                    'options' => ['placeholder' => 'Selecione um tipo de produto'],
+                    'pluginOptions' => [
+                        'allowClear' => true
+                    ],                    
+                ]);
+                ?>
+            </div>
         </div>
+        
         <div class="row">
-            
+            <div class="col-sm-6" >
+                <?=
+                $form->field($model, 'dt_fabricacao')->widget(DateControl::classname(), [
+                    'type' => 'date',
+                    'ajaxConversion' => true,
+                    'autoWidget' => true,
+                    'widgetClass' => '',
+                    'displayFormat' => 'php:d/m/Y',
+                    'saveFormat' => 'php:Y-m-d',
+                    'saveTimezone' => 'UTC',
+                    'widgetOptions' => [
+                        'pluginOptions' => [
+                            'autoclose' => true,
+                            'format' => 'php:d/m/Y',
+                        ],
+                        'language' => 'pt-BR'
+                    ]
+                ]);
+                ?>
+            </div>
             <div class="col-sm-6" >  
                 <?=
                 $form->field($model, 'dt_vencimento')->widget(DateControl::classname(), [
@@ -152,7 +201,7 @@ use yii\widgets\ActiveForm;
             </div>
 
         </div>
-       
+        <?= $form->field($model, 'nr_lote')->textInput() ?>
     </div>
 
 
