@@ -84,7 +84,7 @@ class Produto extends \yii\db\ActiveRecord {
             'dt_fabricacao' => 'Envase',
             'dt_vencimento' => 'Vencimento',
             'nr_lote' => 'Número do Lote',
-            'teor_alcoolico'=>'Teor Alcoolico',
+            'teor_alcoolico'=>'Teor Alcoólico',
             'ibu'=>'IBU',
             'tipo_produto'=>'Tipo de Produto',
             'custo_compra_producao' => 'Preço de Custo da Unidade de Medida'
