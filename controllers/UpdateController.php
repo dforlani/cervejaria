@@ -439,6 +439,9 @@ ALTER TABLE `caixa`
         $this->atualizaBanco("ALTER TABLE `produto` ADD `teor_alcoolico` DECIMAL(10,3) NOT NULL AFTER `tipo_produto`, ADD `ibu` DECIMAL(10,3) NOT NULL AFTER `teor_alcoolico`;", "add_teor_alcoolico_e_ibu_produto", 'Update tabela produto pra adicionar teor alcoolico e ibu');       
         
         
+        $this->atualizaBanco("ALTER TABLE `produto` CHANGE `teor_alcoolico` `teor_alcoolico` DECIMAL(10,3) NULL;ALTER TABLE `produto` CHANGE `ibu` `ibu` DECIMAL(10,3) NULL;", "update_teor_alcoolico_e_ibu_to_null", 'Update tabela produto pra adicionar teor alcoolico e ibu como nulo');       
+
+        
         echo '<br><br>ATUALIZAÇÃO DO BANCO ENCERRADA<br>';
     }
 
