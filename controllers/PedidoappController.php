@@ -49,9 +49,10 @@ class PedidoappController extends Controller {
         if (!empty($cardapio)) {
             foreach ($cardapio as $item) {
 
-                $retorno[] = ['pk_preco' => $item->pk_preco,
+                $retorno[] = ['fk_preco' => $item->pk_preco,
                     'denominacao' => $item->getNomeProdutoPlusDenominacaoSemBarras(),
-                    'quantidade' => 0
+                    'quantidade' => 0,
+					'preco'=>$item->preco
                 ];
             }
         }
@@ -111,14 +112,16 @@ class PedidoappController extends Controller {
      * ]
      */
 
-    public function actionPedir($codigo_cliente) {
+    public function actionPedir($codigo_cliente_app) {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        if (!empty($codigo_cliente)) {
+        if (!empty($codigo_cliente_app)) {
+			
 
             //verifica se o cliente tem uma comanda aberta
-            $venda = Venda::find()->joinWith('cliente')->where(['codigo_cliente' => $codigo_cliente, 'estado' => 'aberta'])->one();
+            $venda = Venda::find()->joinWith('cliente')->where(['codigo_cliente_app' => $codigo_cliente_app, 'estado' => 'aberta'])->one();
             if (!empty($venda)) {
+				
 
 
                 $itens = &$_POST['itens'];
@@ -138,7 +141,7 @@ class PedidoappController extends Controller {
                         foreach ($itens as $fk_preco => $item) {
                             $item_pedido = new ItemPedidoApp();
                             $item_pedido->fk_pedido_app = $pedido->pk_pedido_app;
-                            $item_pedido->fk_preco = $item['pk_preco'];
+                            $item_pedido->fk_preco = $item['fk_preco'];
                             $item_pedido->quantidade = $item['quantidade'];
 
                             if (!$item_pedido->save()) {
@@ -152,7 +155,9 @@ class PedidoappController extends Controller {
                     } else {
                         return "Não foi possível salvar o pedido. Dirija-se ao caixa" . implode(',', $pedido->getErrorSummary(true));
                     }
-                }
+                }else{
+					return ['pk_pedido_app' => -1, 'status' => "Nenhum item foi solicitado."];
+				}
             } else {
                 return ['pk_pedido_app' => -1, 'status' => "É preciso ter uma comanda aberta para iniciar os pedidos. Dirija-se ao caixa."];
             }
@@ -284,6 +289,51 @@ class PedidoappController extends Controller {
         return ['success' => 'false'];
     }
 
+	public function actionRequisitaPedidosComandaAberta($codigo_cliente_app) {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        if (!empty($codigo_cliente_app)) {
+
+            //verifica se o cliente tem uma comanda aberta
+            $venda = Venda::find()->joinWith('cliente')->where(['codigo_cliente_app' => $codigo_cliente_app, 'estado' => 'aberta'])->one();
+            if (!empty($venda)) {
+				$pedidos = $venda->pedidosApp;
+				if(!empty($pedidos)){
+					$retorno = [];
+					foreach($pedidos as $pedido){
+						$itens = $pedido->itensPedidoApp;
+						$itens_array = [];
+							foreach($itens as $item){
+								$aux['fk_preco'] = $item->fk_preco;
+								$aux['denominacao'] = $item->preco->getNomeProdutoPlusDenominacaoSemBarras();
+								$aux['quantidade'] = $item->quantidade;
+								$aux['preco'] = $item->preco->preco;
+								
+								$itens_array[] = $aux;
+							}
+							
+						$retorno[] = ['status' => $pedido->status,
+							'pk_pedido_app' => $pedido->pk_pedido_app,
+							'dt_pedido'=> Yii::$app->formatter->asDateTime($pedido->dt_pedido),
+							'itens' => $itens_array
+							
+						
+						];
+						
+						//$retorno[$pedido->pk_pedido_app]['itens'] = [];
+							
+					}
+					return $retorno;
+				
+				
+
+                }
+            } else {
+                return ['pk_pedido_app' => -1, 'status' => "É preciso ter uma comanda aberta para iniciar os pedidos. Dirija-se ao caixa."];
+            }
+        }
+    }
+	
     /**
      * Finds the Caixa model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

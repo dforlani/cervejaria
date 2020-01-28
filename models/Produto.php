@@ -33,13 +33,14 @@ class Produto extends \yii\db\ActiveRecord {
         return [
             [['fk_unidade_medida'], 'required'],
             [['fk_unidade_medida'], 'integer'],
-            [['estoque_vendido', 'estoque_inicial', 'estoque_minimo', 'custo_compra_producao'], 'number'],
+            [['estoque_vendido', 'estoque_inicial', 'estoque_minimo', 'custo_compra_producao', 'ibu', 'teor_alcoolico'], 'number'],
             [['nome',], 'string', 'max' => 100],
             [['nr_lote',], 'string', 'max' => 20],
             [['pk_produto'], 'unique'],
             [['dt_fabricacao'], 'default'],
             [['dt_vencimento'], 'default'],
             [['is_vendavel'], 'required'],
+            [['tipo_produto'], 'safe'],
             [['dt_fabricacao', 'dt_vencimento'], 'validateData'],
        
 
@@ -83,6 +84,9 @@ class Produto extends \yii\db\ActiveRecord {
             'dt_fabricacao' => 'Envase',
             'dt_vencimento' => 'Vencimento',
             'nr_lote' => 'Número do Lote',
+            'teor_alcoolico'=>'Teor Alcoólico',
+            'ibu'=>'IBU',
+            'tipo_produto'=>'Tipo de Produto',
             'custo_compra_producao' => 'Preço de Custo da Unidade de Medida'
         ];
     }
@@ -119,5 +123,12 @@ class Produto extends \yii\db\ActiveRecord {
         }
         return 'Não';
     }
+    
+    public static function getTiposProdutos(){
+        return ['Cerveja'=>'Cerveja', 'Outro'=>'Outro'];                
+    }
 
+    public function isCerveja(){
+        return $this->tipo_produto == 'Cerveja';
+    }
 }
