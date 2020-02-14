@@ -56,12 +56,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'datetime',
                 'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
             ],
-            [
-                'class' => 'yii\grid\ActionColumn',
-                'header' => 'Ações',
-                'headerOptions' => ['style' => 'color:#337ab7'],
-                'template' => '{delete}',
-            ],
+//            [
+//                'class' => 'yii\grid\ActionColumn',
+//                'header' => 'Ações',
+//                'headerOptions' => ['style' => 'color:#337ab7'],
+//                'template' => '{delete}',
+//            ],
         ],
     ]);
     ?>
