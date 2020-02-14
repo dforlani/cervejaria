@@ -231,26 +231,35 @@ AppAsset::register($this);
     var pedidos = {};
     var myVar = setInterval(myTimer, 1000);
     var d, displayDate;
+    
+    //faz os painés de pedidos do aplicativo piscarem
     function myTimer() {
         pedidos.forEach(minusDate);
         $('#div-painel-pedido').toggleClass('painel-pedido-red');
         $('#div-painel-pedido').toggleClass('painel-pedido-yellow');
     }
 
+    //calcula o tempo de espera a atualiza a tela
     function minusDate(value, index, array) {
 
         d = new Date();
+       // console.log(value.minuto);
+        //console.log(d.getMinutes());
         d.setDate(d.getDate() - value.dia);
-        d.setMonth(d.getMonth() - value.mes);
-        d.setYear(d.getYear() - value.ano);
-        d.setHours(d.getHours() - value.hora);
+        d.setMonth(d.getMonth()  + 1 - value.mes);
+      
+        d.setHours(d.getHours() + 1 - value.hora);
         d.setMinutes(d.getMinutes() - value.minuto);
         d.setSeconds(d.getSeconds() - value.segundo);
+   
+         console.log(d);
         if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
             displayDate = d.toLocaleTimeString('pt-BR');
+            
         } else {
             displayDate = d.toLocaleTimeString('pt-BR', {timeZone: 'America/Belem'});
         }
+        console.log(displayDate);
         document.getElementById("espera" + value.pk_pedido_app).innerHTML = displayDate;
     }
 </script>

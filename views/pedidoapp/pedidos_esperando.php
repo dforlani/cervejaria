@@ -60,11 +60,10 @@ if (!empty($pedidos)) {
                         $('#btn-cancelar-pedido').attr('id_pedido', id);
                         $('#btn-cancelar-pedido').attr('id_venda', id_venda);
                     });
-            // $('#modalPedido').modal('show');
+          
         });
     });
 
-//timer pra tela de pedidos ficar piscando e ficar contando o tempo de espera
     pedidos = [<?php
     foreach ($pedidos as $pedido) {
         echo $pedido->getDtPedidoExploded() . ',';
