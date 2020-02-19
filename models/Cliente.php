@@ -18,6 +18,7 @@ use Yii;
  */
 class Cliente extends \yii\db\ActiveRecord {
 
+    public $cod_uf_aux;
     /**
      * {@inheritdoc}
      */
@@ -39,6 +40,7 @@ class Cliente extends \yii\db\ActiveRecord {
             [['pk_cliente'], 'unique'],
             [['codigo_cliente_app'], 'unique'],
             [['codigo_cliente_app'], 'string', 'max' => 4],
+            [['cod_mun'], 'safe'],
             [['dt_nascimento'], 'default']
         ];
     }
@@ -54,6 +56,8 @@ class Cliente extends \yii\db\ActiveRecord {
             'cpf' => 'CPF',
             'dt_nascimento' => 'Data de Nascimento',
             'codigo_cliente_app' => 'Código do Cliente para o Aplicativo',
+            'cod_mun'=> 'Município',
+            'cod_uf_aux'=>'UF'
         ];
     }
 
@@ -62,6 +66,10 @@ class Cliente extends \yii\db\ActiveRecord {
      */
     public function getVendas() {
         return $this->hasMany(Venda::className(), ['fk_cliente' => 'pk_cliente']);
+    }
+    
+     public function getMunicipio() {
+        return $this->hasOne(Municipio::className(), ['cod_mun' => 'cod_mun']);
     }
 
     public function beforeSave($insert) {

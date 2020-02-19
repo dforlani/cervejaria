@@ -440,9 +440,35 @@ ALTER TABLE `caixa`
         
         
         $this->atualizaBanco("ALTER TABLE `produto` CHANGE `teor_alcoolico` `teor_alcoolico` DECIMAL(10,3) NULL;ALTER TABLE `produto` CHANGE `ibu` `ibu` DECIMAL(10,3) NULL;", "update_teor_alcoolico_e_ibu_to_null", 'Update tabela produto pra adicionar teor alcoolico e ibu como nulo');       
-
         
+        $this->atualizaBancoByFile("../sql/uf.sql", 'Create_table_uf', "Tabela de UF criada com sucesso");
+        
+        $this->atualizaBancoByFile("../sql/municipio.sql", 'Create_table_municipio', "Tabela de municipio criada com sucesso");
+
+        $this->atualizaBanco("ALTER TABLE `cliente` ADD `cod_mun` CHAR(7) NULL DEFAULT NULL;
+        ALTER TABLE `cliente` ADD `endereco` VARCHAR(100) NULL DEFAULT NULL;", "alter_table_cliente_endereco", 'Update tabela produto pra adicionar endereço');       
+        
+            
+            
         echo '<br><br>ATUALIZAÇÃO DO BANCO ENCERRADA<br>';
+    }
+    
+    /**
+     * Abre o arquivo e envia a string para atualização
+     * @param type $comando
+     * @param type $nome_configuracao
+     * @param type $mensagem
+     */
+    public function atualizaBancoByFile($file, $nome_configuracao, $mensagem)  {
+        if(file_exists($file)){
+            $resultado = file_get_contents($file);
+            if($resultado != FALSE){
+                $this->atualizaBanco($resultado, $nome_configuracao, $mensagem);
+            }
+        }else{
+            echo 'Arquivo '.$file." não existe<br>";            
+        }
+        
     }
 
     public function atualizaBanco($comando, $nome_configuracao, $mensagem) {
