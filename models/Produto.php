@@ -131,4 +131,11 @@ class Produto extends \yii\db\ActiveRecord {
     public function isCerveja(){
         return $this->tipo_produto == 'Cerveja';
     }
+
+public function getProdutoPraVencer(){
+    $produtos_pra_vencer = Produto::find()->where('dt_vencimento < "2020-02-20" + interval 0 day')->all();
+    return $produtos_pra_vencer;
+    
+}    
+    
 }

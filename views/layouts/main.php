@@ -3,9 +3,9 @@
 /* @var $content string */
 
 use app\assets\AppAsset;
+use kartik\popover\PopoverX;
 use kartik\widgets\AlertBlock;
 use kartik\widgets\SideNav;
-use yii\bootstrap\Modal;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\View;
@@ -127,18 +127,73 @@ AppAsset::register($this);
         .painel-pedido-yellow{
             background-color: yellow
         }   
+
     </style>
+    <script src="/cervejaria/web/assets/253d8583/js/bootstrap.js"></script>
+    <script src="/cervejaria/web/assets/57c00ab9/js/bootstrap-popover-x.js"></script>
+    
     <body>
         <?php $this->beginBody() ?>
         <div class="content">
             <div class="container">                
                 <div class="row">
 
-                    <div class="col-md-2">
+                    <div class="col-md-2" style="">
+
+
+
                         <?php
+                        $key = 'cache_avisos';
+                        $avisos = Yii::$app->cache->get($key);
+
+                        if ($avisos === false) {
+                            //como não foi encontrado o cache de avisos, vai calculá-lo
+                            // $data is not found in cache, calculate it from scratch
+                            $avisos = PopoverX::widget([
+                                        'header' => 'Avisos',
+                                        'placement' => PopoverX::ALIGN_BOTTOM_LEFT,
+                                        'size' => 'md',
+                                        'content' => '<p class="text-justify">' .
+                                        'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.' .
+                                        '</p>',
+                                        'footer' => Html::button('Limpar', ['class' => 'btn btn-sm btn-outline-secondary']),
+                                        'toggleButton' => [
+                                            'label' => Html::tag('span', '',
+                                                    ['class' => 'glyphicon glyphicon-question-sign', 'style' => 'text-align: right']),
+                                            'class' => 'btn btn-danger'
+                                        ],
+                                        'pluginOptions' => [
+                                            'dialogCss' => ['z-index' => 1051], // will overlay the popover over the navbar
+                                        ]
+                            ]);
+                            echo 'entrou';
+
+                            // store $data in cache so that it can be retrieved next time
+                            Yii::$app->cache->set($key, $avisos, 10);
+                        }
+//    $avisos = PopoverX::widget([
+//                                        'header' => 'Avisos',
+//                                        'placement' => PopoverX::ALIGN_BOTTOM_LEFT,
+//                                        'size' => 'md',
+//                                        'content' => '<p class="text-justify">' .
+//                                        'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.' .
+//                                        '</p>',
+//                                        'footer' => Html::button('Limpar', ['class' => 'btn btn-sm btn-outline-secondary']),
+//                                        'toggleButton' => [
+//                                            'label' => Html::tag('span', '',
+//                                                    ['class' => 'glyphicon glyphicon-question-sign', 'style' => 'text-align: right']),
+//                                            'class' => 'btn btn-danger'
+//                                        ],
+//                                        'pluginOptions' => [
+//                                            'dialogCss' => ['z-index' => 1051], // will overlay the popover over the navbar
+//                                        ]
+//                            ]);
                         echo SideNav::widget([
                             'type' => SideNav::TYPE_DEFAULT,
-                            'heading' => 'Menu',
+                            'heading' => "<div class='row'>
+                              <div class='col-sm-3' style=' display: table-cell;vertical-align: middle' >Menu </div>
+                              <div class='col-sm-9' style='text-align:right' > $avisos</div>
+                          </div>",
                             'items' => [
                                 ['label' => '', 'template' => '<a href="{url}"  accesskey="b">{icon}<u>B</u>alcão{label}</a>', 'url' => ['/venda/venda'],],
                                 ['label' => '', 'template' => '<a href="{url}"  accesskey="h">{icon}Fol<u>h</u>a de Vendas{label}</a>', 'url' => ['/venda/folha'],],
@@ -231,7 +286,7 @@ AppAsset::register($this);
     var pedidos = {};
     var myVar = setInterval(myTimer, 1000);
     var d, displayDate;
-    
+
     //faz os painés de pedidos do aplicativo piscarem
     function myTimer() {
         pedidos.forEach(minusDate);
@@ -243,19 +298,19 @@ AppAsset::register($this);
     function minusDate(value, index, array) {
 
         d = new Date();
-       // console.log(value.minuto);
+        // console.log(value.minuto);
         //console.log(d.getMinutes());
         d.setDate(d.getDate() - value.dia);
-        d.setMonth(d.getMonth()  + 1 - value.mes);
-      
+        d.setMonth(d.getMonth() + 1 - value.mes);
+
         d.setHours(d.getHours() + 1 - value.hora);
         d.setMinutes(d.getMinutes() - value.minuto);
         d.setSeconds(d.getSeconds() - value.segundo);
-   
-         console.log(d);
+
+        console.log(d);
         if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
             displayDate = d.toLocaleTimeString('pt-BR');
-            
+
         } else {
             displayDate = d.toLocaleTimeString('pt-BR', {timeZone: 'America/Belem'});
         }
