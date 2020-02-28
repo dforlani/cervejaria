@@ -19,7 +19,7 @@ class Avisos {
         $produtos = Cerveja::getProdutosPraVencer();
         $avisos = "";
         if (!empty($produtos)) {
-            $avisos = "<b>Cervejas pra Vencer</b><br>";
+            $avisos = "<b>Cervejas pra Vencer em 15 dias</b><br>";
             foreach ($produtos as $aux) {
                 $avisos .= '<a href="' . Avisos::criar_link("produto/update-cerveja", "id", $aux->pk_produto) . '">' . $aux->nome . '</a> (' . Yii::$app->formatter->asDate($aux->dt_vencimento) . ')<br>';
             }
@@ -39,7 +39,7 @@ class Avisos {
         $produtos = Produto::getProdutosPraVencer();
     
         if (!empty($produtos)) {
-            $avisos .= "<br><b>Produtos pra Vencer</b><br>";
+            $avisos .= "<br><b>Produtos pra Vencer em 15 dias</b><br>";
             foreach ($produtos as $aux) {
                 $avisos .= '<a href="' . Avisos::criar_link("produto/update-cerveja", "id", $aux->pk_produto) . '">' . $aux->nome . '</a> (' . Yii::$app->formatter->asDate($aux->dt_vencimento) . ')<br>';
             }
