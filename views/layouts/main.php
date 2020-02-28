@@ -119,7 +119,7 @@ AppAsset::register($this);
         function myFunction() {
             $.post("<?= Url::to(['avisos/limpar']); ?>", {'_csrf': '<?= Yii::$app->request->csrfToken ?>'})
                     .done(function (data) {
-                        alert('oi');
+                     
                         $('#divAvisos').html("");
                     });
         }
