@@ -17,8 +17,11 @@ use Yii;
  * @property Preco[] $precos
  */
 class Produto extends \yii\db\ActiveRecord {
-    public $auxHasPromocao;
+
+    public static $OUTRO = 'Outro';
     
+    public $auxHasPromocao;
+
     /**
      * {@inheritdoc}
      */
@@ -42,25 +45,20 @@ class Produto extends \yii\db\ActiveRecord {
             [['is_vendavel'], 'required'],
             [['tipo_produto'], 'safe'],
             [['dt_fabricacao', 'dt_vencimento'], 'validateData'],
-       
-
         ];
     }
 
-  
-    
-    
     public function validateData($attribute, $params) {
         //cria uma data 10 anos no passado para comparação
         $date = new \DateTime();
         date_sub($date, date_interval_create_from_date_string('10 years'));
         $minAgeDate = date_format($date, 'Y-m-d');
-        
+
         //cria uma data 10 anos no futuro para comparação
         $date = new \DateTime();
         date_add($date, date_interval_create_from_date_string('10 years'));
         $maxAgeDate = date_format($date, 'Y-m-d');
-        
+
         if ($this->$attribute < $minAgeDate) {
             $this->addError($attribute, 'A data é muito antiga.');
         } elseif ($this->$attribute > $maxAgeDate) {
@@ -84,9 +82,9 @@ class Produto extends \yii\db\ActiveRecord {
             'dt_fabricacao' => 'Envase',
             'dt_vencimento' => 'Vencimento',
             'nr_lote' => 'Número do Lote',
-            'teor_alcoolico'=>'Teor Alcoólico',
-            'ibu'=>'IBU',
-            'tipo_produto'=>'Tipo de Produto',
+            'teor_alcoolico' => 'Teor Alcoólico',
+            'ibu' => 'IBU',
+            'tipo_produto' => 'Tipo de Produto',
             'custo_compra_producao' => 'Preço de Custo da Unidade de Medida'
         ];
     }
@@ -112,30 +110,41 @@ class Produto extends \yii\db\ActiveRecord {
     public function beforeSave($insert) {
         return parent::beforeSave($insert);
     }
-    
-    public function hasPromocaoAtiva(){
+
+    public function hasPromocaoAtiva() {
         $precos = $this->precos;
-        if(!empty($precos)){
-            foreach($precos as $preco){
-                if($preco->is_promocao_ativa)
+        if (!empty($precos)) {
+            foreach ($precos as $preco) {
+                if ($preco->is_promocao_ativa)
                     return 'Sim';
             }
         }
         return 'Não';
     }
-    
-    public static function getTiposProdutos(){
-        return ['Cerveja'=>'Cerveja', 'Outro'=>'Outro'];                
+
+    public static function getTiposProdutos() {
+        return ['Cerveja' => 'Cerveja', 'Outro' => 'Outro'];
     }
 
-    public function isCerveja(){
+    public function isCerveja() {
         return $this->tipo_produto == 'Cerveja';
     }
 
-public function getProdutoPraVencer(){
-    $produtos_pra_vencer = Produto::find()->where('dt_vencimento < "2020-02-20" + interval 0 day')->all();
-    return $produtos_pra_vencer;
+      /**
+     * Busca produtos que vão vencer em alguns dias
+     * @return type
+     */
+    public function getProdutosPraVencer($tipo_produto = "Outro") {
+        return Produto::find()->where('dt_vencimento  <= NOW() + interval 15 day  AND dt_vencimento > NOW() AND tipo_produto like "' . $tipo_produto.'"')->orderBy('dt_vencimento ASC')
+                ->all();
+    }
     
-}    
-    
+    /**
+     * return produtos que estão vencidos
+     * @return type
+     */
+    public function getProdutosVencidos($tipo_produto = "Outro") {
+        return Produto::find()->where('dt_vencimento  <= NOW() AND tipo_produto like "' . $tipo_produto . '"')->orderBy('dt_vencimento ASC')->all();
+    }
+
 }

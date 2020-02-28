@@ -3,6 +3,7 @@
 /* @var $content string */
 
 use app\assets\AppAsset;
+use app\components\Avisos;
 use kartik\popover\PopoverX;
 use kartik\widgets\AlertBlock;
 use kartik\widgets\SideNav;
@@ -115,6 +116,13 @@ AppAsset::register($this);
 
         });
 
+        function myFunction() {
+            $.post("<?= Url::to(['avisos/limpar']); ?>", {'_csrf': '<?= Yii::$app->request->csrfToken ?>'})
+                    .done(function (data) {
+                        alert('oi');
+                        $('#divAvisos').html("");
+                    });
+        }
 
 
     </script>
@@ -129,9 +137,8 @@ AppAsset::register($this);
         }   
 
     </style>
-    <script src="/cervejaria/web/assets/253d8583/js/bootstrap.js"></script>
-    <script src="/cervejaria/web/assets/57c00ab9/js/bootstrap-popover-x.js"></script>
-    
+
+
     <body>
         <?php $this->beginBody() ?>
         <div class="content">
@@ -143,20 +150,27 @@ AppAsset::register($this);
 
 
                         <?php
-                        $key = 'cache_avisos';
-                        $avisos = Yii::$app->cache->get($key);
+                        
+                        $avisos = Yii::$app->cache->get(Avisos::$KEY);
 
                         if ($avisos === false) {
-                            //como não foi encontrado o cache de avisos, vai calculá-lo
-                            // $data is not found in cache, calculate it from scratch
-                            $avisos = PopoverX::widget([
-                                        'header' => 'Avisos',
+                            //como não foi encontrado o cache de avisos, vai calculá-lo                           
+
+                            $avisos = Avisos::getAvisos();
+                            // store $data in cache so that it can be retrieved next time
+                            Yii::$app->cache->set(Avisos::$KEY, $avisos, 60 * 60 * 6);
+                        }
+                        $popover = null;
+                        if ($avisos !== false && !empty($avisos)) {
+                            //altera $avisos para o popover
+                            $popover = PopoverX::widget([
+                                        'header' => '<b>Avisos</b>',
                                         'placement' => PopoverX::ALIGN_BOTTOM_LEFT,
                                         'size' => 'md',
-                                        'content' => '<p class="text-justify">' .
-                                        'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.' .
-                                        '</p>',
-                                        'footer' => Html::button('Limpar', ['class' => 'btn btn-sm btn-outline-secondary']),
+                                        'content' => '<p class="text-justify"><div id="divAvisos">' .
+                                        $avisos .
+                                        '</div></p>',
+                                        'footer' => Html::button('Limpar', ["onclick" => "myFunction()", 'class' => 'btn btn-sm btn-outline-secondary']),
                                         'toggleButton' => [
                                             'label' => Html::tag('span', '',
                                                     ['class' => 'glyphicon glyphicon-question-sign', 'style' => 'text-align: right']),
@@ -166,33 +180,14 @@ AppAsset::register($this);
                                             'dialogCss' => ['z-index' => 1051], // will overlay the popover over the navbar
                                         ]
                             ]);
-                            echo 'entrou';
-
-                            // store $data in cache so that it can be retrieved next time
-                            Yii::$app->cache->set($key, $avisos, 10);
                         }
-//    $avisos = PopoverX::widget([
-//                                        'header' => 'Avisos',
-//                                        'placement' => PopoverX::ALIGN_BOTTOM_LEFT,
-//                                        'size' => 'md',
-//                                        'content' => '<p class="text-justify">' .
-//                                        'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.' .
-//                                        '</p>',
-//                                        'footer' => Html::button('Limpar', ['class' => 'btn btn-sm btn-outline-secondary']),
-//                                        'toggleButton' => [
-//                                            'label' => Html::tag('span', '',
-//                                                    ['class' => 'glyphicon glyphicon-question-sign', 'style' => 'text-align: right']),
-//                                            'class' => 'btn btn-danger'
-//                                        ],
-//                                        'pluginOptions' => [
-//                                            'dialogCss' => ['z-index' => 1051], // will overlay the popover over the navbar
-//                                        ]
-//                            ]);
+
+
                         echo SideNav::widget([
                             'type' => SideNav::TYPE_DEFAULT,
                             'heading' => "<div class='row'>
                               <div class='col-sm-3' style=' display: table-cell;vertical-align: middle' >Menu </div>
-                              <div class='col-sm-9' style='text-align:right' > $avisos</div>
+                              <div class='col-sm-9' style='text-align:right' > $popover</div>
                           </div>",
                             'items' => [
                                 ['label' => '', 'template' => '<a href="{url}"  accesskey="b">{icon}<u>B</u>alcão{label}</a>', 'url' => ['/venda/venda'],],
@@ -213,6 +208,7 @@ AppAsset::register($this);
                                 ['label' => 'Unidades de Medida', 'url' => ['/unidade-medida']],
                                 ['label' => 'Pedidos Aplicativo', 'url' => ['/pedidoapp']],
                                 ['options' => ['style' => 'background-color:#ddd;margin-top: 0px;']],
+                                 ['label' => 'Avisos',  'url' => ['/avisos/index']],
                                 ['label' => 'Relatórios', 'items' => [['label' => 'Vendas', 'url' => ['/relatorio/vendas']]]],
                                 ['label' => 'Graficos', 'items' => [['label' => 'Vendas', 'url' => ['/grafico/vendas']]]],
                                 ['options' => ['style' => 'background-color:#ddd;margin-top: 0px;']],

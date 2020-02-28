@@ -31,6 +31,7 @@ class Cliente extends \yii\db\ActiveRecord {
      */
     public function rules() {
         return [
+            [['nome'], 'required'],
             [['pk_cliente'], 'integer'],
             [['dt_nascimento'], 'safe'],
             [['nome'], 'string', 'max' => 200],
