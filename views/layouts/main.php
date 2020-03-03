@@ -116,14 +116,16 @@ AppAsset::register($this);
 
         });
 
-        function myFunction() {
+        function limparAvisos() {
             $.post("<?= Url::to(['avisos/limpar']); ?>", {'_csrf': '<?= Yii::$app->request->csrfToken ?>'})
                     .done(function (data) {
-                     
                         $('#divAvisos').html("");
+                        $('#avisosPopover').popoverX('hide');
                     });
         }
 
+
+       
 
     </script>
     <style>
@@ -150,7 +152,6 @@ AppAsset::register($this);
 
 
                         <?php
-                        
                         $avisos = Yii::$app->cache->get(Avisos::$KEY);
 
                         if ($avisos === false) {
@@ -163,14 +164,16 @@ AppAsset::register($this);
                         $popover = null;
                         if ($avisos !== false && !empty($avisos)) {
                             //altera $avisos para o popover
-                            $popover = PopoverX::widget([
+                            $popover = '<div id="divAvisos" class="avisosClose">';
+                            $popover .= PopoverX::widget([
+                                        'id' => 'avisosPopover',
                                         'header' => '<b>Avisos</b>',
                                         'placement' => PopoverX::ALIGN_BOTTOM_LEFT,
                                         'size' => 'md',
-                                        'content' => '<p class="text-justify"><div id="divAvisos">' .
+                                        'content' => '<p class="text-justify">' .
                                         $avisos .
-                                        '</div></p>',
-                                        'footer' => Html::button('Limpar', ["onclick" => "myFunction()", 'class' => 'btn btn-sm btn-outline-secondary']),
+                                        '</p>',
+                                        'footer' => Html::button('Limpar', ["onclick" => "limparAvisos()", 'class' => 'btn btn-sm btn-outline-secondary']),
                                         'toggleButton' => [
                                             'label' => Html::tag('span', '',
                                                     ['class' => 'glyphicon glyphicon-question-sign', 'style' => 'text-align: right']),
@@ -178,8 +181,13 @@ AppAsset::register($this);
                                         ],
                                         'pluginOptions' => [
                                             'dialogCss' => ['z-index' => 1051], // will overlay the popover over the navbar
-                                        ]
+                                        ],
+                                        'pluginEvents' => [
+                                            "click.target.popoverX" => "function() { console.log('click.target.popoverX'); $('#avisosPopover').popoverX('toggle'); }",
+                                           
+                                        ],
                             ]);
+                            $popover .= '</div>';
                         }
 
 
@@ -208,7 +216,7 @@ AppAsset::register($this);
                                 ['label' => 'Unidades de Medida', 'url' => ['/unidade-medida']],
                                 ['label' => 'Pedidos Aplicativo', 'url' => ['/pedidoapp']],
                                 ['options' => ['style' => 'background-color:#ddd;margin-top: 0px;']],
-                                 ['label' => 'Avisos',  'url' => ['/avisos/index']],
+                                ['label' => 'Avisos', 'url' => ['/avisos/index']],
                                 ['label' => 'Relatórios', 'items' => [['label' => 'Vendas', 'url' => ['/relatorio/vendas']]]],
                                 ['label' => 'Graficos', 'items' => [['label' => 'Vendas', 'url' => ['/grafico/vendas']]]],
                                 ['options' => ['style' => 'background-color:#ddd;margin-top: 0px;']],
