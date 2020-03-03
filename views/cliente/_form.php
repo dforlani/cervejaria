@@ -23,6 +23,11 @@ use yii\widgets\MaskedInput;
 
     <?= $form->field($model, 'telefone')->widget(MaskedInput::className(), ['mask' => ['(99)9999-9999', '(99)99999-9999']]) ?>
     <?= $form->field($model, 'cpf')->widget(MaskedInput::className(), ['mask' => ['999.999.999-99']]) ?>
+    
+        <?php //echo $form->field($model, 'endereco')->textInput(['maxlength' => true]) ?> 
+    <?php //echo $form->field($model, 'cod_uf_aux')->listBox(yii\helpers\ArrayHelper::map(app\models\Uf::find()->all(), 'cod_uf', 'nome_uf'), ['multiple'=>false,'size'=>1, 'prompt'=>'Selecione a UF']) ?>    
+    <?php //echo $form->field($model, 'cod_mun')->listBox(yii\helpers\ArrayHelper::map(app\models\Municipio::find()->all(), 'cod_mun', 'nome_mun'), ['multiple'=>false,'size'=>1, 'prompt'=>'Selecione o Município']) ?>
+
 
 
     <?php

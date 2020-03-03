@@ -3,9 +3,10 @@
 /* @var $content string */
 
 use app\assets\AppAsset;
+use app\components\Avisos;
+use kartik\popover\PopoverX;
 use kartik\widgets\AlertBlock;
 use kartik\widgets\SideNav;
-use yii\bootstrap\Modal;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\View;
@@ -115,7 +116,16 @@ AppAsset::register($this);
 
         });
 
+        function limparAvisos() {
+            $.post("<?= Url::to(['avisos/limpar']); ?>", {'_csrf': '<?= Yii::$app->request->csrfToken ?>'})
+                    .done(function (data) {
+                        $('#divAvisos').html("");
+                        $('#avisosPopover').popoverX('hide');
+                    });
+        }
 
+
+       
 
     </script>
     <style>
@@ -127,18 +137,66 @@ AppAsset::register($this);
         .painel-pedido-yellow{
             background-color: yellow
         }   
+
     </style>
+
+
     <body>
         <?php $this->beginBody() ?>
         <div class="content">
             <div class="container">                
                 <div class="row">
 
-                    <div class="col-md-2">
+                    <div class="col-md-2" style="">
+
+
+
                         <?php
+                        $avisos = Yii::$app->cache->get(Avisos::$KEY);
+
+                        if ($avisos === false) {
+                            //como não foi encontrado o cache de avisos, vai calculá-lo                           
+
+                            $avisos = Avisos::getAvisos();
+                            // store $data in cache so that it can be retrieved next time
+                            Yii::$app->cache->set(Avisos::$KEY, $avisos, 60 * 60 * 6);
+                        }
+                        $popover = null;
+                        if ($avisos !== false && !empty($avisos)) {
+                            //altera $avisos para o popover
+                            $popover = '<div id="divAvisos" class="avisosClose">';
+                            $popover .= PopoverX::widget([
+                                        'id' => 'avisosPopover',
+                                        'header' => '<b>Avisos</b>',
+                                        'placement' => PopoverX::ALIGN_BOTTOM_LEFT,
+                                        'size' => 'md',
+                                        'content' => '<p class="text-justify">' .
+                                        $avisos .
+                                        '</p>',
+                                        'footer' => Html::button('Limpar', ["onclick" => "limparAvisos()", 'class' => 'btn btn-sm btn-outline-secondary']),
+                                        'toggleButton' => [
+                                            'label' => Html::tag('span', '',
+                                                    ['class' => 'glyphicon glyphicon-question-sign', 'style' => 'text-align: right']),
+                                            'class' => 'btn btn-danger'
+                                        ],
+                                        'pluginOptions' => [
+                                            'dialogCss' => ['z-index' => 1051], // will overlay the popover over the navbar
+                                        ],
+                                        'pluginEvents' => [
+                                            "click.target.popoverX" => "function() { console.log('click.target.popoverX'); $('#avisosPopover').popoverX('toggle'); }",
+                                           
+                                        ],
+                            ]);
+                            $popover .= '</div>';
+                        }
+
+
                         echo SideNav::widget([
                             'type' => SideNav::TYPE_DEFAULT,
-                            'heading' => 'Menu',
+                            'heading' => "<div class='row'>
+                              <div class='col-sm-3' style=' display: table-cell;vertical-align: middle' >Menu </div>
+                              <div class='col-sm-9' style='text-align:right' > $popover</div>
+                          </div>",
                             'items' => [
                                 ['label' => '', 'template' => '<a href="{url}"  accesskey="b">{icon}<u>B</u>alcão{label}</a>', 'url' => ['/venda/venda'],],
                                 ['label' => '', 'template' => '<a href="{url}"  accesskey="h">{icon}Fol<u>h</u>a de Vendas{label}</a>', 'url' => ['/venda/folha'],],
@@ -158,6 +216,7 @@ AppAsset::register($this);
                                 ['label' => 'Unidades de Medida', 'url' => ['/unidade-medida']],
                                 ['label' => 'Pedidos Aplicativo', 'url' => ['/pedidoapp']],
                                 ['options' => ['style' => 'background-color:#ddd;margin-top: 0px;']],
+                                ['label' => 'Avisos', 'url' => ['/avisos/index']],
                                 ['label' => 'Relatórios', 'items' => [['label' => 'Vendas', 'url' => ['/relatorio/vendas']]]],
                                 ['label' => 'Graficos', 'items' => [['label' => 'Vendas', 'url' => ['/grafico/vendas']]]],
                                 ['options' => ['style' => 'background-color:#ddd;margin-top: 0px;']],
@@ -231,7 +290,7 @@ AppAsset::register($this);
     var pedidos = {};
     var myVar = setInterval(myTimer, 1000);
     var d, displayDate;
-    
+
     //faz os painés de pedidos do aplicativo piscarem
     function myTimer() {
         pedidos.forEach(minusDate);
@@ -243,19 +302,19 @@ AppAsset::register($this);
     function minusDate(value, index, array) {
 
         d = new Date();
-       // console.log(value.minuto);
+        // console.log(value.minuto);
         //console.log(d.getMinutes());
         d.setDate(d.getDate() - value.dia);
-        d.setMonth(d.getMonth()  + 1 - value.mes);
-      
+        d.setMonth(d.getMonth() + 1 - value.mes);
+
         d.setHours(d.getHours() + 1 - value.hora);
         d.setMinutes(d.getMinutes() - value.minuto);
         d.setSeconds(d.getSeconds() - value.segundo);
-   
-         console.log(d);
+
+        console.log(d);
         if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
             displayDate = d.toLocaleTimeString('pt-BR');
-            
+
         } else {
             displayDate = d.toLocaleTimeString('pt-BR', {timeZone: 'America/Belem'});
         }

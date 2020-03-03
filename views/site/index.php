@@ -35,6 +35,14 @@
 
 <h2>Notas de versão</h2>
 <div class="notasVersaoStyle">
+    <a href="#" id="v138" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.3.8 (27/02/2020)</a>
+    <ul id="nv138" style="display:">        
+        <li><b>Produtos</b>Separação entre produtos e cervejas.</li>            
+        <li><b>Avisos</b>Inclusão de sistema de avisos. Aviso de produtos pra vencer em 15 dias ou já vencidos</li>            
+                   
+    </ul>
+</div>
+<div class="notasVersaoStyle">
     <a href="#" id="v137" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.3.7 (13/12/2019)</a>
     <ul id="nv137" style="display:">        
         <li><b>Clientes</b>Incluído mecanismo de geração de códigos para o aplicativo dos clientes.</li>            
