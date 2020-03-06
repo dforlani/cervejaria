@@ -24,7 +24,7 @@ class Cerveja extends Produto {
      * Busca produtos que vão vencer em alguns dias
      * @return type
      */
-    public function getProdutosPraVencer($tipo_produto = "Cerveja") {
+    public static function getProdutosPraVencer($tipo_produto = "Cerveja") {
         return parent::getProdutosPraVencer(Cerveja::$CERVEJA);
     }
     
@@ -32,7 +32,7 @@ class Cerveja extends Produto {
      * return produtos que estão vencidos
      * @return type
      */
-    public function getProdutosVencidos($tipo_produto = "Cerveja") {
+    public static function getProdutosVencidos($tipo_produto = "Cerveja") {
        return parent::getProdutosVencidos(Cerveja::$CERVEJA);
     }
 

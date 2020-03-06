@@ -134,7 +134,7 @@ class Produto extends \yii\db\ActiveRecord {
      * Busca produtos que vão vencer em alguns dias
      * @return type
      */
-    public function getProdutosPraVencer($tipo_produto = "Outro") {
+    public static function getProdutosPraVencer($tipo_produto = "Outro") {
         return Produto::find()->where('dt_vencimento  <= NOW() + interval 15 day  AND dt_vencimento > NOW() AND tipo_produto like "' . $tipo_produto.'"')->orderBy('dt_vencimento ASC')
                 ->all();
     }
@@ -143,7 +143,7 @@ class Produto extends \yii\db\ActiveRecord {
      * return produtos que estão vencidos
      * @return type
      */
-    public function getProdutosVencidos($tipo_produto = "Outro") {
+    public static function getProdutosVencidos($tipo_produto = "Outro") {
         return Produto::find()->where('dt_vencimento  <= NOW() AND tipo_produto like "' . $tipo_produto . '"')->orderBy('dt_vencimento ASC')->all();
     }
 
