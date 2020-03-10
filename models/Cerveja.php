@@ -18,22 +18,27 @@ use Yii;
  */
 class Cerveja extends Produto {
 
-    public static $CERVEJA = "Cerveja";
+    public static $TIPO = "Cerveja";
+    public static $URL = "produto/update-cerveja";
 
     /**
      * Busca produtos que vão vencer em alguns dias
      * @return type
      */
-    public static function getProdutosPraVencer($tipo_produto = "Cerveja") {
-        return parent::getProdutosPraVencer(Cerveja::$CERVEJA);
+    public static function getProdutosPraVencer($tipo_produto = 'Outros') {
+        return parent::getProdutosPraVencer(Cerveja::$TIPO);
     }
-    
+
     /**
      * return produtos que estão vencidos
      * @return type
      */
-    public static function getProdutosVencidos($tipo_produto = "Cerveja") {
-       return parent::getProdutosVencidos(Cerveja::$CERVEJA);
+    public static function getProdutosVencidos($tipo_produto = 'Outros') {
+        return parent::getProdutosVencidos(Cerveja::$TIPO);
+    }
+
+    public static function getProdutosComPromocaoAtiva($tipo_produto = 'Cerveja') {
+        return parent::getProdutosComPromocaoAtiva(Cerveja::$TIPO);
     }
 
 }

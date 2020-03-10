@@ -30,6 +30,10 @@ AppAsset::register($this);
     <script>
         //timer para informar ao sistema a passagem do tempo. Sempre que passar o tempo pré-definido nas configurações, o sistema irá realizar um backup automático
         var counter = 0;
+
+        //grava se os avisos estão sendo mostrados, para permitir que sejam fechados ao clicar novamente no botão
+        var isAvisosShown = false;
+
         //efetua uma chamada na tela de backup para avisá-la de que passou 1 minuto
         function backupAutomatico() {
             var timer = setTimeout(function () {
@@ -125,7 +129,7 @@ AppAsset::register($this);
         }
 
 
-       
+
 
     </script>
     <style>
@@ -184,7 +188,8 @@ AppAsset::register($this);
                                         ],
                                         'pluginEvents' => [
                                             "click.target.popoverX" => "function() { console.log('click.target.popoverX'); $('#avisosPopover').popoverX('toggle'); }",
-                                           
+                                            "click.target.popoverX" => "function() { console.log('click.target.popoverX'); }",
+                                            "load.complete.popoverX" => "function() { console.  log('load.complete.popoverX'); }",
                                         ],
                             ]);
                             $popover .= '</div>';
@@ -293,7 +298,9 @@ AppAsset::register($this);
 
     //faz os painés de pedidos do aplicativo piscarem
     function myTimer() {
-        pedidos.forEach(minusDate);
+        if (pedidos.length > 0) {
+            pedidos.forEach(minusDate);
+        }
         $('#div-painel-pedido').toggleClass('painel-pedido-red');
         $('#div-painel-pedido').toggleClass('painel-pedido-yellow');
     }
@@ -311,15 +318,46 @@ AppAsset::register($this);
         d.setMinutes(d.getMinutes() - value.minuto);
         d.setSeconds(d.getSeconds() - value.segundo);
 
-        console.log(d);
+
         if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
             displayDate = d.toLocaleTimeString('pt-BR');
 
         } else {
             displayDate = d.toLocaleTimeString('pt-BR', {timeZone: 'America/Belem'});
         }
-        console.log(displayDate);
         document.getElementById("espera" + value.pk_pedido_app).innerHTML = displayDate;
     }
+
+    $('#avisosPopover').on('click.target.popoverX', function (e) {
+
+        if (isAvisosShown) {
+            //tem algum erro na biblioteca que não faz com que o botão popover se feche sozinho, 
+            //precisa usar o timer pra que ele execute primeiramente o evento da biblioteca e depois feche
+            setTimeout(function () {
+                $('#avisosPopover').popoverX('hide').on('hide');
+            }, 100);
+
+            isAvisosShown = false;
+        } else {
+            //o plugin faz os avisos aparecerem sozinhos
+            isAvisosShown = true;
+
+        }
+
+    });
+
+    function closeIfOpen(e) {
+        $('[data-toggle="popover-x"]').each(function () {
+            if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+                var $this = $(this), href = $this.attr('href'),
+                        $dialog = $($this.attr('data-target') || (href && href.replace(/.*(?=#[^\s]+$)/, ''))), //strip for ie7
+                        option = $dialog.data('popover-x') ? 'toggle' : $.extend({remote: !/#/.test(href) && href});
+                $dialog.popoverX('hide').on('hide');
+            }
+        });
+    }
+    $('body').on('click', function (e) {
+        closeIfOpen(e);
+    });
 </script>
 

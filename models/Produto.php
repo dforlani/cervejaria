@@ -18,9 +18,9 @@ use Yii;
  */
 class Produto extends \yii\db\ActiveRecord {
 
-    public static $OUTRO = 'Outro';
-    
+    public static $TIPO = 'Outro';
     public $auxHasPromocao;
+    public static $URL = "produto/update";
 
     /**
      * {@inheritdoc}
@@ -130,21 +130,31 @@ class Produto extends \yii\db\ActiveRecord {
         return $this->tipo_produto == 'Cerveja';
     }
 
-      /**
+    /**
      * Busca produtos que vão vencer em alguns dias
      * @return type
      */
-    public static function getProdutosPraVencer($tipo_produto = "Outro") {
-        return Produto::find()->where('dt_vencimento  <= NOW() + interval 15 day  AND dt_vencimento > NOW() AND tipo_produto like "' . $tipo_produto.'"')->orderBy('dt_vencimento ASC')
-                ->all();
+    public static function getProdutosPraVencer($tipo_produto = 'Outro') {
+
+        return Produto::find()->where('dt_vencimento  <= NOW() + interval 15 day  AND dt_vencimento > NOW() AND tipo_produto like "' . $tipo_produto . '"')->orderBy('dt_vencimento ASC')
+                        ->all();
     }
-    
+
     /**
      * return produtos que estão vencidos
      * @return type
      */
-    public static function getProdutosVencidos($tipo_produto = "Outro") {
-        return Produto::find()->where('dt_vencimento  <= NOW() AND tipo_produto like "' . $tipo_produto . '"')->orderBy('dt_vencimento ASC')->all();
+    public static function getProdutosVencidos($tipo_produto = 'Outro') {
+      
+        return Produto::find()->where('dt_vencimento  <= NOW() AND tipo_produto like "' . $tipo_produto. '"')->orderBy('dt_vencimento ASC')->all();
+    }
+
+    /**
+     * Retorna todos os produtos com promoção ativa
+     * @return type
+     */
+    public static function getProdutosComPromocaoAtiva($tipo_produto = 'Outro') {
+        return Produto::find()->where('is_promocao_ativa IS TRUE AND tipo_produto like "' . $tipo_produto. '"')->joinWith('precos')->orderBy('nome')->all();
     }
 
 }
