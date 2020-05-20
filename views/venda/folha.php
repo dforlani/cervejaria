@@ -46,7 +46,8 @@
 
     <?php foreach ($vendas as $venda) { ?>
         <a href="./venda?id=<?= $venda->pk_venda ?>" class="link">
-            <div type="button" class="btn btn-default" style='vertical-align: top;margin: 5px;text-align: left;min-width: 250px;min-height:250px;max-height: 100% '>
+            <div type="button" class="btn btn-default" 
+                 style='vertical-align: top; margin: 5px;text-align: left;min-width: 250px;min-height:250px;max-height: 100% '>
                 <div >
                     <div class="container-fluid" style="padding-right: 0px; padding-left: 0px;">
 
@@ -56,7 +57,7 @@
                                     <?= (!empty($venda->comanda) ? $venda->comanda->numero : '(Sem Comanda)' ) ?></b><br><br>
                             </div>
                             <div class="col-sm-6"  style='text-align: right'>
-                                <div  style="<?= !empty($venda->observacao)?'color:blue;padding: 10px;font-size: 20px;':'padding: 10px;font-size: 20px;' ?> " title="<?= $venda->observacao?>" id_venda='<?= $venda->pk_venda ?>' type="button" class="btn-observacao-venda btn-default glyphicon glyphicon-question-sign"  data-toggle="modal" data-target="#modalObervacaoVenda" ></div>
+                                <div  style="<?= !empty($venda->observacao)?'color:white;background-color:blue;padding: 10px;font-size: 20px;':'padding: 10px;font-size: 20px;' ?> " title="<?= $venda->observacao?>" id_venda='<?= $venda->pk_venda ?>' type="button" class="btn btn-observacao-venda btn-default glyphicon glyphicon-question-sign"  data-toggle="modal" data-target="#modalObervacaoVenda" ></div>
                             </div>                            
                         </div>
                     </div>
