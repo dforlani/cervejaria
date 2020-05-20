@@ -448,6 +448,8 @@ ALTER TABLE `caixa`
         $this->atualizaBanco("ALTER TABLE `cliente` ADD `cod_mun` CHAR(7) NULL DEFAULT NULL;
         ALTER TABLE `cliente` ADD `endereco` VARCHAR(100) NULL DEFAULT NULL;", "alter_table_cliente_endereco", 'Update tabela produto pra adicionar endereço');       
         
+        $this->atualizaBanco("ALTER TABLE `venda` ADD `observacao` VARCHAR(500) NULL ;", "add_obervacao_venda", 'Update tabela venda pra adicionar observacao');       
+
             
             
         echo '<br><br>ATUALIZAÇÃO DO BANCO ENCERRADA<br>';

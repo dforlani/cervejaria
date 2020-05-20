@@ -229,6 +229,24 @@ class VendaController extends Controller {
                     'model' => $model,
         ]);
     }
+    
+        /**
+     * Updates an existing Venda model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionSalvarObservacao($id, $observacao) {
+        $model = $this->findModel($id);
+        $model->observacao = $observacao;
+
+        if ($model->save()) {
+            return 'true';
+        }else{
+            return 'false';
+        }        
+    }
 
     public function actionPagamento($id) {
 

@@ -101,7 +101,7 @@ use yii\widgets\Pjax;
                     <br>
 
 
-
+                    <span style="font-size:20px;color:blue"> <?php echo !empty($model->observacao)? "<b>Observação: ".$model->observacao ."</b>": ""?></span>
                 </div>
             </div>
         </div>

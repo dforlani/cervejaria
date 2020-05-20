@@ -51,7 +51,7 @@ if (!empty($pedidos)) {
         $(".btn-pedido").click(function () {
             id = $(this).attr('id_pedido');
             id_venda = $(this).attr('id_venda');
-            console.log(id);
+   
             $.get("<?= Url::to(['pedidoapp/pedido-atendimento']); ?>", {'id': id, '_csrf': '<?= Yii::$app->request->csrfToken ?>'})
                     .done(function (data) {
                         $('#divPedidoAtendimento').html(data);

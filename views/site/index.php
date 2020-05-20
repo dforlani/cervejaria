@@ -35,6 +35,12 @@
 
 <h2>Notas de versão</h2>
 <div class="notasVersaoStyle">
+    <a href="#" id="v139" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.3.9 (20/05/2020)</a>
+    <ul id="nv138" style="display:">        
+        <li><b>Vendas</b>Adicionado sistema de observações.</li>                                     
+    </ul>
+</div>
+<div class="notasVersaoStyle">
     <a href="#" id="v138" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.3.8 (27/02/2020)</a>
     <ul id="nv138" style="display:">        
         <li><b>Produtos</b>Separação entre produtos e cervejas.</li>            
