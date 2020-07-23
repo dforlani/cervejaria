@@ -449,8 +449,10 @@ ALTER TABLE `caixa`
         ALTER TABLE `cliente` ADD `endereco` VARCHAR(100) NULL DEFAULT NULL;", "alter_table_cliente_endereco", 'Update tabela produto pra adicionar endereço');       
         
         $this->atualizaBanco("ALTER TABLE `venda` ADD `observacao` VARCHAR(500) NULL ;", "add_obervacao_venda", 'Update tabela venda pra adicionar observacao');       
+        
+        $this->atualizaBanco("ALTER TABLE `cliente` CHANGE `codigo_cliente_app` `codigo_cliente_app` CHAR(5) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;", "aumenta_cliente_cod_app", 'Aumenta o tamanho do código de cliente');       
 
-            
+        
             
         echo '<br><br>ATUALIZAÇÃO DO BANCO ENCERRADA<br>';
     }

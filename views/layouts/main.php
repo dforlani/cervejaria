@@ -293,28 +293,29 @@ AppAsset::register($this);
 
 <script>
     var pedidos = {};
-    var myVar = setInterval(myTimer, 1000);
+    var myVar = setInterval(piscaPedidosEmEspera, 1000);
     var d, displayDate;
 
     //faz os painés de pedidos do aplicativo piscarem
-    function myTimer() {
+    function piscaPedidosEmEspera() {
         if (pedidos.length > 0) {
-            pedidos.forEach(minusDate);
+            pedidos.forEach(atualizaTempoEsperaPedidos);
         }
         $('#div-painel-pedido').toggleClass('painel-pedido-red');
         $('#div-painel-pedido').toggleClass('painel-pedido-yellow');
     }
 
     //calcula o tempo de espera a atualiza a tela
-    function minusDate(value, index, array) {
+    function atualizaTempoEsperaPedidos(value, index, array) {
 
+console.log(value);
         d = new Date();
         // console.log(value.minuto);
         //console.log(d.getMinutes());
         d.setDate(d.getDate() - value.dia);
         d.setMonth(d.getMonth() + 1 - value.mes);
 
-        d.setHours(d.getHours() + 1 - value.hora);
+        d.setHours(d.getHours() - value.hora);
         d.setMinutes(d.getMinutes() - value.minuto);
         d.setSeconds(d.getSeconds() - value.segundo);
 

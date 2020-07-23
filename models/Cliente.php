@@ -40,7 +40,7 @@ class Cliente extends \yii\db\ActiveRecord {
             [['cpf'], 'string', 'max' => 14],
             [['pk_cliente'], 'unique'],
             [['codigo_cliente_app'], 'unique'],
-            [['codigo_cliente_app'], 'string', 'max' => 4],
+            [['codigo_cliente_app'], 'string', 'max' => 5],
             [['cod_mun'], 'safe'],
             [['dt_nascimento'], 'default']
         ];

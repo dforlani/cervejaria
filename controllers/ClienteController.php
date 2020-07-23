@@ -120,11 +120,17 @@ class ClienteController extends Controller {
         if (!empty($cliente)) {
             if (empty($cliente->codigo_cliente_app)) {
                 //vai ficar tentando gerar número randomicos únicos até conseguir salvar
+                $count = 0;
                 do {
-                    $cliente->codigo_cliente_app = rand(1000, 9999) . "";
-                } while (!$cliente->save());
+                    $cliente->codigo_cliente_app = rand(10000, 99999) . "";                    
+                    $count++;
+                } while (!$cliente->save() && $count < 1000); //vai tentar no máximo 1000 vezes
             }
-            return $cliente->codigo_cliente_app;
+            if ($count >= 1000) {
+                return "Não foi possível gerar o código, tente novamente";
+            } else {
+                return $cliente->codigo_cliente_app;
+            }
         } else {
             return "Não foi encontrado o cliente";
         }
