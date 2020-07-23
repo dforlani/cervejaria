@@ -308,6 +308,7 @@ class PedidoappController extends Controller {
 								$aux['denominacao'] = $item->preco->getNomeProdutoPlusDenominacaoSemBarras();
 								$aux['quantidade'] = $item->quantidade;
 								$aux['preco'] = $item->preco->preco;
+								$aux['precoTotal'] = \Yii::$app->formatter->asCurrency($item->preco->preco * $item->quantidade);
 								
 								$itens_array[] = $aux;
 							}

@@ -115,7 +115,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body" id='divPedidoAtendimento'>    
+            <div class="modal-body" id='divObservacoesVenda'>    
                 <textarea id='text-observacao' style='width: 100%'></textarea>
 
             </div>

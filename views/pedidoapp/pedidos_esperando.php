@@ -51,14 +51,16 @@ if (!empty($pedidos)) {
         $(".btn-pedido").click(function () {
             id = $(this).attr('id_pedido');
             id_venda = $(this).attr('id_venda');
-   
+   console.log('oi');
             $.get("<?= Url::to(['pedidoapp/pedido-atendimento']); ?>", {'id': id, '_csrf': '<?= Yii::$app->request->csrfToken ?>'})
                     .done(function (data) {
+                        console.log('oi12');
                         $('#divPedidoAtendimento').html(data);
                         $('#btn_pedido_pronto').attr('id_pedido', id);
                         $('#btn_pedido_pronto').attr('id_venda', id_venda);
                         $('#btn-cancelar-pedido').attr('id_pedido', id);
                         $('#btn-cancelar-pedido').attr('id_venda', id_venda);
+                        console.log('oi3');
                     });
           
         });
