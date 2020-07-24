@@ -319,9 +319,8 @@ class PedidoappController extends Controller {
 							'itens' => $itens_array
 							
 						
-						];
+						];						
 						
-						//$retorno[$pedido->pk_pedido_app]['itens'] = [];
 							
 					}
 					return $retorno;
@@ -330,7 +329,7 @@ class PedidoappController extends Controller {
 
                 }
             } else {
-                return ['pk_pedido_app' => -1, 'status' => "É preciso ter uma comanda aberta para iniciar os pedidos. Dirija-se ao caixa."];
+                return [['pk_pedido_app' => -1, 'status' => "É preciso ter uma comanda aberta para iniciar os pedidos. Dirija-se ao caixa e, depois, reinicie o aplicativo."]];
             }
         }
     }

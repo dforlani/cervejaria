@@ -55,7 +55,21 @@ $this->params['breadcrumbs'][] = $this->title;
 GridView::widget([
     'dataProvider' => $dataProvider,
     'columns' => [
-
+ [//coluna invisível necessário pra não estragar a lista de pedidos pelo app, não descobri o motivo
+ 'visible'=>false,
+                'class' => 'kartik\grid\ExpandRowColumn',
+                'width' => '50px',
+                'value' => function ($model, $key, $index, $column) {
+                    return GridView::ROW_COLLAPSED;
+                },
+                // uncomment below and comment detail if you need to render via ajax
+                // 'detailUrl'=>Url::to(['/site/book-details']),
+                'detail' => function ($model, $key, $index, $column) {
+                    return Yii::$app->controller->renderPartial('empty', ['model' => $model]);
+                },
+                'headerOptions' => ['class' => 'kartik-sheet-style'],
+                'expandOneOnly' => true
+            ],
         [
             'class' => 'kartik\grid\EditableColumn',
             'attribute' => 'pos_tap_list',
@@ -97,6 +111,6 @@ GridView::widget([
     ],
 ]);
 ?>
-<b>O número da posição utilizado poderá ser utilizado como tecla de atalho na tela de Vendas. Use Alt + número para adicionar. Só funciona para números menores que 10.<b>
+<b>O número da posição utilizado poderá ser utilizado como tecla de atalho na tela de Vendas. Use Alt + número para adicionar. Só funciona para números menores que 10.</b>
 
 </div>
