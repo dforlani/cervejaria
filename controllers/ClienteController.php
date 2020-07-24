@@ -118,9 +118,10 @@ class ClienteController extends Controller {
         $cliente = Cliente::findOne($id);
         $código = "";
         if (!empty($cliente)) {
+            $count = 0;
             if (empty($cliente->codigo_cliente_app)) {
                 //vai ficar tentando gerar número randomicos únicos até conseguir salvar
-                $count = 0;
+                
                 do {
                     $cliente->codigo_cliente_app = rand(10000, 99999) . "";                    
                     $count++;
