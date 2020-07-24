@@ -243,6 +243,36 @@ use yii\web\View;
                         ?>
                     </div>
                 </div>
+                
+            </div>
+
+            <div class="col-sm-5"  style='text-align: right'>
+                
+                <div class="row">
+                    <h2> Valor Total: <span id='valor_final'><?= Yii::$app->formatter->asCurrency($model->valor_total) ?></span></h2>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6" style="text-align: right"> 
+                    </div>
+                    <div class="col-sm-6" style="text-align: right"> 
+                        <?php
+                        echo $form->field($model, 'desconto')->widget(NumberControl::classname(), [
+                            'maskedInputOptions' => [
+                                'prefix' => '',
+                                'suffix' => '',
+                                'allowMinus' => false
+                            ],
+                            'displayOptions' => ['autofocus' => '', 'tabindex' => 4]
+                        ]);
+                        ?>
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <h1 style='color:blue'> Valor Final: <span id='venda-valor_final'><?= Yii::$app->formatter->asCurrency($model->valor_final) ?></span></h1>
+                </div>
                 <div class="row">
 
                     <h1 id='troco_div' style="color: red">
@@ -279,35 +309,6 @@ use yii\web\View;
 
                     </h1>
 
-                </div>
-            </div>
-
-            <div class="col-sm-5"  style='text-align: right'>
-                <br><br><br><br><br><br><br><br><br>
-                <div class="row">
-                    <h2> Valor Total: <span id='valor_final'><?= Yii::$app->formatter->asCurrency($model->valor_total) ?></span></h2>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6" style="text-align: right"> 
-                    </div>
-                    <div class="col-sm-6" style="text-align: right"> 
-                        <?php
-                        echo $form->field($model, 'desconto')->widget(NumberControl::classname(), [
-                            'maskedInputOptions' => [
-                                'prefix' => '',
-                                'suffix' => '',
-                                'allowMinus' => false
-                            ],
-                            'displayOptions' => ['autofocus' => '', 'tabindex' => 4]
-                        ]);
-                        ?>
-                    </div>
-
-                </div>
-
-                <div class="row">
-
-                    <h1 style='color:blue'> Valor Final: <span id='venda-valor_final'><?= Yii::$app->formatter->asCurrency($model->valor_final) ?></span></h1>
                 </div>
             </div>
         </div>
