@@ -83,5 +83,7 @@ class Cliente extends \yii\db\ActiveRecord {
     public static function getClientesSemVendasAbertas(){
         return Cliente::findBySql('select * from cliente where pk_cliente not in (select fk_cliente from venda where estado = "aberta" and fk_cliente is not null) order by nome')->all();
     }
+    
+    
 
 }

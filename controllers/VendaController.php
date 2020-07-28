@@ -52,7 +52,7 @@ class VendaController extends Controller {
     }
 
     public function actionFolha() {
-        $vendas = Venda::find()->where(['estado' => 'aberta'])->orderBy('nome')->joinWith(['cliente'])->all();
+        $vendas = Venda::find()->where(['estado' => Venda::$ESTADO_ABERTA])->orderBy('nome')->joinWith(['cliente'])->all();
 
         return $this->render('folha', ['vendas' => $vendas]);
     }
@@ -105,15 +105,14 @@ class VendaController extends Controller {
      */
     public function actionVenda($id = null) {
 
-
-
         $precoModelItem = new PrecoSearch();
 
         $tapListProvider = $precoModelItem->search(['PrecoSearch' => ['is_tap_list' => true]], true);
 
+
         if (empty($id)) { //venda não iniciada
             $model = new Venda();
-            $model->estado = 'aberta';
+            $model->estado = Venda::$ESTADO_ABERTA;
             $model->valor_final = 0;
             $model->desconto = 0;
             $model->valor_total = 0;
@@ -121,7 +120,7 @@ class VendaController extends Controller {
 
             $dataProviderItem = null;
             $searchModelItem = null;
-        } else {
+        } else {//adicionando novo item
             $model = $this->findModel($id);
             $modelItem = new ItemVenda();
             $modelItem->fk_venda = $model->pk_venda;
@@ -139,19 +138,31 @@ class VendaController extends Controller {
 
         //cria a nova venda
         if ((!empty(Yii::$app->request->post('Venda'))) && ($model->load(Yii::$app->request->post()))) {
+
+            $fiado = null;
+            //pode ser que esteja iniciando um venda pra um cliente que tenha fiado, busca esta informação e retoma a venda
+            if ((!empty(Yii::$app->request->post('Venda'))) && (!empty(Yii::$app->request->post('Venda')['fk_cliente']))) {
+                $fiado = Venda::getVendaFiadoDoCliente(Yii::$app->request->post('Venda')['fk_cliente']);
+                if ($fiado != null) {//vai reabrir uma venda fiado
+                    Yii::$app->session->setFlash('error', "Cliente com fiado pendente, retomando comanda");
+                    $fiado->estado = Venda::$ESTADO_ABERTA;
+                    $model = $fiado;
+                }
+            }
+
             if ($model->save()) {
                 return $this->redirect(['venda', 'id' => $model->pk_venda]);
             }
+        } else {
+
+            return $this->render('venda', [
+                        'model' => $model,
+                        'modelItem' => $modelItem,
+                        'searchModelItem' => $searchModelItem,
+                        'dataProviderItem' => $dataProviderItem,
+                        'tapListProvider' => $tapListProvider
+            ]);
         }
-
-
-        return $this->render('venda', [
-                    'model' => $model,
-                    'modelItem' => $modelItem,
-                    'searchModelItem' => $searchModelItem,
-                    'dataProviderItem' => $dataProviderItem,
-                    'tapListProvider' => $tapListProvider
-        ]);
     }
 
     public function actionAdicionaItemForm($id = null) {
@@ -229,8 +240,8 @@ class VendaController extends Controller {
                     'model' => $model,
         ]);
     }
-    
-        /**
+
+    /**
      * Updates an existing Venda model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
@@ -243,9 +254,9 @@ class VendaController extends Controller {
 
         if ($model->save()) {
             return 'true';
-        }else{
+        } else {
             return 'false';
-        }        
+        }
     }
 
     public function actionPagamento($id) {

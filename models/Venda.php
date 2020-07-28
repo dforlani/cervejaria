@@ -40,6 +40,10 @@ class Venda extends ActiveRecord {
     public $nome_cliente;
     public $produto;
   public $aux_nome_cliente;
+  
+  public static $FIADO = "fiado";
+  public static $ESTADO_ABERTA = "aberta";
+  
 
     /**
      * {@inheritdoc}
@@ -314,6 +318,15 @@ class Venda extends ActiveRecord {
 
     public function getValorTotalPago() {
         return Yii::$app->formatter->asCurrency($this->valor_pago_credito + $this->valor_pago_dinheiro + $this->valor_pago_debito);
+    }
+    
+    /**
+     * Verifica se o cliente tem alguma venda em fiado e a retorna se tiver
+     * @param type $pk_cliente
+     * @return type
+     */
+     public static function getVendaFiadoDoCliente($pk_cliente){
+        return Venda::find()->where("fk_cliente like :fk_cliente AND estado like :estado")->params([':fk_cliente'=>$pk_cliente, ':estado'=>Venda::$FIADO])->one();
     }
 
 }
