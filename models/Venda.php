@@ -39,6 +39,7 @@ class Venda extends ActiveRecord {
     public $unidade_medida;
     public $nome_cliente;
     public $produto;
+  public $aux_nome_cliente;
 
     /**
      * {@inheritdoc}

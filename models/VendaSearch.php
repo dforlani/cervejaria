@@ -12,14 +12,14 @@ use yii\data\ArrayDataProvider;
  */
 class VendaSearch extends Venda {
      public $itens_sem_preco_custo;
-
+  
     /**
      * {@inheritdoc}
      */
     public function rules() {
         return [
             [['pk_venda', 'fk_cliente', 'fk_comanda'], 'integer'],
-            [['fk_usuario_iniciou_venda', 'fk_usuario_recebeu_pagamento', 'estado', 'dt_venda', 'dt_pagamento', 'cliente', 'produto',], 'safe'],
+            [['fk_usuario_iniciou_venda', 'fk_usuario_recebeu_pagamento', 'aux_nome_cliente', 'estado', 'dt_venda', 'dt_pagamento', 'cliente', 'produto',], 'safe'],
             [['valor_total', 'desconto', 'valor_final'], 'number'],
         ];
     }
@@ -57,6 +57,9 @@ class VendaSearch extends Venda {
             // $query->where('0=1');
            // return $dataProvider;
        // }
+        $query->select[] = "cliente.nome as aux_nome_cliente";
+        $query->select[] = "venda.*";
+        $query->joinWith(['cliente']);
 
         // grid filtering conditions
         $query->andFilterWhere([
@@ -68,10 +71,12 @@ class VendaSearch extends Venda {
             'valor_final' => $this->valor_final,
             'dt_venda' => $this->dt_venda,
             'dt_pagamento' => $this->dt_pagamento,
+            
         ]);
 
         $query->andFilterWhere(['like', 'fk_usuario_iniciou_venda', $this->fk_usuario_iniciou_venda])
                 ->andFilterWhere(['like', 'fk_usuario_recebeu_pagamento', $this->fk_usuario_recebeu_pagamento])
+                ->andFilterWhere(['like', 'cliente.nome', $this->aux_nome_cliente])                
                 ->andFilterWhere(['like', 'estado', $this->estado]);
 
         return $dataProvider;
