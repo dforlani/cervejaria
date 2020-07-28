@@ -79,7 +79,7 @@ class ItemVendaSearch extends ItemVenda {
         return $dataProvider;
     }
 
-    public static function searchGrafico($por_dia, $por_hora, $por_dia_semana, $por_mes, $por_produto, $apenas_vendas_pagas, $por_cliente, $data_inicial, $data_final) {
+    public static function searchGrafico($por_dia, $por_hora, $por_dia_semana, $por_mes_agregado, $por_mes, $por_produto, $apenas_vendas_pagas, $por_cliente, $data_inicial, $data_final) {
         $query = ItemVendaSearch::find();
         $groupBy = [];
         $order = [];
@@ -104,13 +104,19 @@ class ItemVendaSearch extends ItemVenda {
             $groupBy[] = 'WEEKDAY(dt_inclusao)';
             $order['WEEKDAY(dt_inclusao)'] = SORT_ASC;
             // $order['aux_quantidade'] = SORT_DESC;
-        } elseif ($por_mes) {
+        } elseif ($por_mes_agregado) {
 
             $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)), 2) as aux_quantidade';
             $select[] = 'DATE_FORMAT(`dt_venda`, "%m" ) AS  aux_temporizador';
+            $order['MONTH(dt_venda)'] = SORT_ASC;  
+            $groupBy[] = 'MONTH(dt_venda)';            
+        } elseif ($por_mes) {
+            $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)), 2) as aux_quantidade';
+            $select[] = 'DATE_FORMAT(`dt_venda`, "%m/%y" ) AS  aux_temporizador';
             $order['MONTH(dt_venda)'] = SORT_ASC;
-            $groupBy[] = 'MONTH(dt_venda)';
-            // $order['aux_quantidade'] = SORT_DESC;
+            $order['YEAR(dt_venda)'] = SORT_ASC;
+            $groupBy[] = 'YEAR(dt_venda)';
+            $groupBy[] = 'MONTH(dt_venda)';            
         }
 
         if ($por_produto) {
@@ -129,10 +135,10 @@ class ItemVendaSearch extends ItemVenda {
         $query->select($select);
 
         $query->andWhere("dt_inclusao BETWEEN  '$data_inicial_convertida' AND '$data_final_convertida 23:59:59.999'");
-        $query->andWhere(['like', 'unidade_medida', 'Litros']);
+        $query->andWhere(['like', 'tipo_produto', Produto::$TIPO_CERVEJA]);
 
         //precisa ter ao menos algo selecionado para que a consulta seja feita
-        if (!($por_hora || $por_dia_semana || $por_dia || $por_mes || $por_produto || $apenas_vendas_pagas || $por_cliente)) {
+        if (!($por_hora || $por_dia_semana || $por_dia || $por_mes_agregado || $por_mes || $por_produto || $apenas_vendas_pagas || $por_cliente)) {
             $query->andWhere('pk_item_venda = -1');
         }
 
@@ -174,9 +180,13 @@ class ItemVendaSearch extends ItemVenda {
             foreach ($resultado as $index => $agrupamentos) {
                 $resultado[$index] = array_replace(TempoUtil::getDiasSemana(), $agrupamentos);
             }
-        } elseif ($por_mes) {
+        } elseif ($por_mes_agregado) {
             foreach ($resultado as $index => $agrupamentos) {
                 $resultado[$index] = array_replace(TempoUtil::getMeseDoAno(), $agrupamentos);
+            }
+        }elseif ($por_mes) {
+            foreach ($resultado as $index => $agrupamentos) {
+                $resultado[$index] = array_replace(TempoUtil::getMeseDoAnoNoPeriodo($data_inicial_convertida, $data_final_convertida), $agrupamentos);
             }
         }
 

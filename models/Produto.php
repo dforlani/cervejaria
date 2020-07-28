@@ -19,6 +19,7 @@ use Yii;
 class Produto extends \yii\db\ActiveRecord {
 
     public static $TIPO = 'Outro';
+    public static $TIPO_CERVEJA = 'Cerveja';
     public $auxHasPromocao;
     public static $URL = "produto/update";
 

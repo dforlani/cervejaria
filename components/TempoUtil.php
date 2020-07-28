@@ -52,4 +52,25 @@ class TempoUtil {
         return $resultado;
     }
     
+    public static function getMeseDoAnoNoPeriodo($inicio, $fim) {
+        $resultado = [];
+        $d_inicio = new DateTime($inicio);
+        $d_fim = new DateTime($fim);
+        $resultado[$d_inicio->format('m/y')] = 0;
+
+        $intervalo = new DateInterval('P1M');
+        $count = 0;
+        while (($d_inicio->format('m/y') != $d_fim->format('m/y'))&& $count < 500) {
+            $count++;
+             
+            $d_inicio->add($intervalo);
+            $resultado[$d_inicio->format('m/y')] = 0;
+        }    
+        
+
+
+        return $resultado;
+    }
+    
+    
 }
