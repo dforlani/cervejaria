@@ -212,6 +212,7 @@ AppAsset::register($this);
                                     ]
                                 ],
                                 ['label' => 'Tap List', 'url' => ['/produto/tap-list']],
+                                  ['label' => 'Cardápio app', 'url' => ['/produto/cardapio-app']],
                                 ['options' => ['style' => 'background-color:#ddd;margin-top: 0px;']],
                                 ['label' => 'Todas as Vendas', 'url' => ['/venda']],
                                 ['label' => '', 'template' => '<a href="{url}"  accesskey="t">{icon}Clien<u>t</u>es{label}</a>', 'url' => ['/cliente']],

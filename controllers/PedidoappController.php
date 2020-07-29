@@ -43,7 +43,7 @@ class PedidoappController extends Controller {
     public function actionCardapio() {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        $cardapio = Preco::find()->where("is_tap_list = 1", null)->orderBy('pos_tap_list')->all();
+        $cardapio = Preco::find()->where("tipo_cardapio like :tipo_cardapio", [':tipo_cardapio'=>Preco::$TIPO_CARDAPIO_TAP_LIST])->orderBy('pos_tipo_cardapio')->all();
 
         $retorno = [];
         if (!empty($cardapio)) {

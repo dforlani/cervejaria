@@ -107,7 +107,7 @@ class VendaController extends Controller {
 
         $precoModelItem = new PrecoSearch();
 
-        $tapListProvider = $precoModelItem->search(['PrecoSearch' => ['is_tap_list' => true]], true);
+        $tapListProvider = $precoModelItem->search(['PrecoSearch' => ['tipo_cardapio' => Preco::$TIPO_CARDAPIO_TAP_LIST]], true);
 
 
         if (empty($id)) { //venda não iniciada

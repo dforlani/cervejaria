@@ -17,7 +17,7 @@ class PrecoSearch extends Preco {
     public function rules() {
         return [
             [['pk_preco', 'fk_produto', 'codigo_barras'], 'integer'],
-            [['denominacao', 'is_tap_list'], 'safe'],
+            [['denominacao', 'tipo_cardapio'], 'safe'],
             [['preco', 'quantidade'], 'number'],
         ];
     }
@@ -37,7 +37,7 @@ class PrecoSearch extends Preco {
      *
      * @return ActiveDataProvider
      */
-    public function search($params, $is_sort_pos_tap_list = false) {
+    public function search($params, $is_sort_pos_cardapio = false) {
         $query = Preco::find();
 
         // add conditions that should always apply here
@@ -61,13 +61,13 @@ class PrecoSearch extends Preco {
             'preco' => $this->preco,
             'quantidade' => $this->quantidade,
             'codigo_barras' => $this->codigo_barras,
-            'is_tap_list' => $this->is_tap_list
+            'tipo_cardapio' => $this->tipo_cardapio
         ]);        
 
         $query->andFilterWhere(['like', 'denominacao', $this->denominacao]);
         
-        if($is_sort_pos_tap_list){
-            $query->orderBy('pos_tap_list');
+        if($is_sort_pos_cardapio){
+            $query->orderBy('pos_cardapio');
         }
 
         return $dataProvider;

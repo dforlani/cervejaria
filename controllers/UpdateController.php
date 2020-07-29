@@ -415,64 +415,73 @@ ALTER TABLE `caixa`
         // 10/12/2019 incluído mecanismo de inclusão de desconto promocional
         $this->atualizaBanco("ALTER TABLE `item_venda` ADD `is_desconto_promocional` BOOLEAN NOT NULL DEFAULT FALSE AFTER `dt_inclusao`;", "update_item_venda_is_desconto_promocional", 'Incluído mecanismo de desconto promocional');
         $this->atualizaBanco("ALTER TABLE `preco` ADD `promocao_quantidade_atingir` INT NOT NULL AFTER `pos_tap_list`, ADD `promocao_desconto_aplicar` DECIMAL(10,2) NOT NULL AFTER `promocao_quantidade_atingir`, ADD `is_promocao_ativa` BOOLEAN NOT NULL DEFAULT FALSE AFTER `promocao_desconto_aplicar`;", "update_preco_desconto_promocional", 'Incluído mecanismo de desconto promocional na tabela de preços');
-        
+
         // 10/12/2019 correção da não atualização na dt_pagamento
         $this->atualizaBanco("update venda set dt_pagamento = dt_venda  WHERE dt_pagamento is null  AND estado = 'paga'", "update_dt_pagamento_correcao", 'Correção nas datas de pagamentos que não estavam funcionando');
-        
+
         // 13/12/2019 inclusão de coluna para codigo_cliente_app
         $this->atualizaBanco("ALTER TABLE `cliente` ADD `codigo_cliente_app` CHAR(4) NULL;", "alter_cliente_add_codigo_app", 'Incluído coluna de código do aplicativo na tabela de Cliente');
-        
+
         // 13/12/2019 inclusão de coluna para codigo_cliente_app
         $this->atualizaBanco("ALTER TABLE `pedido_app` ADD `dt_pedido` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ;", "alter_pedido_app_add_dt_pedido", 'Incluído coluna de data do pedido');
-        
+
         //26-10-2019 Inclusão de novo tipo de item caixa
         $this->atualizaBanco("ALTER TABLE `item_caixa` CHANGE `tipo` `tipo` ENUM('Abertura de Caixa','Entrada - Recebimento de Pagamento','Saída - Pagamento de Despesa','Sangria','Complementação de Caixa') CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;", "update_novo_item_caixa", 'Update tabela item_caixa, novo item caixa');
 
-        
+
         //26-10-2019 Inclusão de novo tipo de item caixa
         $this->atualizaBanco("ALTER TABLE `preco` CHANGE `promocao_quantidade_atingir` `promocao_quantidade_atingir` INT(11) NULL;        ALTER TABLE `preco` CHANGE `promocao_desconto_aplicar` `promocao_desconto_aplicar` DECIMAL(10,2) NULL;        ALTER TABLE `preco` CHANGE `is_promocao_ativa` `is_promocao_ativa` TINYINT(1) NULL DEFAULT '0';", "update_promocoes_null", 'Update tabela preco pra promoções');
-        
+
         //17-01-2020 Inclusão de tipo de produto
-        $this->atualizaBanco("ALTER TABLE `produto` ADD `tipo_produto` ENUM('Cerveja','Outro') NOT NULL DEFAULT 'Outro'", "add_tipo_produto_table_produto", 'Update tabela produto pra diferenciar cervejas de outros');       
-        
+        $this->atualizaBanco("ALTER TABLE `produto` ADD `tipo_produto` ENUM('Cerveja','Outro') NOT NULL DEFAULT 'Outro'", "add_tipo_produto_table_produto", 'Update tabela produto pra diferenciar cervejas de outros');
+
         //17-01-2020 Inclusão de IBU e teor alcoolico
-        $this->atualizaBanco("ALTER TABLE `produto` ADD `teor_alcoolico` DECIMAL(10,3) NOT NULL AFTER `tipo_produto`, ADD `ibu` DECIMAL(10,3) NOT NULL AFTER `teor_alcoolico`;", "add_teor_alcoolico_e_ibu_produto", 'Update tabela produto pra adicionar teor alcoolico e ibu');       
-        
-        
-        $this->atualizaBanco("ALTER TABLE `produto` CHANGE `teor_alcoolico` `teor_alcoolico` DECIMAL(10,3) NULL;ALTER TABLE `produto` CHANGE `ibu` `ibu` DECIMAL(10,3) NULL;", "update_teor_alcoolico_e_ibu_to_null", 'Update tabela produto pra adicionar teor alcoolico e ibu como nulo');       
-        
+        $this->atualizaBanco("ALTER TABLE `produto` ADD `teor_alcoolico` DECIMAL(10,3) NOT NULL AFTER `tipo_produto`, ADD `ibu` DECIMAL(10,3) NOT NULL AFTER `teor_alcoolico`;", "add_teor_alcoolico_e_ibu_produto", 'Update tabela produto pra adicionar teor alcoolico e ibu');
+
+
+        $this->atualizaBanco("ALTER TABLE `produto` CHANGE `teor_alcoolico` `teor_alcoolico` DECIMAL(10,3) NULL;ALTER TABLE `produto` CHANGE `ibu` `ibu` DECIMAL(10,3) NULL;", "update_teor_alcoolico_e_ibu_to_null", 'Update tabela produto pra adicionar teor alcoolico e ibu como nulo');
+
         $this->atualizaBancoByFile("../sql/uf.sql", 'Create_table_uf', "Tabela de UF criada com sucesso");
-        
+
         $this->atualizaBancoByFile("../sql/municipio.sql", 'Create_table_municipio', "Tabela de municipio criada com sucesso");
 
         $this->atualizaBanco("ALTER TABLE `cliente` ADD `cod_mun` CHAR(7) NULL DEFAULT NULL;
-        ALTER TABLE `cliente` ADD `endereco` VARCHAR(100) NULL DEFAULT NULL;", "alter_table_cliente_endereco", 'Update tabela produto pra adicionar endereço');       
-        
-        $this->atualizaBanco("ALTER TABLE `venda` ADD `observacao` VARCHAR(500) NULL ;", "add_obervacao_venda", 'Update tabela venda pra adicionar observacao');       
-        
-        $this->atualizaBanco("ALTER TABLE `cliente` CHANGE `codigo_cliente_app` `codigo_cliente_app` CHAR(5) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;", "aumenta_cliente_cod_app", 'Aumenta o tamanho do código de cliente');       
+        ALTER TABLE `cliente` ADD `endereco` VARCHAR(100) NULL DEFAULT NULL;", "alter_table_cliente_endereco", 'Update tabela produto pra adicionar endereço');
 
-        
-            
+        $this->atualizaBanco("ALTER TABLE `venda` ADD `observacao` VARCHAR(500) NULL ;", "add_obervacao_venda", 'Update tabela venda pra adicionar observacao');
+
+        $this->atualizaBanco("ALTER TABLE `cliente` CHANGE `codigo_cliente_app` `codigo_cliente_app` CHAR(5) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;", "aumenta_cliente_cod_app", 'Aumenta o tamanho do código de cliente');
+
+        //28-07-2020
+        $this->atualizaBanco("ALTER TABLE `preco` ADD `tipo_cardapio` ENUM('nenhum','tap_list','cardapio','') NOT NULL DEFAULT 'nenhum' AFTER `is_promocao_ativa`;", "add_tipo_cardapio_preco", 'Cria coluna tipo cardápio');
+
+        $this->atualizaBanco("UPDATE `preco` SET `tipo_cardapio`='tap_list' WHERE is_tap_list = 1", "clona_tipo_cardapio_preco", 'Atualiza com os produtos tap_list');
+
+        $this->atualizaBanco("ALTER TABLE `preco` CHANGE `pos_tap_list` `pos_cardapio` INT(11) NULL DEFAULT NULL;", "muda_nome_pos_tap_list", 'Muda nome pos_tap_list');
+        $this->atualizaBanco("ALTER TABLE `preco` DROP `is_tap_list`;", "remove_coluna_is_tap_list", 'Remove coluna is_tap_list');
+
+
+
+
+
         echo '<br><br>ATUALIZAÇÃO DO BANCO ENCERRADA<br>';
     }
-    
+
     /**
      * Abre o arquivo e envia a string para atualização
      * @param type $comando
      * @param type $nome_configuracao
      * @param type $mensagem
      */
-    public function atualizaBancoByFile($file, $nome_configuracao, $mensagem)  {
-        if(file_exists($file)){
+    public function atualizaBancoByFile($file, $nome_configuracao, $mensagem) {
+        if (file_exists($file)) {
             $resultado = file_get_contents($file);
-            if($resultado != FALSE){
+            if ($resultado != FALSE) {
                 $this->atualizaBanco($resultado, $nome_configuracao, $mensagem);
             }
-        }else{
-            echo 'Arquivo '.$file." não existe<br>";            
+        } else {
+            echo 'Arquivo ' . $file . " não existe<br>";
         }
-        
     }
 
     public function atualizaBanco($comando, $nome_configuracao, $mensagem) {

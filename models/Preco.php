@@ -10,7 +10,7 @@ use Yii;
  * @property int $pk_preco
  * @property int $fk_produto
  * @property int $codigo_barras
- * @property int $is_tap_list
+ * @property int $tipo_cardapio
  * @property string $denominacao
  * @property string $preco
  * @property double $quantidade
@@ -22,6 +22,10 @@ use Yii;
  */
 class Preco extends \yii\db\ActiveRecord {
 
+    
+    public static $TIPO_CARDAPIO_NENHUM = 'nenhum';
+    public static $TIPO_CARDAPIO_TAP_LIST = 'tap_list';
+    public static $TIPO_CARDAPIO_CARDAPIO = 'cardapio';
     /**
      * {@inheritdoc}
      */
@@ -42,10 +46,10 @@ class Preco extends \yii\db\ActiveRecord {
             [['codigo_barras'], 'number', 'min' => 100000000001, 'max' => 999999999999,],
             [['is_promocao_ativa'], 'boolean'],
             [['pk_preco'], 'unique'],
-            // [['pos_tap_list'], 'integer'],
-            [['is_tap_list',], 'safe'],
+    
+            [['tipo_cardapio'], 'safe'],
             [['codigo_barras'], 'unique'],
-            [['pos_tap_list'], 'validateValorUnicoSeTapList'],
+            [['pos_cardapio'], 'validateValorUnicoCardapio'],
             [['fk_produto'], 'exist', 'skipOnError' => true, 'targetClass' => Produto::className(), 'targetAttribute' => ['fk_produto' => 'pk_produto']],
             [['is_promocao_ativa'], 'validatePromocao']
         ];
@@ -64,19 +68,19 @@ class Preco extends \yii\db\ActiveRecord {
         }
     }
 
-    public function validateValorUnicoSeTapList($attribute, $params) {
+    public function validateValorUnicoCardapio($attribute, $params) {
 
-        if ($this->is_tap_list) {
+        if ($this->isTapList() || $this->isCardapioApp()) {
             if ($this->isNewRecord) {
-                $precos = Preco::find()->where('is_tap_list = 1 AND pos_tap_list = ' . $this->pos_tap_list)->all();
+                $precos = Preco::find()->where('tipo_cardapio like :tipo_cardapio AND pos_cardapio = :pos_cardapio', [':tipo_cardapio'=>$this->tipo_cardapio, ':pos_cardapio'=>$this->pos_cardapio])->all();
             } else {
-                $precos = Preco::find()->where('is_tap_list = 1 AND pos_tap_list = ' . $this->pos_tap_list . ' AND pk_preco != ' . $this->pk_preco)->all();
+                $precos = Preco::find()->where('tipo_cardapio like :tipo_cardapio AND pos_cardapio = :pos_cardapio  AND pk_preco != :pk_preco', [':tipo_cardapio'=>$this->tipo_cardapio, ':pos_cardapio'=>$this->pos_cardapio, ':pk_preco'=> $this->pk_preco])->all();
             }
             if (!empty($precos)) {
-                $this->addError($attribute, 'Posição da Tap List já está sendo utilizada no produto: ' . $precos[0]->produto->nome . ' -> ' . $precos[0]->denominacao);
+                $this->addError($attribute, 'Posição já está sendo utilizada no produto: ' . $precos[0]->produto->nome . ' -> ' . $precos[0]->denominacao);
             }
         } else {
-            $this->pos_tap_list = null;
+            $this->pos_cardapio = null;
         }
     }
 
@@ -115,9 +119,8 @@ class Preco extends \yii\db\ActiveRecord {
             'denominacao' => 'Denominação',
             'preco' => 'Preço',
             'quantidade' => 'Quantidade',
-            'codigo_barras' => 'Código de Barras',
-            'is_tap_list' => 'Colocar na Tap List?',
-            'pos_tap_list' => 'Posição na Tap List',
+            'codigo_barras' => 'Código de Barras',           
+            'pos_cardapio' => 'Posição',
             'promocao_quantidade_atingir' => 'Quantidade Comprada pra Atingir',
             'promocao_desconto_aplicar' => 'Desconto a Aplicar',
             'is_promocao_ativa' => 'Promoção está Ativa?',
@@ -175,8 +178,22 @@ class Preco extends \yii\db\ActiveRecord {
         }
     }
 
-    public static function getMaiorTapList() {
-        return Preco::find()->where('is_tap_list = 1')->max('pos_tap_list');
+    public static function getMaiorPosicaoTipoCardapio($tipo_cardapio) {
+        $pos = Preco::find()->where('tipo_cardapio = :tipo_cardapio', [':tipo_cardapio'=>$tipo_cardapio])->max('pos_cardapio');
+     
+        if(empty($pos))
+            return 0;
+        return $pos;
+    }
+    
+
+    
+    public function isTapList(){
+        return $this->tipo_cardapio == Preco::$TIPO_CARDAPIO_TAP_LIST;
     }
 
+       public function isCardapioApp(){
+        return $this->tipo_cardapio == Preco::$TIPO_CARDAPIO_CARDAPIO;
+    }
+    
 }

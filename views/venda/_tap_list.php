@@ -25,7 +25,7 @@ use yii\web\View;
                 'columns' => [
                     [
                         'label' => '#',
-                        'value' => 'pos_tap_list',
+                        'value' => 'pos_cardapio',
                     ],
                     [
                         'label' => 'Produto',
@@ -45,7 +45,7 @@ use yii\web\View;
                             'adiciona' => function($url, $model_preco) use ($model) {
 
                                 return Html::a('<span  style="border:1px solid #000; padding: 5px 10px;" class="glyphicon glyphicon-plus "></span>', ['adiciona-item-by-tap-list', "pk_venda" => $model->pk_venda, 'pk_preco' => $model_preco->pk_preco], [
-                                            'accessKey' => $model_preco->pos_tap_list,
+                                            'accessKey' => $model_preco->pos_cardapio,
                                             'title' => 'Adicionar 1 Produto na Venda',
                                             'data' => [
                                                 'method' => 'post',

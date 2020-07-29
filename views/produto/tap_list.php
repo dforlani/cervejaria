@@ -72,7 +72,7 @@ GridView::widget([
             ],
         [
             'class' => 'kartik\grid\EditableColumn',
-            'attribute' => 'pos_tap_list',
+            'attribute' => 'pos_cardapio',
             'editableOptions' => [
                 'header' => 'Posição',
                 'inputType' => Editable::INPUT_SPIN,

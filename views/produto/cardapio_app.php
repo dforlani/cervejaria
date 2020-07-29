@@ -14,7 +14,7 @@ use yii\widgets\ActiveForm;
 /* @var $searchModel ProdutoSearch */
 /* @var $dataProvider ActiveDataProvider */
 
-$this->title = 'Tap List';
+$this->title = 'Cardapio App';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -72,7 +72,7 @@ GridView::widget([
             ],
         [
             'class' => 'kartik\grid\EditableColumn',
-            'attribute' => 'pos_tap_list',
+            'attribute' => 'pos_cardapio',
             'editableOptions' => [
                 'header' => 'Posição',
                 'inputType' => Editable::INPUT_SPIN,
@@ -102,7 +102,7 @@ GridView::widget([
             'template' => '{delete}',
             'buttons' => [
                 'delete' => function ($url, $model) {
-                    return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['remover-tap-list', 'id' => $model->pk_preco], [
+                    return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['remover-cardapio', 'id' => $model->pk_preco], [
                                 'title' => Yii::t('app', 'Remover da Tap list'),
                     ]);
                 },

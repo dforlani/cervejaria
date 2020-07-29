@@ -254,6 +254,10 @@ class ProdutoController extends Controller {
         ]);
     }
 
+    /**
+     * Permite a inserção de produtos na Tap List
+     * @return type
+     */
     public function actionTapList() {
 
         if (!empty($_POST['Preco'])) {
@@ -262,19 +266,19 @@ class ProdutoController extends Controller {
                 $model = $this->findModelPreco($_POST['Preco']['pk_preco']);
 
                 //se já estiver na tap list, não vai adicionar novamente
-                if (!$model->is_tap_list) {
-                    $pos = Preco::getMaiorTapList();
+                if (!$model->isTapList() && !$model->isCardapioApp()) {
+                    $pos = Preco::getMaiorPosicaoTipoCardapio(Preco::$TIPO_CARDAPIO_TAP_LIST);
                     if (empty($pos))
                         $pos = 0;
 
-                    $model->is_tap_list = 1;
-                    $model->pos_tap_list = $pos + 1;
+                    $model->tipo_cardapio = Preco::$TIPO_CARDAPIO_TAP_LIST;
+                    $model->pos_cardapio = $pos + 1;
                 }
             } else
             if (isset($_POST['editableKey'])) {
                 $model = $this->findModelPreco($_POST['editableKey']);
 
-                $model->pos_tap_list = $_POST['Preco'][$_POST['editableIndex']]['pos_tap_list'];
+                $model->pos_cardapio = $_POST['Preco'][$_POST['editableIndex']]['pos_cardapio'];
                 $model->save();
                 $mensagem = '';
 
@@ -282,7 +286,7 @@ class ProdutoController extends Controller {
                     $mensagem = implode(', ', $model->getErrorSummary(true));
                 }
 
-                echo Json::encode(['output' => $model->pos_tap_list, 'message' => $mensagem]);
+                echo Json::encode(['output' => $model->pos_cardapio, 'message' => $mensagem]);
 
                 return;
             }
@@ -299,12 +303,70 @@ class ProdutoController extends Controller {
 
         $searchModel = new PrecoSearch();
         if (empty($_GET['sort']))
-            $_GET['sort'] = 'pos_tap_list';
+            $_GET['sort'] = 'pos_cardapio';
 
-        $dataProvider = $searchModel->search(['PrecoSearch' => ['is_tap_list' => 1],]);
+        $dataProvider = $searchModel->search(['PrecoSearch' => ['tipo_cardapio' => Preco::$TIPO_CARDAPIO_TAP_LIST],]);
 
 
         return $this->render('tap_list', [
+                    'model' => $model,
+                    'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
+     * Permite a inserção de produtos no Cardápio para aparecerem no App
+     * @return type
+     */
+    public function actionCardapioApp() {
+
+        if (!empty($_POST['Preco'])) {
+            //vindo de um pedido de inclusão na tap list
+            if (isset($_POST['Preco']['pk_preco'])) {
+                $model = $this->findModelPreco($_POST['Preco']['pk_preco']);
+
+                //se já estiver na tap list, não vai adicionar novamente
+                if (!$model->isTapList() && !$model->isCardapioApp()) {
+                    $pos = Preco::getMaiorPosicaoTipoCardapio(Preco::$TIPO_CARDAPIO_CARDAPIO);
+           
+                    $model->tipo_cardapio = Preco::$TIPO_CARDAPIO_CARDAPIO;
+                    $model->pos_cardapio = $pos + 1;
+                  
+                }
+            } elseif (isset($_POST['editableKey'])) {
+                $model = $this->findModelPreco($_POST['editableKey']);
+
+                $model->pos_cardapio = $_POST['Preco'][$_POST['editableIndex']]['pos_cardapio'];
+                $model->save();
+                $mensagem = '';
+
+                if (!empty($model->getErrors())) {
+                    $mensagem = implode(', ', $model->getErrorSummary(true));
+                }
+
+                echo Json::encode(['output' => $model->pos_cardapio, 'message' => $mensagem]);
+
+                return;
+            }
+        } else {
+            $model = new Preco();
+        }
+
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['cardapio-app']);
+        }
+
+
+
+        $searchModel = new PrecoSearch();
+        if (empty($_GET['sort']))
+            $_GET['sort'] = 'pos_cardapio';
+
+        $dataProvider = $searchModel->search(['PrecoSearch' => ['tipo_cardapio' => Preco::$TIPO_CARDAPIO_CARDAPIO],]);
+
+
+        return $this->render('cardapio_app', [
                     'model' => $model,
                     'dataProvider' => $dataProvider,
         ]);
@@ -417,13 +479,22 @@ class ProdutoController extends Controller {
     }
 
     public function actionRemoverTapList($id) {
-        $model = $this->findModelPreco($id);
-        $model->is_tap_list = 0;
-        $model->pos_tap_list = null;
-        $model->save();
-
+        $this->removerTipoCardapio($id);
 
         return $this->redirect(['tap-list']);
+    }
+
+    public function actionRemoverCardapio($id) {
+
+        $this->removerTipoCardapio($id);
+        return $this->redirect(['cardapio-app']);
+    }
+
+    public function removerTipoCardapio($id) {
+        $model = $this->findModelPreco($id);
+        $model->tipo_cardapio = Preco::$TIPO_CARDAPIO_NENHUM;
+        $model->pos_cardapio = null;
+        $model->save();
     }
 
     /**

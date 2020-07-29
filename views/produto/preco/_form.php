@@ -26,8 +26,8 @@ use yii\web\View;
         });
 
 
-        $("input[name='Preco[is_tap_list]']").click(function (evt) {
-            var valor = $("input[name='Preco[is_tap_list]']:checked").val();
+        $("input[name='Preco[tipo_cardapio]']").click(function (evt) {
+            var valor = $("input[name='Preco[tipo_cardapio]']:checked").val();
             showPosTapList(valor);
         });
     });
@@ -50,7 +50,7 @@ use yii\web\View;
         }
     }
 
-    showPosTapList(<?= !empty($model->is_tap_list) ? $model->is_tap_list : 0 ?>);
+    showPosTapList(<?= ($model->isTapList()) ? 1 : 0 ?>);
 
 
 
