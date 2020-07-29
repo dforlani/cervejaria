@@ -36,14 +36,16 @@ class PedidoappController extends Controller {
         ];
     }
 
+  
+
     /**
      * Retorna o cardápio da Tap List para o App do Cliente
      * @return type
      */
-    public function actionCardapio() {
+    public function actionAppGetTapList() {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        $cardapio = Preco::find()->where("tipo_cardapio like :tipo_cardapio", [':tipo_cardapio'=>Preco::$TIPO_CARDAPIO_TAP_LIST])->orderBy('pos_tipo_cardapio')->all();
+        $cardapio = Preco::find()->where("tipo_cardapio like :tipo_cardapio", [':tipo_cardapio' => Preco::$TIPO_CARDAPIO_TAP_LIST])->orderBy('pos_cardapio')->all();
 
         $retorno = [];
         if (!empty($cardapio)) {
@@ -52,7 +54,31 @@ class PedidoappController extends Controller {
                 $retorno[] = ['fk_preco' => $item->pk_preco,
                     'denominacao' => $item->getNomeProdutoPlusDenominacaoSemBarras(),
                     'quantidade' => 0,
-					'preco'=>$item->preco
+                    'preco' => $item->preco
+                ];
+            }
+        }
+
+        return $retorno;
+    }
+
+    /**
+     * Retorna o cardápio do tipo cardapio para o App do Cliente
+     * @return type
+     */
+    public function actionAppGetCardapio() {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $cardapio = Preco::find()->where("tipo_cardapio like :tipo_cardapio", [':tipo_cardapio' => Preco::$TIPO_CARDAPIO_CARDAPIO])->orderBy('pos_cardapio')->all();
+
+        $retorno = [];
+        if (!empty($cardapio)) {
+            foreach ($cardapio as $item) {
+
+                $retorno[] = ['fk_preco' => $item->pk_preco,
+                    'denominacao' => $item->getNomeProdutoPlusDenominacaoSemBarras(),
+                    'quantidade' => 0,
+                    'preco' => $item->preco
                 ];
             }
         }
@@ -69,16 +95,6 @@ class PedidoappController extends Controller {
 
 
         return parent::beforeAction($action);
-    }
-
-    public function actionTest() {
-
-        Yii::$app->response->format = Response::FORMAT_JSON;
-        $_REQUEST['oi'] = 'preprogramadonoservidor';
-        // return  [file_get_contents( 'php://input' ) => 'kmlklmklm'];
-        //return getallheaders();
-        $_POST['opopo'] = 99;
-        return $_POST;
     }
 
     public function actionCancelaPedidoAplicativo() {
@@ -112,16 +128,16 @@ class PedidoappController extends Controller {
      * ]
      */
 
-    public function actionPedir($codigo_cliente_app) {
+    public function actionAppPedir($codigo_cliente_app) {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         if (!empty($codigo_cliente_app)) {
-			
+
 
             //verifica se o cliente tem uma comanda aberta
             $venda = Venda::find()->joinWith('cliente')->where(['codigo_cliente_app' => $codigo_cliente_app, 'estado' => 'aberta'])->one();
             if (!empty($venda)) {
-				
+
 
 
                 $itens = &$_POST['itens'];
@@ -155,11 +171,72 @@ class PedidoappController extends Controller {
                     } else {
                         return "Não foi possível salvar o pedido. Dirija-se ao caixa" . implode(',', $pedido->getErrorSummary(true));
                     }
-                }else{
-					return ['pk_pedido_app' => -1, 'status' => "Nenhum item foi solicitado."];
-				}
+                } else {
+                    return ['pk_pedido_app' => -1, 'status' => "Nenhum item foi solicitado."];
+                }
             } else {
                 return ['pk_pedido_app' => -1, 'status' => "É preciso ter uma comanda aberta para iniciar os pedidos. Dirija-se ao caixa."];
+            }
+        }
+    }
+
+    /*
+     * Retorna a comanda do cliente
+     * 
+     * return
+     * ['pk_venda'=>pk_venda, 
+     * 'valor_total' => valor_total
+     * 'valor_pago' => valor_pago
+     *  'itens' =>
+     *      [
+     *        ['pk_preco'=>pk_preco,
+     * 		 'denominacao'=>denominacao
+     * 		'quantidade'=>quantidade],
+     *        ] 
+     *      ]
+     * ]
+     */
+
+    public function actionAppGetComandaAberta($codigo_cliente_app) {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        if (!empty($codigo_cliente_app)) {
+
+            //verifica se o cliente tem uma comanda aberta
+            $venda = Venda::find()->joinWith('cliente')->where(['codigo_cliente_app' => $codigo_cliente_app, 'estado' => 'aberta'])->one();
+            if (!empty($venda)) {
+                $valor_pago = $venda->valor_pago_credito + $venda->valor_pago_debito + $venda->valor_pago_dinheiro;
+
+				$itens_array = [];
+				if(!empty($venda->itensVenda)){
+					foreach ($venda->itensVenda as $item) {
+						$itens_array[$item->fk_preco]['fk_preco']  = $item->fk_preco;
+						if(!$item->is_desconto_promocional) {//pra separar descontos de itens comprados
+							$itens_array[$item->fk_preco]['denominacao'] = $item->preco->getNomeProdutoPlusDenominacaoSemBarras();
+							$itens_array[$item->fk_preco]['quantidade'] = (isset($itens_array[$item->fk_preco]['quantidade']) ? $itens_array[$item->fk_preco]['quantidade'] + $item->quantidade : $item->quantidade);
+							$itens_array[$item->fk_preco]['preco'] = $item->preco_unitario;
+							$itens_array[$item->fk_preco]['precoTotal'] = (isset($itens_array[$item->fk_preco]['precoTotal']) ? $itens_array[$item->fk_preco]['precoTotal'] + $item->preco_final : $item->preco_final + 0 );
+					
+						} else {
+							$itens_array[$item->fk_preco.'promocao']['denominacao'] = 'Desconto - '.$item->preco->getNomeProdutoPlusDenominacaoSemBarras();
+							$itens_array[$item->fk_preco.'promocao']['quantidade'] = (isset($itens_array[$item->fk_preco.'promocao']['quantidade']) ? $itens_array[$item->fk_preco.'promocao']['quantidade'] + $item->quantidade : $item->quantidade);
+							$itens_array[$item->fk_preco.'promocao']['preco'] = $item->preco_unitario;
+							$itens_array[$item->fk_preco.'promocao']['precoTotal'] = (isset($itens_array[$item->fk_preco.'promocao']['precoTotal']) ? $itens_array[$item->fk_preco.'promocao']['precoTotal'] + $item->preco_final : $item->preco_final + 0 );                                                
+						}
+					}
+				}
+				
+				//formata para o padrão brasileiro de moeda
+				if(!empty($itens_array)){
+					foreach ($itens_array as $item_array) {					
+						$itens_array[$item_array['fk_preco']]['precoTotal'] =   \Yii::$app->formatter->asCurrency($item_array['precoTotal']);											
+					}
+				}
+					
+			 $itens_array = array_values($itens_array);
+                return ['pk_venda' => $venda->pk_venda, 'valor_total' => \Yii::$app->formatter->asCurrency($venda->valor_total), 'valor_pago' => \Yii::$app->formatter->asCurrency($valor_pago), 'itensVenda' => $itens_array];
+            } else {
+                return ['pk_venda' => -1, 'status' => "É preciso ter uma comanda aberta. Dirija-se ao caixa."];
             }
         }
     }
@@ -183,7 +260,7 @@ class PedidoappController extends Controller {
      * 
      */
 
-    public function actionVerificarStatusPedido($pk_pedido_app) {
+    public function actionAppVerificarStatusPedido($pk_pedido_app) {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         $model = PedidoApp::findOne($pk_pedido_app);
@@ -208,10 +285,6 @@ class PedidoappController extends Controller {
         } else {
             return ['status' => 'Não encontrado'];
         }
-    }
-
-    public function actionTeste() {
-        return $this->render('teste_pedir');
     }
 
     /**
@@ -289,51 +362,45 @@ class PedidoappController extends Controller {
         return ['success' => 'false'];
     }
 
-	public function actionRequisitaPedidosComandaAberta($codigo_cliente_app) {
+    public function actionAppRequisitaPedidosComandaAberta($codigo_cliente_app) {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         if (!empty($codigo_cliente_app)) {
 
             //verifica se o cliente tem uma comanda aberta
             $venda = Venda::find()->joinWith('cliente')->where(['codigo_cliente_app' => $codigo_cliente_app, 'estado' => 'aberta'])->one();
+		
             if (!empty($venda)) {
-				$pedidos = $venda->pedidosApp;
-				if(!empty($pedidos)){
-					$retorno = [];
-					foreach($pedidos as $pedido){
-						$itens = $pedido->itensPedidoApp;
-						$itens_array = [];
-							foreach($itens as $item){
-								$aux['fk_preco'] = $item->fk_preco;
-								$aux['denominacao'] = $item->preco->getNomeProdutoPlusDenominacaoSemBarras();
-								$aux['quantidade'] = $item->quantidade;
-								$aux['preco'] = $item->preco->preco;
-								$aux['precoTotal'] = \Yii::$app->formatter->asCurrency($item->preco->preco * $item->quantidade);
-								
-								$itens_array[] = $aux;
-							}
-							
-						$retorno[] = ['status' => $pedido->status,
-							'pk_pedido_app' => $pedido->pk_pedido_app,
-							'dt_pedido'=> Yii::$app->formatter->asDateTime($pedido->dt_pedido),
-							'itens' => $itens_array
-							
-						
-						];						
-						
-							
-					}
-					return $retorno;
-				
-				
+                $pedidos = $venda->pedidosApp;
+                if (!empty($pedidos)) {
+                    $retorno = [];
+                    foreach ($pedidos as $pedido) {
+                        $itens = $pedido->itensPedidoApp;
+                        $itens_array = [];
+                        foreach ($itens as $item) {
+                            $aux['fk_preco'] = $item->fk_preco;
+                            $aux['denominacao'] = $item->preco->getNomeProdutoPlusDenominacaoSemBarras();
+                            $aux['quantidade'] = $item->quantidade;
+                            $aux['preco'] = $item->preco->preco;
+                            $aux['precoTotal'] = \Yii::$app->formatter->asCurrency($item->preco->preco * $item->quantidade);
 
+                            $itens_array[] = $aux;
+                        }
+
+                        $retorno[] = ['status' => $pedido->status,
+                            'pk_pedido_app' => $pedido->pk_pedido_app,
+                            'dt_pedido' => Yii::$app->formatter->asDateTime($pedido->dt_pedido),
+                            'itens' => $itens_array
+                        ];
+                    }
+                    return $retorno;
                 }
             } else {
-                return [['pk_pedido_app' => -1, 'status' => "É preciso ter uma comanda aberta para iniciar os pedidos. Dirija-se ao caixa e, depois, reinicie o aplicativo."]];
+                return [['pk_pedido_app' => -1, 'status' => "É preciso ter uma comanda aberta para iniciar os pedidos. Dirija-se ao caixa.".$codigo_cliente_app]];
             }
         }
     }
-	
+
     /**
      * Finds the Caixa model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
