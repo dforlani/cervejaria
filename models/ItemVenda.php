@@ -13,6 +13,7 @@ use Yii;
  * @property string $preco_unitario
  * @property string $preco_final
  * @property boolean $is_desconto_promocional
+ * @property boolean $is_venda_app
  *
  * @property Venda $fkVenda
  * @property Preco $fkPreco
@@ -37,6 +38,7 @@ class ItemVenda extends \yii\db\ActiveRecord {
             [['dt_inclusao'], 'safe'],
             [['preco_unitario', 'preco_final', 'preco_custo_item'], 'number'],
             [['quantidade'], 'number', 'min' => 0],
+            [['is_venda_app'], 'safe'],
             [['fk_venda'], 'exist', 'skipOnError' => true, 'targetClass' => Venda::className(), 'targetAttribute' => ['fk_venda' => 'pk_venda']],
             [['fk_preco'], 'exist', 'skipOnError' => true, 'targetClass' => Preco::className(), 'targetAttribute' => ['fk_preco' => 'pk_preco']],
         ];

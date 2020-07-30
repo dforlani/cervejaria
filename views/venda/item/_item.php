@@ -156,13 +156,21 @@ use yii\widgets\ActiveForm;
             'layout' => '{items}{pager}{summary}',
             'options' => ['style' => 'font-size:12px;'],
             'headerRowOptions' => ['style' => 'font-size:12px;'],
+            'rowOptions' => function ($model, $key, $index, $grid) {
+                if ($model->is_venda_app)
+                    return ['style' => 'color:blue;font-weight: bold;'];
+            },
             'columns' => [
                 [
                     'label' => 'Produto',
-                    'value' =>function($model){
-                        $texto = $model->is_desconto_promocional ? "Desconto - ":"";
-                        return  $texto.$model->preco->getNomeProdutoPlusDenominacaoSemBarras();
+                    'value' => function($model) {
+                        $texto = '';
+                        if ($model->is_venda_app == 1)
+                            $texto = '<span class="glyphicon glyphicon-phone"></span> ';
+                        $texto =  $model->is_desconto_promocional ? "Desconto - " : $texto;
+                        return $texto . $model->preco->getNomeProdutoPlusDenominacaoSemBarras();
                     },
+                    'format' => 'raw',
                     //'value' => 'preco.nomeProdutoPlusDenominacaoSemBarras',
                     'contentOptions' => ['style' => 'font-size:12px;'],
                 ],

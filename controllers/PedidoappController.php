@@ -342,6 +342,7 @@ class PedidoappController extends Controller {
                     $item_venda->fk_preco = $item_pedido->fk_preco;
                     $item_venda->quantidade = $item_pedido->quantidade;
                     $item_venda->preco_unitario = $item_pedido->preco->preco;
+                    $item_venda->is_venda_app = 1;
                     $salvoTodos = $salvoTodos && $item_venda->save();
                 }
 

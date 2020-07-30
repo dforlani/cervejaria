@@ -459,7 +459,7 @@ ALTER TABLE `caixa`
 
         $this->atualizaBanco("ALTER TABLE `preco` CHANGE `pos_tap_list` `pos_cardapio` INT(11) NULL DEFAULT NULL;", "muda_nome_pos_tap_list", 'Muda nome pos_tap_list');
         $this->atualizaBanco("ALTER TABLE `preco` DROP `is_tap_list`;", "remove_coluna_is_tap_list", 'Remove coluna is_tap_list');
-
+		$this->atualizaBanco("ALTER TABLE `item_venda` ADD `is_venda_app` BOOLEAN NOT NULL DEFAULT FALSE;", "add_coluna_is_venda_app", 'Adicionada coluna pra diferenciar quando é venda pelo app');
 
 
 
