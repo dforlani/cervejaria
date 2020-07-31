@@ -13,7 +13,7 @@
         $(".btn-observacao-venda").click(function (event) {
             event.preventDefault();
             id = $(this).attr('id_venda');
-            console.log(id);
+       
             $("#btn_salvar_observacao").attr('id_venda', id);
             $('#text-observacao').val($(this).attr('title'));
       ;
@@ -27,7 +27,7 @@
         $("#btn_salvar_observacao").click(function (event) {
             event.preventDefault();
             id = $(this).attr('id_venda');
-            console.log(id);
+        
             $("#btn-salvar_observacao").attr('id_pedido', id);
             $.get("salvar-observacao", {'id': id,
                 '_csrf': '<?= Yii::$app->request->csrfToken ?>',

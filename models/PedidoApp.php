@@ -9,6 +9,7 @@ use yii\db\ActiveRecord;
  * This is the model class for table "pedido_app".
  *
  * @property int $pk_pedido_app
+ * @property int $fk_venda
  * @property int $fk_cliente
  * @property string $status
  * @property string $dt_pedido

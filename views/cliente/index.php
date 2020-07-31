@@ -13,9 +13,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <script>
     $(document).ready(function () {
-        console.log('oi');
-        $('.lock_codigo_app').click(function (event) {
-            console.log($(this).attr('href'));
+        $('.lock_codigo_app').click(function (event) {       
             $.post($(this).attr('href'), {'_csrf': '<?= Yii::$app->request->csrfToken ?>'})
                     .done(function (data) {
                         $('#divCodigoApp').html(data);

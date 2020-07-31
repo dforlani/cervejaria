@@ -36,8 +36,6 @@ class PedidoappController extends Controller {
         ];
     }
 
-  
-
     /**
      * Retorna o cardápio da Tap List para o App do Cliente
      * @return type
@@ -207,33 +205,32 @@ class PedidoappController extends Controller {
             if (!empty($venda)) {
                 $valor_pago = $venda->valor_pago_credito + $venda->valor_pago_debito + $venda->valor_pago_dinheiro;
 
-				$itens_array = [];
-				if(!empty($venda->itensVenda)){
-					foreach ($venda->itensVenda as $item) {
-						$itens_array[$item->fk_preco]['fk_preco']  = $item->fk_preco;
-						if(!$item->is_desconto_promocional) {//pra separar descontos de itens comprados
-							$itens_array[$item->fk_preco]['denominacao'] = $item->preco->getNomeProdutoPlusDenominacaoSemBarras();
-							$itens_array[$item->fk_preco]['quantidade'] = (isset($itens_array[$item->fk_preco]['quantidade']) ? $itens_array[$item->fk_preco]['quantidade'] + $item->quantidade : $item->quantidade);
-							$itens_array[$item->fk_preco]['preco'] = $item->preco_unitario;
-							$itens_array[$item->fk_preco]['precoTotal'] = (isset($itens_array[$item->fk_preco]['precoTotal']) ? $itens_array[$item->fk_preco]['precoTotal'] + $item->preco_final : $item->preco_final + 0 );
-					
-						} else {
-							$itens_array[$item->fk_preco.'promocao']['denominacao'] = 'Desconto - '.$item->preco->getNomeProdutoPlusDenominacaoSemBarras();
-							$itens_array[$item->fk_preco.'promocao']['quantidade'] = (isset($itens_array[$item->fk_preco.'promocao']['quantidade']) ? $itens_array[$item->fk_preco.'promocao']['quantidade'] + $item->quantidade : $item->quantidade);
-							$itens_array[$item->fk_preco.'promocao']['preco'] = $item->preco_unitario;
-							$itens_array[$item->fk_preco.'promocao']['precoTotal'] = (isset($itens_array[$item->fk_preco.'promocao']['precoTotal']) ? $itens_array[$item->fk_preco.'promocao']['precoTotal'] + $item->preco_final : $item->preco_final + 0 );                                                
-						}
-					}
-				}
-				
-				//formata para o padrão brasileiro de moeda
-				if(!empty($itens_array)){
-					foreach ($itens_array as $item_array) {					
-						$itens_array[$item_array['fk_preco']]['precoTotal'] =   \Yii::$app->formatter->asCurrency($item_array['precoTotal']);											
-					}
-				}
-					
-			 $itens_array = array_values($itens_array);
+                $itens_array = [];
+                if (!empty($venda->itensVenda)) {
+                    foreach ($venda->itensVenda as $item) {
+                        $itens_array[$item->fk_preco]['fk_preco'] = $item->fk_preco;
+                        if (!$item->is_desconto_promocional) {//pra separar descontos de itens comprados
+                            $itens_array[$item->fk_preco]['denominacao'] = $item->preco->getNomeProdutoPlusDenominacaoSemBarras();
+                            $itens_array[$item->fk_preco]['quantidade'] = (isset($itens_array[$item->fk_preco]['quantidade']) ? $itens_array[$item->fk_preco]['quantidade'] + $item->quantidade : $item->quantidade);
+                            $itens_array[$item->fk_preco]['preco'] = $item->preco_unitario;
+                            $itens_array[$item->fk_preco]['precoTotal'] = (isset($itens_array[$item->fk_preco]['precoTotal']) ? $itens_array[$item->fk_preco]['precoTotal'] + $item->preco_final : $item->preco_final + 0 );
+                        } else {
+                            $itens_array[$item->fk_preco . 'promocao']['denominacao'] = 'Desconto - ' . $item->preco->getNomeProdutoPlusDenominacaoSemBarras();
+                            $itens_array[$item->fk_preco . 'promocao']['quantidade'] = (isset($itens_array[$item->fk_preco . 'promocao']['quantidade']) ? $itens_array[$item->fk_preco . 'promocao']['quantidade'] + $item->quantidade : $item->quantidade);
+                            $itens_array[$item->fk_preco . 'promocao']['preco'] = $item->preco_unitario;
+                            $itens_array[$item->fk_preco . 'promocao']['precoTotal'] = (isset($itens_array[$item->fk_preco . 'promocao']['precoTotal']) ? $itens_array[$item->fk_preco . 'promocao']['precoTotal'] + $item->preco_final : $item->preco_final + 0 );
+                        }
+                    }
+                }
+
+                //formata para o padrão brasileiro de moeda
+                if (!empty($itens_array)) {
+                    foreach ($itens_array as $item_array) {
+                        $itens_array[$item_array['fk_preco']]['precoTotal'] = \Yii::$app->formatter->asCurrency($item_array['precoTotal']);
+                    }
+                }
+
+                $itens_array = array_values($itens_array);
                 return ['pk_venda' => $venda->pk_venda, 'valor_total' => \Yii::$app->formatter->asCurrency($venda->valor_total), 'valor_pago' => \Yii::$app->formatter->asCurrency($valor_pago), 'itensVenda' => $itens_array];
             } else {
                 return ['pk_venda' => -1, 'status' => "É preciso ter uma comanda aberta. Dirija-se ao caixa."];
@@ -327,23 +324,28 @@ class PedidoappController extends Controller {
 
         $id_venda = &$_POST['id_venda'];
         $id_pedido = &$_POST['id_pedido'];
+        $itens_pedido = &$_POST['ItemPedido'];
         $pedido = PedidoApp::findOne($id_pedido);
         $connection = \Yii::$app->db;
         $transaction = $connection->beginTransaction();
         $salvoTodos = true;
 
-        if (!empty($pedido)) {
+
+        if (!empty($pedido) && (!empty($itens_pedido))) {
             $venda = Venda::findOne($id_venda);
             if (!empty($venda)) {
-                foreach ($pedido->itensPedidoApp as $item_pedido) {
-
-                    $item_venda = new ItemVenda();
-                    $item_venda->fk_venda = $venda->pk_venda;
-                    $item_venda->fk_preco = $item_pedido->fk_preco;
-                    $item_venda->quantidade = $item_pedido->quantidade;
-                    $item_venda->preco_unitario = $item_pedido->preco->preco;
-                    $item_venda->is_venda_app = 1;
-                    $salvoTodos = $salvoTodos && $item_venda->save();
+                foreach ($itens_pedido as $index => $item_pedido) {
+                    $pedidoAux = ItemPedidoApp::find()->where('pk_item_pedido_app = :pk_item_pedido_app',[':pk_item_pedido_app'=>$index])->one();
+                    if (!empty($pedidoAux)) {
+                        $item_venda = new ItemVenda();
+                        $item_venda->fk_venda = $venda->pk_venda;
+                        $item_venda->fk_preco = $pedidoAux->fk_preco;
+                        $item_venda->quantidade = $pedidoAux->quantidade;
+                        $item_venda->preco_unitario = $pedidoAux->preco->preco;
+                        $item_venda->is_venda_app = 1;
+                      
+                        $salvoTodos = $salvoTodos && $item_venda->save();
+                    }
                 }
 
                 $salvoTodos = $salvoTodos && $venda->save(); //atualizar os totais
@@ -370,7 +372,7 @@ class PedidoappController extends Controller {
 
             //verifica se o cliente tem uma comanda aberta
             $venda = Venda::find()->joinWith('cliente')->where(['codigo_cliente_app' => $codigo_cliente_app, 'estado' => 'aberta'])->one();
-		
+
             if (!empty($venda)) {
                 $pedidos = $venda->pedidosApp;
                 if (!empty($pedidos)) {
@@ -397,7 +399,7 @@ class PedidoappController extends Controller {
                     return $retorno;
                 }
             } else {
-                return [['pk_pedido_app' => -1, 'status' => "É preciso ter uma comanda aberta para iniciar os pedidos. Dirija-se ao caixa.".$codigo_cliente_app]];
+                return [['pk_pedido_app' => -1, 'status' => "É preciso ter uma comanda aberta para iniciar os pedidos. Dirija-se ao caixa." . $codigo_cliente_app]];
             }
         }
     }

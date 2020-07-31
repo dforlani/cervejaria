@@ -73,7 +73,7 @@ AppAsset::register($this);
                 var timer = setTimeout(function () {
 
                     conferePedidosEsperando();
-                }, 1000 * 15); //15 segundos
+                }, 1000 * 5); //15 segundos
 
             }
             conferePedidosEsperando();
@@ -84,8 +84,12 @@ AppAsset::register($this);
             $("#btn_pedido_pronto").click(function () {
                 id_venda = $(this).attr('id_venda');
                 id_pedido = $(this).attr('id_pedido');
+                form = $("#form-atendimento-app").serializeArray();
+           
 
-                $.post("<?= Url::to(['pedidoapp/converte-pedido-venda']); ?>", {'id_venda': id_venda, 'id_pedido': id_pedido, '_csrf': '<?= Yii::$app->request->csrfToken ?>'})
+                $.post("<?= Url::to(['pedidoapp/converte-pedido-venda']); ?>",
+                
+                 form)
                         .done(function (data) {
                             if (data.success == 'true') {
                                 window.location.href = "<?= Url::to(['venda/venda']); ?>?id=" + id_venda;
@@ -309,7 +313,7 @@ AppAsset::register($this);
     //calcula o tempo de espera a atualiza a tela
     function atualizaTempoEsperaPedidos(value, index, array) {
 
-console.log(value);
+
         d = new Date();
         // console.log(value.minuto);
         //console.log(d.getMinutes());

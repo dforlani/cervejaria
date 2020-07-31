@@ -53,8 +53,7 @@ use yii\web\View;
             }
         });
 
-        $('#venda-valor_pago_dinheiro-disp').change(function () {
-            console.log('descontro');
+        $('#venda-valor_pago_dinheiro-disp').change(function () {  
 
             atualizaTrocoEFaltando();
         });
@@ -134,7 +133,6 @@ use yii\web\View;
             }
 
             saldo = valor_final - (dinheiro + credito + debito);
-            console.log(saldo);
             return saldo;
         }
 
