@@ -50,7 +50,8 @@ class PedidoappController extends Controller {
             foreach ($cardapio as $item) {
 
                 $retorno[] = ['fk_preco' => $item->pk_preco,
-                    'denominacao' => $item->getNomeProdutoPlusDenominacaoSemBarras(),
+                    'denominacao' => $item->denominacao,
+					'nome'=>$item->produto->nome,
                     'quantidade' => 0,
                     'preco' => $item->preco
                 ];
@@ -73,8 +74,9 @@ class PedidoappController extends Controller {
         if (!empty($cardapio)) {
             foreach ($cardapio as $item) {
 
-                $retorno[] = ['fk_preco' => $item->pk_preco,
-                    'denominacao' => $item->getNomeProdutoPlusDenominacaoSemBarras(),
+                 $retorno[] = ['fk_preco' => $item->pk_preco,
+                    'denominacao' => $item->denominacao,
+					'nome'=>$item->produto->nome,
                     'quantidade' => 0,
                     'preco' => $item->preco
                 ];
@@ -399,7 +401,7 @@ class PedidoappController extends Controller {
                     return $retorno;
                 }
             } else {
-                return [['pk_pedido_app' => -1, 'status' => "É preciso ter uma comanda aberta para iniciar os pedidos. Dirija-se ao caixa." . $codigo_cliente_app]];
+                return [['pk_pedido_app' => -1, 'status' => "É preciso ter uma comanda aberta para iniciar os pedidos. Dirija-se ao caixa." ]];
             }
         }
     }
