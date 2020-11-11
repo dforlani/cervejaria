@@ -10,6 +10,7 @@ use app\models\PedidoAppSearch;
 use app\models\Preco;
 use app\models\Venda;
 use Yii;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -23,14 +24,27 @@ class PedidoappController extends Controller {
     /**
      * {@inheritdoc}
      */
-    public function behaviors1kjfkdnkfjdnkfnk() {
+    public function behaviors() {
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'cardapio' => ['GET'],
-                    'pedir' => ['POST'],
-                    'status' => ['POST'],
+                    'delete' => ['POST'],
+                ],
+            ],
+            'access' => [
+                'class' => AccessControl::className(),
+                
+                'rules' => [
+                    [
+                        'allow' => true,                        
+                        'actions'=>['pedidos-esperando', 'app-get-cardapio', 'app-get-comanda-aberta', 'app-get-tap-list', 'app-pedir', 'app-requisita-pedidos-comanda-aberta', 'app-verificar-status-pedido']
+                    ],
+					[
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+
                 ],
             ],
         ];

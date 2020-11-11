@@ -24,7 +24,7 @@ $this->registerJsFile(
         margin-left: 40px;
         margin-right: 40px;
         margin-bottom: 40px;
-        height: 900px;
+        height: 500px;
     }
     .container2 {
         display: flex;

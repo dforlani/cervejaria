@@ -8,6 +8,7 @@ use app\models\Produto;
 use app\models\ProdutoSearch;
 use kartik\mpdf\Pdf;
 use Yii;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\Json;
 use yii\web\Controller;
@@ -28,6 +29,16 @@ class ProdutoController extends Controller {
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                ],
+            ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+
                 ],
             ],
         ];

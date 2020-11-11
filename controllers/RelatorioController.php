@@ -2,18 +2,38 @@
 
 namespace app\controllers;
 
-use Yii;
-use app\models\Venda;
 use app\models\VendaSearch;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
+use Yii;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\web\Controller;
 
 /**
  * VendaController implements the CRUD actions for Venda model.
  */
 class RelatorioController extends Controller {
 
+      public function behaviors() {
+        return [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+
+                ],
+            ],
+        ];
+    }
+    
     public function actionVendas() {
 
 

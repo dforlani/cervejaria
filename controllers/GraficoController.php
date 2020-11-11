@@ -2,7 +2,9 @@
 
 namespace app\controllers;
 
-use app\models\ItemVenda;
+use app\models\ItemVendaSearch;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 
 /**
@@ -10,6 +12,27 @@ use yii\web\Controller;
  */
 class GraficoController extends Controller {
 
+      public function behaviors() {
+        return [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+
+                ],
+            ],
+        ];
+    }
+    
     public function actionTeste() {
 
 
@@ -31,7 +54,7 @@ class GraficoController extends Controller {
         $data_final = isset($_GET['data_final']) ? $_GET['data_final'] : date('t/m/Y'); //último dia do mês atual
 
 
-        $resultado = \app\models\ItemVendaSearch::searchGrafico($por_dia, $por_hora, $por_dia_semana, $por_mes_agregado, $por_mes, $por_produto, $apenas_vendas_pagas, $por_cliente, $data_inicial, $data_final);
+        $resultado = ItemVendaSearch::searchGrafico($por_dia, $por_hora, $por_dia_semana, $por_mes_agregado, $por_mes, $por_produto, $apenas_vendas_pagas, $por_cliente, $data_inicial, $data_final);
 
 
         return $this->render('vendas', [

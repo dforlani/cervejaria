@@ -184,8 +184,8 @@ AppAsset::register($this);
                                         'footer' => Html::button('Limpar', ["onclick" => "limparAvisos()", 'class' => 'btn btn-sm btn-outline-secondary']),
                                         'toggleButton' => [
                                             'label' => Html::tag('span', '',
-                                                    ['class' => 'glyphicon glyphicon-question-sign', 'style' => 'text-align: right']),
-                                            'class' => 'btn btn-danger'
+                                                    ['class' => 'glyphicon glyphicon-question-sign', 'title'=>'Avisos', 'style' => 'text-align: right']),
+                                            'class' => 'btn btn-warning'
                                         ],
                                         'pluginOptions' => [
                                             'dialogCss' => ['z-index' => 1051], // will overlay the popover over the navbar
@@ -203,8 +203,12 @@ AppAsset::register($this);
                         echo SideNav::widget([
                             'type' => SideNav::TYPE_DEFAULT,
                             'heading' => "<div class='row'>
-                              <div class='col-sm-3' style=' display: table-cell;vertical-align: middle' >Menu </div>
-                              <div class='col-sm-9' style='text-align:right' > $popover</div>
+                              <div class='col-sm-5' style=' display: table-cell;vertical-align:top;font-size:28px;color:#337ab7 ' >Menu </div>
+                              <div class='col-sm-3' style='text-align:right' > 
+                            $popover </div>".
+                            ' <div class="col-sm-3" style="text-align:right" > <a href="/cervejaria/web/site/logout" title="Logout" type="button" class="btn btn-danger " data-toggle="popover-x" data-placement="bottom bottom-right" ><span class="glyphicon glyphicon-log-out" style="text-align: right"></span></a>'.
+
+                                  "</div>
                           </div>",
                             'items' => [
                                 ['label' => '', 'template' => '<a href="{url}"  accesskey="b">{icon}<u>B</u>alcão{label}</a>', 'url' => ['/venda/venda'],],

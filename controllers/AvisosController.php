@@ -4,6 +4,8 @@ namespace app\controllers;
 
 use app\components\Avisos;
 use Yii;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 
 /**
@@ -11,6 +13,27 @@ use yii\web\Controller;
  */
 class AvisosController extends Controller {
 
+//      public function behaviors() {
+//        return [
+//            'verbs' => [
+//                'class' => VerbFilter::className(),
+//                'actions' => [
+//                    'delete' => ['POST'],
+//                ],
+//            ],
+//            'access' => [
+//                'class' => AccessControl::className(),
+//                'rules' => [
+//                    [
+//                        'allow' => true,
+////                        'roles' => ['@'],
+//                    ],
+//
+//                ],
+//            ],
+//        ];
+//    }
+    
     /**
      * Limpa o cache de avisos
      */

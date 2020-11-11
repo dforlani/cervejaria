@@ -2,10 +2,10 @@
   "id": "661afb2e-3ed5-493f-bdbc-5ff797269da8",
   "version": "2.0",
   "name": "cervejaria",
-  "url": "http://localhost",
+  "url": "http://localhost:8585",
   "tests": [{
     "id": "196c7646-7631-4e87-b695-339785d5bccc",
-    "name": "tt",
+    "name": "teste de venda",
     "commands": [{
       "id": "a703026f-0beb-4d72-abff-9762cc51f5fd",
       "comment": "",
@@ -52,6 +52,163 @@
       "target": "css=.select2-results__options li:first-of-type",
       "targets": [],
       "value": ""
+    }, {
+      "id": "4e9442a5-a451-4b48-9a3b-399f4dd1639a",
+      "comment": "",
+      "command": "click",
+      "target": "select2-itemvenda-fk_preco-container",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "a1b27191-06a5-4611-9c22-ec7dbcfd38f0",
+      "comment": "",
+      "command": "clickAt",
+      "target": "css=.select2-results__options li:first-of-type",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "f90ac27a-95d1-44a5-afbd-24c544a0054f",
+      "comment": "",
+      "command": "click",
+      "target": "id=btn_incluir",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "0f23be7c-c45b-4e84-a734-ce9afe08c1bc",
+      "comment": "",
+      "command": "click",
+      "target": "css=tr:nth-child(2) .glyphicon-plus",
+      "targets": [
+        ["css=tr:nth-child(2) .glyphicon-plus", "css:finder"],
+        ["xpath=//div[@id='w2']/table/tbody/tr[2]/td[4]/a/span", "xpath:idRelative"],
+        ["xpath=//tr[2]/td[4]/a/span", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "c56ca150-011e-4f49-875d-290b9600bcc1",
+      "comment": "",
+      "command": "click",
+      "target": "css=.pull-right:nth-child(1)",
+      "targets": [
+        ["css=.pull-right:nth-child(1)", "css:finder"],
+        ["xpath=(//button[@type='button'])[4]", "xpath:attributes"],
+        ["xpath=//h3/button", "xpath:position"],
+        ["xpath=//button[contains(.,'Pagar')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "90201724-0d7d-48a3-a81b-e07812efed2f",
+      "comment": "",
+      "command": "type",
+      "target": "id=venda-valor_pago_dinheiro-disp",
+      "targets": [
+        ["id=venda-valor_pago_dinheiro-disp", "id"],
+        ["name=venda-valor_pago_dinheiro-disp", "name"],
+        ["css=#venda-valor_pago_dinheiro-disp", "css:finder"],
+        ["xpath=//input[@id='venda-valor_pago_dinheiro-disp']", "xpath:attributes"],
+        ["xpath=//form[@id='teste']/div[4]/div/div/div/div[2]/div/input", "xpath:idRelative"],
+        ["xpath=//div/div/div/div[2]/div/input", "xpath:position"]
+      ],
+      "value": "50"
+    }]
+  }, {
+    "id": "8df67d16-dde6-47c9-be5c-e0b6dcab0660",
+    "name": "cadastro clientes",
+    "commands": [{
+      "id": "ac2edc50-942a-46a2-9f1d-4dc142148f57",
+      "comment": "",
+      "command": "open",
+      "target": "/cervejaria/web/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "aabaaaf7-706d-42c5-839d-8ca82f63c975",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Clientes",
+      "targets": [
+        ["linkText=Clientes", "linkText"],
+        ["css=li:nth-child(8) > a", "css:finder"],
+        ["xpath=//a[contains(@href, '/cervejaria/web/cliente')]", "xpath:href"],
+        ["xpath=//li[8]/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Clientes')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "300e1967-40fa-4289-a6d8-10647cf3e925",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Novo Cliente",
+      "targets": [
+        ["linkText=Novo Cliente", "linkText"],
+        ["css=.btn-success", "css:finder"],
+        ["xpath=//a[contains(@href, '/cervejaria/web/cliente/create')]", "xpath:href"],
+        ["xpath=//div[2]/p/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Novo Cliente')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "1e76b80b-b90b-4aad-bd94-86565c8110a3",
+      "comment": "",
+      "command": "type",
+      "target": "id=cliente-nome",
+      "targets": [
+        ["id=cliente-nome", "id"],
+        ["name=Cliente[nome]", "name"],
+        ["css=#cliente-nome", "css:finder"],
+        ["xpath=//input[@id='cliente-nome']", "xpath:attributes"],
+        ["xpath=//form[@id='w0']/div/input", "xpath:idRelative"],
+        ["xpath=//div/input", "xpath:position"]
+      ],
+      "value": "teste"
+    }, {
+      "id": "d0187d9d-62ca-477e-953f-9a24cd6fd257",
+      "comment": "",
+      "command": "click",
+      "target": "id=cliente-telefone",
+      "targets": [
+        ["id=cliente-telefone", "id"],
+        ["name=Cliente[telefone]", "name"],
+        ["css=#cliente-telefone", "css:finder"],
+        ["xpath=//input[@id='cliente-telefone']", "xpath:attributes"],
+        ["xpath=//form[@id='w0']/div[2]/input", "xpath:idRelative"],
+        ["xpath=//div[2]/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "01ed83c0-aff3-44e4-9253-dff1194fc997",
+      "comment": "",
+      "command": "type",
+      "target": "id=cliente-telefone",
+      "targets": [],
+      "value": "22222222222"
+    }, {
+      "id": "8fb836ae-4076-482c-8f8f-da904eae459d",
+      "comment": "",
+      "command": "click",
+      "target": "id=cliente-cpf",
+      "targets": [
+        ["id=cliente-cpf", "id"],
+        ["name=Cliente[cpf]", "name"],
+        ["css=#cliente-cpf", "css:finder"],
+        ["xpath=//input[@id='cliente-cpf']", "xpath:attributes"],
+        ["xpath=//form[@id='w0']/div[3]/input", "xpath:idRelative"],
+        ["xpath=//div[3]/input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "e106edab-ba46-4a55-81f8-27e7170bbbc5",
+      "comment": "",
+      "command": "click",
+      "target": "css=.btn-success",
+      "targets": [
+        ["css=.btn-success", "css:finder"],
+        ["xpath=//button[@type='submit']", "xpath:attributes"],
+        ["xpath=//form[@id='w0']/div[5]/button", "xpath:idRelative"],
+        ["xpath=//div[5]/button", "xpath:position"],
+        ["xpath=//button[contains(.,'Salvar')]", "xpath:innerText"]
+      ],
+      "value": ""
     }]
   }],
   "suites": [{
@@ -62,6 +219,6 @@
     "timeout": 300,
     "tests": ["196c7646-7631-4e87-b695-339785d5bccc"]
   }],
-  "urls": ["http://localhost/"],
+  "urls": ["http://localhost/", "http://localhost:8585/"],
   "plugins": []
 }

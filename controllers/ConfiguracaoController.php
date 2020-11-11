@@ -8,6 +8,7 @@ use Exception;
 use Ifsnop\Mysqldump\Mysqldump;
 use PHPMailer\PHPMailer\PHPMailer;
 use Yii;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 
@@ -25,6 +26,16 @@ class ConfiguracaoController extends Controller {
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                ],
+            ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+
                 ],
             ],
         ];

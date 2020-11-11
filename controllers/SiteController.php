@@ -22,19 +22,17 @@ class SiteController extends Controller {
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout'],
+                'only' => ['logout', 'login'],
                 'rules' => [
                     [
                         'actions' => ['logout'],
                         'allow' => true,
-                        'roles' => ['@'],
+                        
                     ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
+                    [
+                        'actions' => ['login'],
+                        'allow' => true,
+                    ],
                 ],
             ],
         ];
@@ -61,7 +59,7 @@ class SiteController extends Controller {
      * @return string
      */
     public function actionIndex() {
-                 
+
         return $this->render('index');
     }
 
@@ -71,15 +69,20 @@ class SiteController extends Controller {
      * @return Response|string
      */
     public function actionLogin() {
-        if (!Yii::$app->user->isGuest) {           
+        if (!Yii::$app->user->isGuest) {
+         
             return $this->goHome();
+            
         }
+  
+        
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         }
 
+        
         $model->senha = '';
         return $this->render('login', [
                     'model' => $model,
@@ -168,7 +171,7 @@ class SiteController extends Controller {
                 'pageSize' => 100,
             ],
         ]);
-      
+
 
         return $this->render('proposta', ['model' => $model, 'arquivosProvider' => $arquivosProvider]);
     }

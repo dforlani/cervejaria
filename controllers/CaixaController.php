@@ -7,6 +7,8 @@ use app\models\CaixaSearch;
 use app\models\ItemCaixa;
 use app\models\ItemCaixaSearch;
 use Yii;
+use yii\db\Expression;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -20,12 +22,22 @@ class CaixaController extends Controller {
     /**
      * {@inheritdoc}
      */
-    public function behaviors() {
+     public function behaviors() {
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                ],
+            ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+
                 ],
             ],
         ];
@@ -45,7 +57,7 @@ class CaixaController extends Controller {
         if (isset($_POST['fechar_caixa']) && Caixa::hasCaixaAberto()) {
             $caixa = Caixa::getCaixaAberto();
             $caixa->estado = 'fechado';
-            $caixa->dt_fechamento = new \yii\db\Expression('NOW()');
+            $caixa->dt_fechamento = new Expression('NOW()');
             $caixa->save();
         }
 

@@ -41,6 +41,11 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php ActiveForm::end(); ?>
     </div>
 
+    <div class='col-xs-9'>
+        <h1>Esta é a sua primeira vez aqui?</h1>
+        <p>Clique abaixo para fazer o seu cadastro</p>        
+        <?= Html::a('Criar uma conta', ['/usuario/create'], ['class' => 'btn btn-primary']) ?>
+    </div>
   
 
 
