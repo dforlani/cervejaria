@@ -18,8 +18,8 @@ class EntradaSearch extends Entrada
     {
         return [
             [['pk_entrada', 'fk_produto'], 'integer'],
-            [['fk_usuario', 'dt_entrada'], 'safe'],
-            [['quantidade', 'custo'], 'number'],
+            [['fk_usuario'], 'safe'],
+            [['quantidade', 'custo_fabricacao'], 'number'],
         ];
     }
 
@@ -61,9 +61,8 @@ class EntradaSearch extends Entrada
         $query->andFilterWhere([
             'pk_entrada' => $this->pk_entrada,
             'fk_produto' => $this->fk_produto,
-            'quantidade' => $this->quantidade,
-            'dt_entrada' => $this->dt_entrada,
-            'custo' => $this->custo,
+            'quantidade' => $this->quantidade,           
+            'custo_fabricacao' => $this->custo_fabricacao,
         ]);
 
         $query->andFilterWhere(['like', 'fk_usuario', $this->fk_usuario]);

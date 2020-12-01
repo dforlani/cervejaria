@@ -29,27 +29,14 @@ use yii\widgets\ActiveForm;
 </script>
 
 <div class="produto-form">
-
-    <?php $form = ActiveForm::begin(); ?>
+   <?php $form = ActiveForm::begin(); ?>
 
     <div class="container-fluid">
         <?= $form->field($model, 'is_vendavel')->checkbox([1 => 'Sim', 0 => 'Não']) ?>
         <?= $form->field($model, 'nome')->textInput(['maxlength' => true, 'autofocus' => '']) ?>
 
         <div class="row">
-            <div class="col-sm-3" > 
-                <?=
-                $form->field($model, 'estoque_inicial')->widget(NumberControl::classname(), [
-                    'maskedInputOptions' => [
-                        'prefix' => ' ',
-                        'suffix' => '',
-                        'allowMinus' => false,
-                        'digits' => 3,
-                    ],
-                ]);
-                ?>
-
-            </div>
+         
             <div class="col-sm-3" style=";"> 
                 <?=
                 $form->field($model, 'estoque_vendido')->widget(NumberControl::classname(), [
@@ -75,12 +62,14 @@ use yii\widgets\ActiveForm;
                         'prefix' => ' ',
                         'suffix' => '',
                         'allowMinus' => false,
-                         'digits'=>3,
+                        'digits' => 3,
                     ],
                 ]);
                 ?>
 
             </div>
+        </div>
+        <div class='row'>
             <div class="col-sm-3" >  
                 <br>
                 <?php
@@ -92,27 +81,16 @@ use yii\widgets\ActiveForm;
                     ],
                     'pluginEvents' => [
                         "select2:select" => "function() {
-                                 $('#hlp_custo_compra_producao').text($('#select2-produto-fk_unidade_medida-container').text().substring(1));
+                                 $('.hlp_custo_compra_producao').text($('#select2-produto-fk_unidade_medida-container').text().substring(1));
                                  }",
                         "select2:unselect" => "function() {
-                                 $('#hlp_custo_compra_producao').text('');
+                                 $('.hlp_custo_compra_producao').text('');
                                  }",
                     ]
                 ])->label('Unidade de Medida');
                 ?>
             </div>
-             <div class="col-sm-3" >  
-                <br>
-                <?php
-                echo $form->field($model, 'tipo_produto')->widget(Select2::classname(), [
-                    'data' => Produto::getTiposProdutos(),
-                    'options' => ['placeholder' => 'Selecione um tipo de produto'],
-                    'pluginOptions' => [
-                        'allowClear' => true
-                    ],                    
-                ])->label('Tipo de Produto');
-                ?>
-            </div>
+            
             <div class="col-sm-3" >  
                 <?php
                 echo $form->field($model, 'custo_compra_producao')->widget(NumberControl::classname(), [
@@ -123,36 +101,117 @@ use yii\widgets\ActiveForm;
                     ],
                 ]);
                 ?>
-                <span style="color:blue;font-size:12px">Insira aqui o Preço de Custo do <b><span style="color:blue;font-weight:bold" id='hlp_custo_compra_producao'> <?= (@$model->unidadeMedida->unidade_medida) ?></b>. Vai ser utilizado para calcular o preço líquido.  </span>             
-                </span>
+                <span style="color:blue;font-size:12px">Insira aqui o Preço de Custo do <b><span style="color:blue;font-weight:bold" class='hlp_custo_compra_producao'> <?= (@$model->unidadeMedida->unidade_medida) ?></b>. Vai ser utilizado para calcular o preço líquido.  </span>             
+                
 
             </div>
-        </div>
-        <div class="row">
-            
-            <div class="col-sm-6" >  
-                <?=
-                $form->field($model, 'dt_vencimento')->widget(DateControl::classname(), [
-                    'type' => 'date',
-                    'ajaxConversion' => true,
-                    'autoWidget' => true,
-                    'widgetClass' => '',
-                    'displayFormat' => 'php:d/m/Y',
-                    'saveFormat' => 'php:Y-m-d',
-                    'saveTimezone' => 'UTC',
-                    'widgetOptions' => [
-                        'pluginOptions' => [
-                            'autoclose' => true,
-                            'format' => 'php:d/m/Y',
-                        ],
-                        'language' => 'pt-BR'
-                    ]
-                ]);
+            <div class="col-sm-3" >  
+                <br>
+                <?php
+                echo $form->field($model, 'tipo_produto')->widget(Select2::classname(), [
+                    'data' => Produto::getTiposProdutos(),
+                    'options' => ['placeholder' => 'Selecione um tipo de produto'],
+                    'pluginOptions' => [
+                        'allowClear' => true
+                    ],
+                ])->label('Tipo de Produto');
                 ?>
             </div>
-
         </div>
-       
+
+           <br>
+        <?php if ($model->isNewRecord) { ?>
+            <div class="row">
+                <div class='panel panel-success' >
+                    <div class="panel-heading">
+                        <h1 class="panel-title"> <b>Lote Inicial</b> </h1>
+
+                    </div>
+                    <div class="panel-body" style="padding: 5px">
+                        <div class="venda-create">
+                            <div class="col-sm-2" > 
+                                <br>
+                                <?=
+                                $form->field($model, 'estoque_inicial')->widget(NumberControl::classname(), [
+                                    'maskedInputOptions' => [
+                                        'prefix' => ' ',
+                                        'suffix' => '',
+                                        'allowMinus' => false,
+                                        'digits' => 3,
+                                    ],
+                                ]);
+                                ?>
+                                Estoque Inicial em <b><span style="color:blue;font-weight:bold" class='hlp_custo_compra_producao'> <?= (@$model->unidadeMedida->unidade_medida) ?></b>
+                            </div>
+
+                            <div class="col-sm-2" > 
+                                <?php
+                                echo $form->field($model, 'custo_fabricacao')->widget(NumberControl::classname(), [
+                                    'maskedInputOptions' => [
+                                        'prefix' => 'R$ ',
+                                        'suffix' => '',
+                                        'allowMinus' => false,
+                                    ],
+                                ])->label('Custo de Compra');
+                                ?>
+                            </div>
+
+
+                            <div class="col-sm-3" >
+                                <br>
+                                <?=
+                                $form->field($model, 'dt_fabricacao')->widget(DateControl::classname(), [
+                                    'type' => 'date',
+                                    'ajaxConversion' => true,
+                                    'autoWidget' => true,
+                                    'widgetClass' => '',
+                                    'displayFormat' => 'php:d/m/Y',
+                                    'saveFormat' => 'php:Y-m-d',
+                                    'saveTimezone' => 'UTC',
+                                    'widgetOptions' => [
+                                        'pluginOptions' => [
+                                            'autoclose' => true,
+                                            'format' => 'php:d/m/Y',
+                                        ],
+                                        'language' => 'pt-BR'
+                                    ]
+                                ]);
+                                ?>
+                            </div>
+                            <div class="col-sm-3" >
+                                <br>
+                                <?=
+                                $form->field($model, 'dt_vencimento')->widget(DateControl::classname(), [
+                                    'type' => 'date',
+                                    'ajaxConversion' => true,
+                                    'autoWidget' => true,
+                                    'widgetClass' => '',
+                                    'displayFormat' => 'php:d/m/Y',
+                                    'saveFormat' => 'php:Y-m-d',
+                                    'saveTimezone' => 'UTC',
+                                    'widgetOptions' => [
+                                        'pluginOptions' => [
+                                            'autoclose' => true,
+                                            'format' => 'php:d/m/Y',
+                                        ],
+                                        'language' => 'pt-BR'
+                                    ]
+                                ]);
+                                ?>
+                            </div>
+                            <div class="col-sm-2" > 
+                                <br>
+                                <?= $form->field($model, 'nr_lote')->textInput() ?>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        <?php } ?>
+
     </div>
 
 

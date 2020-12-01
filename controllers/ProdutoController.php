@@ -2,6 +2,8 @@
 
 namespace app\controllers;
 
+use app\models\Entrada;
+use app\models\EntradaSearch;
 use app\models\Preco;
 use app\models\PrecoSearch;
 use app\models\Produto;
@@ -38,7 +40,6 @@ class ProdutoController extends Controller {
                         'allow' => true,
                         'roles' => ['@'],
                     ],
-
                 ],
             ],
         ];
@@ -140,8 +141,12 @@ class ProdutoController extends Controller {
     public function actionCreate() {
         $model = new Produto();
         $model->is_vendavel = true;
+        $model->tipo_produto = Produto::$TIPO_OUTRO;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+              $entrada = new Entrada($model->pk_produto, $model->estoque_inicial, $model->custo_fabricacao, $model->dt_fabricacao, $model->dt_vencimento, $model->nr_lote);
+            $entrada->save();
+            
             Yii::$app->session->setFlash('warning', "Produto inserido, cadastre as formas de venda.");
             $this->redirect(['update', 'id' => $model->pk_produto]);
         }
@@ -154,10 +159,14 @@ class ProdutoController extends Controller {
     public function actionCreateCerveja() {
         $model = new Produto();
         $model->is_vendavel = true;
-        $model->tipo_produto = 'Cerveja';
+        $model->tipo_produto = Produto::$TIPO_CERVEJA;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('warning', "Cerveja inserida, cadastre as formas de venda.");
+
+            $entrada = new Entrada($model->pk_produto, $model->estoque_inicial, $model->custo_fabricacao, $model->dt_fabricacao, $model->dt_vencimento, $model->nr_lote);
+            $entrada->save();
+
             $this->redirect(['update-cerveja', 'id' => $model->pk_produto]);
         }
 
@@ -224,11 +233,18 @@ class ProdutoController extends Controller {
         $searchModelPreco = new PrecoSearch();
         $dataProviderPreco = $searchModelPreco->search(['PrecoSearch' => ['fk_produto' => $model->pk_produto]]);
 
+        $searchModelEntrada = new EntradaSearch();
+        $dataProviderEntrada = $searchModelEntrada->search(['EntradaSearch' => ['fk_produto' => $model->pk_produto]]);
+
 
         return $this->render('update', [
                     'model' => $model,
                     'searchModelPreco' => $searchModelPreco,
                     'dataProviderPreco' => $dataProviderPreco,
+                    'searchModelEntrada' => $searchModelEntrada,
+                    'dataProviderEntrada' => $dataProviderEntrada,
+                    'url_retorno' => 'produto',
+                    'title' => 'Produto'
         ]);
     }
 
@@ -257,11 +273,17 @@ class ProdutoController extends Controller {
         $searchModelPreco = new PrecoSearch();
         $dataProviderPreco = $searchModelPreco->search(['PrecoSearch' => ['fk_produto' => $model->pk_produto]]);
 
+        $searchModelEntrada = new EntradaSearch();
+        $dataProviderEntrada = $searchModelEntrada->search(['EntradaSearch' => ['fk_produto' => $model->pk_produto]]);
 
-        return $this->render('cerveja/update', [
+        return $this->render('update', [
                     'model' => $model,
                     'searchModelPreco' => $searchModelPreco,
                     'dataProviderPreco' => $dataProviderPreco,
+                    'searchModelEntrada' => $searchModelEntrada,
+                    'dataProviderEntrada' => $dataProviderEntrada,
+                    'url_retorno' => 'index',
+                    'title' => 'Cerveja'
         ]);
     }
 
@@ -339,10 +361,9 @@ class ProdutoController extends Controller {
                 //se já estiver na tap list, não vai adicionar novamente
                 if (!$model->isTapList() && !$model->isCardapioApp()) {
                     $pos = Preco::getMaiorPosicaoTipoCardapio(Preco::$TIPO_CARDAPIO_CARDAPIO);
-           
+
                     $model->tipo_cardapio = Preco::$TIPO_CARDAPIO_CARDAPIO;
                     $model->pos_cardapio = $pos + 1;
-                  
                 }
             } elseif (isset($_POST['editableKey'])) {
                 $model = $this->findModelPreco($_POST['editableKey']);
@@ -427,6 +448,32 @@ class ProdutoController extends Controller {
         }
     }
 
+    public function actionCreateEntrada($pk_produto) {
+        $model = new Entrada();
+
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->save()) {
+                if (Yii::$app->request->isAjax) {
+                    // JSON response is expected in case of successful save
+                    Yii::$app->response->format = Response::FORMAT_JSON;
+                    return ['success' => true];
+                }
+                return $this->redirect(['update', 'id' => $pk_produto]);
+            }
+        }
+
+        $model->fk_produto = $pk_produto;
+        if (Yii::$app->request->isAjax) {
+            return $this->renderAjax('entrada/create', [
+                        'model' => $model,
+            ]);
+        } else {
+            return $this->render('entrada/create', [
+                        'model' => $model,
+            ]);
+        }
+    }
+
     public function actionUpdatePreco($pk_preco = null) {
 
         $model = $this->findModelPreco($pk_preco);
@@ -457,11 +504,58 @@ class ProdutoController extends Controller {
         }
     }
 
+    public function actionUpdateEntrada($pk_entrada = null) {
+
+        $model = $this->findModelEntrada($pk_preco);
+
+        if ($model->load(Yii::$app->request->post())) {
+            if ($model->save()) {
+
+                if (Yii::$app->request->isAjax) {
+                    // JSON response is expected in case of successful save
+                    Yii::$app->response->format = Response::FORMAT_JSON;
+                    return ['success' => true];
+                } else {//se não for requisição ajax, volta direto para a listagem de produtos
+                    return $this->redirect(['/produto']);
+                    //return $this->redirect(['update', 'id' => $model->fk_produto]);
+                }
+            }
+        }
+
+
+        if (Yii::$app->request->isAjax) {
+            return $this->renderAjax('entrada/update', [
+                        'model' => $model,
+            ]);
+        } else {
+            return $this->render('entrada/update', [
+                        'model' => $model,
+            ]);
+        }
+    }
+
     public function actionDeletePreco($pk_preco) {
-        $modelPreco = $this->findModelPreco($pk_preco);
-        $pk_produto = $modelPreco->fk_produto;
-        $modelPreco->delete();
-        return $this->redirect(['update', 'id' => $pk_produto]);
+        $model = $this->findModelPreco($pk_preco);
+        $pk_produto = $model->fk_produto;
+        $is_cerveja = $model->produto->isCerveja();
+        $model->delete();
+
+        if ($is_cerveja)
+            return $this->redirect(['update-cerveja', 'id' => $pk_produto]);
+        else
+            return $this->redirect(['update', 'id' => $pk_produto]);
+    }
+
+    public function actionDeleteEntrada($pk_entrada) {
+        $model = $this->findModelEntrada($pk_entrada);
+        $pk_produto = $model->fk_produto;
+        $is_cerveja = $model->produto->isCerveja();
+        $model->delete();
+
+        if ($is_cerveja)
+            return $this->redirect(['update-cerveja', 'id' => $pk_produto]);
+        else
+            return $this->redirect(['update', 'id' => $pk_produto]);
     }
 
     public function actionCodigoBarras($pk_preco) {
@@ -525,6 +619,14 @@ class ProdutoController extends Controller {
 
     protected function findModelPreco($id) {
         if (($model = Preco::findOne($id)) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    protected function findModelEntrada($id) {
+        if (($model = Entrada::findOne($id)) !== null) {
             return $model;
         }
 

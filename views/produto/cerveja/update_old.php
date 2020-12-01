@@ -179,7 +179,7 @@ $this->params['breadcrumbs'][] = 'Update';
                     [
                         'label' => 'Promoção',
                         'value' => function($model) {
-                            return "A cada $model->promocao_quantidade_atingir desconta R$ ".Yii::$app->formatter->asCurrency($model->promocao_desconto_aplicar);
+                            return "A cada $model->promocao_quantidade_atingir desconta R$ " . Yii::$app->formatter->asCurrency($model->promocao_desconto_aplicar);
                         }
                     ],
                     [

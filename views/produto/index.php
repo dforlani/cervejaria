@@ -52,10 +52,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'headerOptions' => ['class' => 'kartik-sheet-style'],
                 'expandOneOnly' => true
             ],
-            [           
+            [
                 'class' => 'kartik\grid\EditableColumn',
                 'attribute' => 'is_vendavel',
-                'filter'=>[1=>'Sim', 0=>'Não'],
+                'filter' => [1 => 'Sim', 0 => 'Não'],
                 'value' => function($model) {
                     return Yii::$app->formatter->asBoolean($model->is_vendavel);
                 },

@@ -33,7 +33,6 @@ class UpdateController extends Controller {
                         'allow' => true,
                         'roles' => ['@'],
                     ],
-
                 ],
             ],
         ];
@@ -471,8 +470,10 @@ ALTER TABLE `caixa`
 
         $this->atualizaBanco("ALTER TABLE `preco` CHANGE `pos_tap_list` `pos_cardapio` INT(11) NULL DEFAULT NULL;", "muda_nome_pos_tap_list", 'Muda nome pos_tap_list');
         $this->atualizaBanco("ALTER TABLE `preco` DROP `is_tap_list`;", "remove_coluna_is_tap_list", 'Remove coluna is_tap_list');
-		$this->atualizaBanco("ALTER TABLE `item_venda` ADD `is_venda_app` BOOLEAN NOT NULL DEFAULT FALSE;", "add_coluna_is_venda_app", 'Adicionada coluna pra diferenciar quando é venda pelo app');
+        $this->atualizaBanco("ALTER TABLE `item_venda` ADD `is_venda_app` BOOLEAN NOT NULL DEFAULT FALSE;", "add_coluna_is_venda_app", 'Adicionada coluna pra diferenciar quando é venda pelo app');
 
+
+        $this->atualizaBanco("ALTER TABLE `entrada` CHANGE `custo` `custo_fabricacao` DECIMAL(10,2) NULL DEFAULT NULL; ALTER TABLE `entrada` ADD `nr_lote` VARCHAR(20) NULL AFTER `custo`;ALTER TABLE `entrada` ADD `dt_vencimento` DATE NULL AFTER `custo`;ALTER TABLE `entrada` ADD `dt_fabricacao` DATE NULL AFTER `custo`;INSERT INTO `entrada`(fk_usuario, `fk_produto`, `quantidade`, `dt_fabricacao`, `dt_vencimento`, `nr_lote`) (select 'dforlani', pk_produto, estoque_inicial, dt_fabricacao, dt_vencimento, nr_lote from produto )", "add_colunas_tabela_entrada", 'Adicionada colunas na tabela de entrada');
 
 
 

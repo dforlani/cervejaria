@@ -18,10 +18,12 @@ use Yii;
  */
 class Produto extends \yii\db\ActiveRecord {
 
-    public static $TIPO = 'Outro';
+    public static $TIPO_OUTRO = 'Outro';
     public static $TIPO_CERVEJA = 'Cerveja';
     public $auxHasPromocao;
     public static $URL = "produto/update";
+    
+    public $custo_fabricacao;
 
     /**
      * {@inheritdoc}
@@ -37,10 +39,11 @@ class Produto extends \yii\db\ActiveRecord {
         return [
             [['fk_unidade_medida'], 'required'],
             [['fk_unidade_medida'], 'integer'],
-            [['estoque_vendido', 'estoque_inicial', 'estoque_minimo', 'custo_compra_producao', 'ibu', 'teor_alcoolico'], 'number'],
+            [['estoque_vendido', 'estoque_inicial', 'estoque_minimo', 'custo_compra_producao', 'ibu', 'teor_alcoolico',], 'number'],
             [['nome',], 'string', 'max' => 100],
             [['nr_lote',], 'string', 'max' => 20],
             [['pk_produto'], 'unique'],
+            [['custo_fabricacao'], 'safe'],
             [['dt_fabricacao'], 'default'],
             [['dt_vencimento'], 'default'],
             [['is_vendavel'], 'required'],
@@ -85,6 +88,7 @@ class Produto extends \yii\db\ActiveRecord {
             'nr_lote' => 'Número do Lote',
             'teor_alcoolico' => 'Teor Alcoólico',
             'ibu' => 'IBU',
+            'custo_fabricacao' =>"Custo Fabricação",
             'tipo_produto' => 'Tipo de Produto',
             'custo_compra_producao' => 'Preço de Custo da Unidade de Medida'
         ];

@@ -15,6 +15,7 @@ use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use app\components\MCrypt;
 
 /**
  * PedidowsController controla os pedidos feitos por aplicativo e o atendimentos a eles
@@ -34,17 +35,15 @@ class PedidoappController extends Controller {
             ],
             'access' => [
                 'class' => AccessControl::className(),
-                
                 'rules' => [
                     [
-                        'allow' => true,                        
-                        'actions'=>['pedidos-esperando', 'app-get-cardapio', 'app-get-comanda-aberta', 'app-get-tap-list', 'app-pedir', 'app-requisita-pedidos-comanda-aberta', 'app-verificar-status-pedido']
+                        'allow' => true,
+                        'actions' => ['pedidos-esperando', 'app-get-cardapio', 'app-get-comanda-aberta', 'app-get-tap-list', 'app-pedir', 'app-requisita-pedidos-comanda-aberta', 'app-verificar-status-pedido']
                     ],
-					[
+                    [
                         'allow' => true,
                         'roles' => ['@'],
                     ],
-
                 ],
             ],
         ];
@@ -65,7 +64,7 @@ class PedidoappController extends Controller {
 
                 $retorno[] = ['fk_preco' => $item->pk_preco,
                     'denominacao' => $item->denominacao,
-					'nome'=>$item->produto->nome,
+                    'nome' => $item->produto->nome,
                     'quantidade' => 0,
                     'preco' => $item->preco
                 ];
@@ -73,6 +72,17 @@ class PedidoappController extends Controller {
         }
 
         return $retorno;
+    }
+
+    public function actionTeste() {
+        $mcrypt = new MCrypt();
+#Encrypt
+        $encrypted = $mcrypt->encrypt("Text to Encrypt");
+        echo $encrypted;
+#Decrypt
+        $decrypted = $mcrypt->decrypt($encrypted);
+        echo '<br>';
+        echo $decrypted;
     }
 
     /**
@@ -88,9 +98,9 @@ class PedidoappController extends Controller {
         if (!empty($cardapio)) {
             foreach ($cardapio as $item) {
 
-                 $retorno[] = ['fk_preco' => $item->pk_preco,
+                $retorno[] = ['fk_preco' => $item->pk_preco,
                     'denominacao' => $item->denominacao,
-					'nome'=>$item->produto->nome,
+                    'nome' => $item->produto->nome,
                     'quantidade' => 0,
                     'preco' => $item->preco
                 ];
@@ -128,6 +138,11 @@ class PedidoappController extends Controller {
         return ['success' => 'false'];
     }
 
+    public function decriptografar($texto) {
+        $mcrypt = new MCrypt();
+        return $mcrypt->decrypt($texto);
+    }
+
     /*
      * Recebe um pedido no formato JSON do app cliente
      * Vai ter o codigo do cliente, os itens e suas quantidades
@@ -146,6 +161,9 @@ class PedidoappController extends Controller {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         if (!empty($codigo_cliente_app)) {
+
+
+            $codigo_cliente_app = $this->decriptografar($codigo_cliente_app);
 
 
             //verifica se o cliente tem uma comanda aberta
@@ -215,7 +233,7 @@ class PedidoappController extends Controller {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         if (!empty($codigo_cliente_app)) {
-
+            $codigo_cliente_app = $this->decriptografar($codigo_cliente_app);
             //verifica se o cliente tem uma comanda aberta
             $venda = Venda::find()->joinWith('cliente')->where(['codigo_cliente_app' => $codigo_cliente_app, 'estado' => 'aberta'])->one();
             if (!empty($venda)) {
@@ -351,7 +369,7 @@ class PedidoappController extends Controller {
             $venda = Venda::findOne($id_venda);
             if (!empty($venda)) {
                 foreach ($itens_pedido as $index => $item_pedido) {
-                    $pedidoAux = ItemPedidoApp::find()->where('pk_item_pedido_app = :pk_item_pedido_app',[':pk_item_pedido_app'=>$index])->one();
+                    $pedidoAux = ItemPedidoApp::find()->where('pk_item_pedido_app = :pk_item_pedido_app', [':pk_item_pedido_app' => $index])->one();
                     if (!empty($pedidoAux)) {
                         $item_venda = new ItemVenda();
                         $item_venda->fk_venda = $venda->pk_venda;
@@ -359,7 +377,7 @@ class PedidoappController extends Controller {
                         $item_venda->quantidade = $pedidoAux->quantidade;
                         $item_venda->preco_unitario = $pedidoAux->preco->preco;
                         $item_venda->is_venda_app = 1;
-                      
+
                         $salvoTodos = $salvoTodos && $item_venda->save();
                     }
                 }
@@ -385,6 +403,7 @@ class PedidoappController extends Controller {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         if (!empty($codigo_cliente_app)) {
+            $codigo_cliente_app = $this->decriptografar($codigo_cliente_app);
 
             //verifica se o cliente tem uma comanda aberta
             $venda = Venda::find()->joinWith('cliente')->where(['codigo_cliente_app' => $codigo_cliente_app, 'estado' => 'aberta'])->one();
@@ -415,7 +434,7 @@ class PedidoappController extends Controller {
                     return $retorno;
                 }
             } else {
-                return [['pk_pedido_app' => -1, 'status' => "É preciso ter uma comanda aberta para iniciar os pedidos. Dirija-se ao caixa." ]];
+                return [['pk_pedido_app' => -1, 'status' => "É preciso ter uma comanda aberta para iniciar os pedidos. Dirija-se ao caixa."]];
             }
         }
     }

@@ -15,8 +15,8 @@ use yii\widgets\Pjax;
 /* @var $this View */
 /* @var $model Produto */
 
-$this->title = 'Produto ';
-$this->params['breadcrumbs'][] = ['label' => 'Produtos', 'url' => ['index']];
+$this->title = $title;
+$this->params['breadcrumbs'][] = ['label' => $title . 's', 'url' => [$url_retorno]];
 $this->params['breadcrumbs'][] = ['label' => $model->pk_produto, 'url' => ['view', 'id' => $model->pk_produto]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
@@ -26,10 +26,16 @@ $this->params['breadcrumbs'][] = 'Update';
     <h1><?= Html::encode($this->title) ?></h1>
 
 
-    <?=
-    $this->render('_form', [
-        'model' => $model,
-    ])
+    <?php
+    if ($model->isCerveja()) {
+        echo $this->render('cerveja\_form', [
+            'model' => $model,
+        ]);
+    } else {
+        echo $this->render('_form', [
+            'model' => $model,
+        ]);
+    }
     ?>
 
 </div>
@@ -37,7 +43,7 @@ $this->params['breadcrumbs'][] = 'Update';
 <br>
 <div class='panel panel-success' >
     <div class="panel-heading">
-        <h1 class="panel-title"> Formas de Venda </h1>
+        <h1 class="panel-title"> <b>Formas de Venda</b> </h1>
 
     </div>
     <div class="panel-body" style="padding: 5px">
@@ -113,7 +119,7 @@ $this->params['breadcrumbs'][] = 'Update';
             echo
             GridView::widget([
                 'dataProvider' => $dataProviderPreco,
-                'filterModel' => $searchModelPreco,
+                //'filterModel' => $searchModelPreco,
                 'columns' => [
                     ['class' => 'yii\grid\SerialColumn'],
                     'denominacao',
@@ -179,7 +185,7 @@ $this->params['breadcrumbs'][] = 'Update';
                     [
                         'label' => 'Promoção',
                         'value' => function($model) {
-                            return "A cada $model->promocao_quantidade_atingir desconta R$ ".Yii::$app->formatter->asCurrency($model->promocao_desconto_aplicar);
+                            return "A cada $model->promocao_quantidade_atingir desconta R$ " . Yii::$app->formatter->asCurrency($model->promocao_desconto_aplicar);
                         }
                     ],
                     [
@@ -217,4 +223,136 @@ $this->params['breadcrumbs'][] = 'Update';
         </div>
     </div>
 </div>
+<br>
+<div class='panel panel-success' >
+    <div class="panel-heading">
+        <h1 class="panel-title"><b> Entradas</b> </h1>
 
+    </div>
+    <div class="panel-body" style="padding: 5px">
+        <div class="venda-create">
+            <p>
+
+                <?php
+                echo ModalAjax::widget([
+                    'id' => 'createEntreda',
+                    'header' => 'Adicionar Nova Entrada',
+                    'toggleButton' => [
+                        'label' => 'Adicionar Entrada',
+                        'class' => 'btn btn-primary pull-right'
+                    ],
+                    'url' => Url::to(['create-entrada', 'pk_produto' => $model->pk_produto]), // Ajax view with form to load
+                    'ajaxSubmit' => true, // Submit the contained form as ajax, true by default
+                    'size' => ModalAjax::SIZE_LARGE,
+                    'options' => ['class' => 'header-primary'],
+                    'autoClose' => true,
+                    'pjaxContainer' => '#grid-entrada-pjax',
+                ]);
+
+
+                echo ModalAjax::widget([
+                    'id' => 'createEntrada',
+                    'selector' => '.update-entrada', // all buttons in grid view with href attribute
+                    'options' => ['class' => 'header-primary'],
+                    'pjaxContainer' => '#grid-entrada-pjax',
+                    'events' => [
+                        ModalAjax::EVENT_MODAL_SHOW => new JsExpression("
+            function(event, data, status, xhr, selector) {
+                selector.addClass('warning');
+            }
+       "),
+                        ModalAjax::EVENT_MODAL_SUBMIT => new JsExpression("
+            function(event, data, status, xhr, selector) {
+             
+                if(status){
+                     location.reload();                  
+                    $(this).modal('toggle');
+                }
+            }
+        "),
+                        ModalAjax::EVENT_MODAL_SHOW_COMPLETE => new JsExpression("
+            function(event, xhr, textStatus) {
+                if (xhr.status == 403) {
+                    $(this).modal('toggle');
+                    alert('You do not have permission to execute this action');
+                }
+            }
+        "),
+                        ModalAjax::EVENT_MODAL_SUBMIT_COMPLETE => new JsExpression("
+            function(event, xhr, textStatus) {
+                if (xhr.status == 403) {
+                    $(this).modal('toggle');
+                    alert('You do not have permission to execute this action');
+                }
+            }
+        ")
+                    ]
+                ]);
+                ?>
+
+            </p>
+
+
+            <?php
+            Pjax::begin([
+                'id' => 'grid-entrada-pjax',
+                'timeout' => 5000,
+            ]);
+
+            echo
+            GridView::widget([
+                'dataProvider' => $dataProviderEntrada,
+                //'filterModel' => $searchModelEntrada,
+                'columns' => [
+                    ['class' => 'yii\grid\SerialColumn'],
+                    [
+                        'attribute' => 'quantidade',
+                        'filter' => false
+                    ],
+                    [
+                        'attribute' => 'custo_fabricacao',
+                        'filter' => false
+                    ],
+                
+                    [
+                        'attribute' => 'dt_fabricacao',
+                        'format' => 'date',
+                        'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
+                    ],
+                    [
+                        'attribute' => 'dt_vencimento',
+                        'format' => 'date',
+                        'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
+                    ],
+                    'nr_lote',
+                    [
+                        'class' => 'yii\grid\ActionColumn',
+                        'header' => 'Ações',
+                        'headerOptions' => ['style' => 'color:#337ab7'],
+                        'template' => '{delete}',
+                        'buttons' => [
+//                            'update' => function ($url, $model) {
+//                                return Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['update-entrada', 'pk_entrada' => $model->pk_entrada], [
+//                                            'class' => 'update-entrada',
+//                                            'title' => 'Atualizar',
+//                                ]);
+//                            },
+//                         
+                            'delete' => function($url, $model) {
+                                return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['delete-entrada', 'pk_entrada' => $model->pk_entrada], [
+                                            'class' => '',
+                                            'data' => [
+                                                'confirm' => 'Tem certeza que deseja remover esta entrada?',
+                                                'method' => 'post',
+                                            ],
+                                ]);
+                            },
+                        ],
+                    ],
+                ],
+            ]);
+            Pjax::end();
+            ?>
+        </div>
+    </div>
+</div>
