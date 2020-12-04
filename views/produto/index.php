@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'rowOptions' => function ($model, $index, $widget, $grid) {
 
-            if ($model->estoque_inicial - $model->estoque_vendido <= $model->estoque_minimo) {
+            if ($model->getEstoqueTotal() - $model->estoque_vendido <= $model->estoque_minimo) {
                 return ['class' => 'danger'];
             } else {
                 return [];
@@ -88,7 +88,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'currency',
                 'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
                 'value' => function($model) {
-                    return $model->estoque_inicial - $model->estoque_vendido;
+                    return $model->getEstoqueTotal() - $model->estoque_vendido;
                 }
             ],
             [

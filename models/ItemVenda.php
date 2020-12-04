@@ -78,7 +78,7 @@ class ItemVenda extends \yii\db\ActiveRecord {
         $produto = $this->preco->produto;
         $produto->estoque_vendido = $produto->estoque_vendido + $this->quantidade * $this->preco->quantidade;
         $produto->save();
-        if ($produto->estoque_minimo >= ( $produto->estoque_inicial - $produto->estoque_vendido)) {
+        if ($produto->estoque_minimo >= ( $produto->getEstoqueTotal() - $produto->estoque_vendido)) {
             Yii::$app->session->setFlash('error', "Estoque mínimo para o produto {$produto->nome} atingido.");
         }
         return parent::afterSave($insert, $changedAttributes);

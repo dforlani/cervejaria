@@ -162,4 +162,18 @@ class Produto extends \yii\db\ActiveRecord {
         return Produto::find()->where('is_promocao_ativa IS TRUE AND tipo_produto like "' . $tipo_produto. '"')->joinWith('precos')->orderBy('nome')->all();
     }
 
+    
+    /**
+     * Retorna a soma de todos os estoques de entradas já adicionados
+     */
+    public function getEstoqueTotal(){
+        $total = 0;
+        $entradas = $this->entradas;
+        if(!empty($entradas)){
+            foreach($entradas as $entrada){        
+                $total += empty($entrada->quantidade)? 0:$entrada->quantidade;
+            }
+        }   
+        return $total;
+    }
 }

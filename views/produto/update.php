@@ -121,7 +121,7 @@ $this->params['breadcrumbs'][] = 'Update';
                 'dataProvider' => $dataProviderPreco,
                 //'filterModel' => $searchModelPreco,
                 'columns' => [
-                    ['class' => 'yii\grid\SerialColumn'],
+                 
                     'denominacao',
                     [
                         'contentOptions' => ['style' => 'text-align:right;'],
@@ -304,7 +304,7 @@ $this->params['breadcrumbs'][] = 'Update';
                 'dataProvider' => $dataProviderEntrada,
                 //'filterModel' => $searchModelEntrada,
                 'columns' => [
-                    ['class' => 'yii\grid\SerialColumn'],
+                    'nr_lote',
                     [
                         'attribute' => 'quantidade',
                         'filter' => false
@@ -324,7 +324,7 @@ $this->params['breadcrumbs'][] = 'Update';
                         'format' => 'date',
                         'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
                     ],
-                    'nr_lote',
+                    
                     [
                         'class' => 'yii\grid\ActionColumn',
                         'header' => 'Ações',

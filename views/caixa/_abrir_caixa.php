@@ -36,4 +36,5 @@ $form = ActiveForm::begin();
     </div>
 
     <?php ActiveForm::end(); ?>
+</div>
 

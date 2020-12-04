@@ -51,8 +51,8 @@ use yii\widgets\ActiveForm;
 
             </div>
             <div class="col-sm-3" style=";"> 
-                <label>Estoque Atual</label>
-                <input type="text" readonly class='form-control' style="text-align: right;" value="<?php is_numeric($model->estoque_inicial) && is_numeric($model->estoque_vendido) ? Yii::$app->formatter->asCurrency($model->estoque_inicial - $model->estoque_vendido) : 0 ?>">                                     
+                <label>Estoque Atual</label>                
+                <input type="text" readonly class='form-control' style="text-align: right;" value="<?= is_numeric($model->getEstoqueTotal()) && is_numeric($model->estoque_vendido) ? Yii::$app->formatter->asCurrency($model->getEstoqueTotal() - $model->estoque_vendido) : 0 ?>">                                     
 
             </div>
             <div class="col-sm-3" >  

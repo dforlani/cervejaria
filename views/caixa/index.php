@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
     <?php if (!empty($caixa)) { ?>
-        <h3>Abertura:<?= Yii::$app->formatter->asDatetime($caixa->dt_abertura)?></h3>
+        <h3>Abertura:<?= Yii::$app->formatter->asDatetime($caixa->dt_abertura) ?></h3>
         <?php
         echo ModalAjax::widget([
             'id' => 'createMovimento',
@@ -94,7 +94,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'caixa' => $caixa,
-            'visualizar'=>false
+            'visualizar' => false
         ]);
         ?>
 

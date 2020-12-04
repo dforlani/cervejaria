@@ -16,7 +16,7 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-
+    <?= $form->field($model, 'nr_lote')->textInput(['maxlength' => true]) ?>
 
     <?=
     $form->field($model, 'quantidade')->widget(NumberControl::classname(), [
@@ -78,7 +78,7 @@ use yii\widgets\ActiveForm;
     ]);
     ?>
 
-    <?= $form->field($model, 'nr_lote')->textInput(['maxlength' => true]) ?>
+
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
