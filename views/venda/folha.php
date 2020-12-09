@@ -53,8 +53,8 @@
 
                         <div class="row">                          
                             <div class="col-sm-6"  style='text-align: left'>
-                                <b><?= (!empty($venda->cliente) ? $venda->cliente->nome . '<br> ' : '(Sem nome)<br>' ) ?>
-                                    <?= (!empty($venda->comanda) ? $venda->comanda->numero : '(Sem Comanda)' ) ?></b><br><br>
+                                <b><?= (!empty($venda->cliente) ? \yii\helpers\Html::encode($venda->cliente->nome) . '<br> ' : '(Sem nome)<br>' ) ?>
+                                    <?= (!empty($venda->comanda) ? \yii\helpers\Html::encode($venda->comanda->numero) : '(Sem Comanda)' ) ?></b><br><br>
                             </div>
                             <div class="col-sm-6"  style='text-align: right'>
                                 <div  style="<?= !empty($venda->observacao)?'color:white;background-color:blue;padding: 10px;font-size: 20px;':'padding: 10px;font-size: 20px;' ?> " title="<?= $venda->observacao?>" id_venda='<?= $venda->pk_venda ?>' type="button" class="btn btn-observacao-venda btn-default glyphicon glyphicon-question-sign"  data-toggle="modal" data-target="#modalObervacaoVenda" ></div>

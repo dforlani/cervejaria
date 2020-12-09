@@ -17,6 +17,7 @@ $config = [
         '@npm' => '@vendor/npm-asset',
     ],
     'components' => [
+       
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],

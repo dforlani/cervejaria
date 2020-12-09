@@ -37,7 +37,8 @@
         "ifsnop/mysqldump-php": "^2.7",
         "nnnick/chartjs": "^2.9",
         "facebook/webdriver": "^1.7",
-        "phpmailer/phpmailer": "^6.1"
+        "phpmailer/phpmailer": "^6.1",
+        "phpseclib/mcrypt_compat": "^1.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

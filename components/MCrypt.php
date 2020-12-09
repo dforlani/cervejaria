@@ -2,20 +2,19 @@
 
 namespace app\components;
 
+use phpseclib\Crypt;
 
 /**
  * Esta classe foi criada para burlar um erro de conversão de datas do Yii2
  */
-class 
-         MCrypt
-        {
-                private $iv = 'p0ack758hyt43210'; #Same as in JAVA
-                private $key = '01o7656poiabcefr'; #Same as in JAVA
+class
+MCrypt {
 
+    private $iv = 'p0ack758hyt43210'; #Same as in JAVA
+    private $key = '01o7656poiabcefr'; #Same as in JAVA
 
-                
-    function __construct()
-    {
+    function __construct() {
+        
     }
 
     /**
@@ -23,8 +22,7 @@ class
      * @param bool $isBinary whether to encrypt as binary or not. Default is: false
      * @return string Encrypted data
      */
-    function encrypt($str, $isBinary = false)
-    {
+    function encrypt($str, $isBinary = false) {
         $iv = $this->iv;
         $str = $isBinary ? $str : utf8_decode($str);
 
@@ -44,8 +42,7 @@ class
      * @param bool $isBinary whether to decrypt as binary or not. Default is: false
      * @return string Decrypted data
      */
-    function decrypt($code, $isBinary = false)
-    {
+    function decrypt($code, $isBinary = false) {
         $code = $isBinary ? $code : $this->hex2bin($code);
         $iv = $this->iv;
 
@@ -60,8 +57,7 @@ class
         return $isBinary ? trim($decrypted) : utf8_encode(trim($decrypted));
     }
 
-    protected function hex2bin($hexdata)
-    {
+    protected function hex2bin($hexdata) {
         $bindata = '';
 
         for ($i = 0; $i < strlen($hexdata); $i += 2) {

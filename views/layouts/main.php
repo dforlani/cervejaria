@@ -85,11 +85,10 @@ AppAsset::register($this);
                 id_venda = $(this).attr('id_venda');
                 id_pedido = $(this).attr('id_pedido');
                 form = $("#form-atendimento-app").serializeArray();
-           
+
 
                 $.post("<?= Url::to(['pedidoapp/converte-pedido-venda']); ?>",
-                
-                 form)
+                        form)
                         .done(function (data) {
                             if (data.success == 'true') {
                                 window.location.href = "<?= Url::to(['venda/venda']); ?>?id=" + id_venda;
@@ -170,7 +169,7 @@ AppAsset::register($this);
                             Yii::$app->cache->set(Avisos::$KEY, $avisos, 60 * 60 * 6);
                         }
                         $popover = null;
-                        if ($avisos !== false && !empty($avisos)) {
+                        if (!Yii::$app->user->getIsGuest() && ($avisos !== false && !empty($avisos))) {
                             //altera $avisos para o popover
                             $popover = '<div id="divAvisos" class="avisosClose">';
                             $popover .= PopoverX::widget([
@@ -184,7 +183,7 @@ AppAsset::register($this);
                                         'footer' => Html::button('Limpar', ["onclick" => "limparAvisos()", 'class' => 'btn btn-sm btn-outline-secondary']),
                                         'toggleButton' => [
                                             'label' => Html::tag('span', '',
-                                                    ['class' => 'glyphicon glyphicon-question-sign', 'title'=>'Avisos', 'style' => 'text-align: right']),
+                                                    ['class' => 'glyphicon glyphicon-question-sign', 'title' => 'Avisos', 'style' => 'text-align: right']),
                                             'class' => 'btn btn-warning'
                                         ],
                                         'pluginOptions' => [
@@ -199,17 +198,17 @@ AppAsset::register($this);
                             $popover .= '</div>';
                         }
 
+                        //$btt_logout = !Yii::$app->user->getIsGuest()? ' <div class="col-sm-3" style="text-align:right" > <a href="/cervejaria/web/site/logout" title="Logout" type="button" class="btn btn-danger "  data-placement="bottom bottom-right" ><span class="glyphicon glyphicon-log-out" style="text-align: right"></span></a></div>':'';
+                        $btt_logout = '';
+
 
                         echo SideNav::widget([
                             'type' => SideNav::TYPE_DEFAULT,
                             'heading' => "<div class='row'>
                               <div class='col-sm-5' style=' display: table-cell;vertical-align:top;font-size:28px;color:#337ab7 ' >Menu </div>
-                              <div class='col-sm-3' style='text-align:right' > 
-                            $popover </div>".
-                            ' <div class="col-sm-3" style="text-align:right" > <a href="/cervejaria/web/site/logout" title="Logout" type="button" class="btn btn-danger " data-toggle="popover-x" data-placement="bottom bottom-right" ><span class="glyphicon glyphicon-log-out" style="text-align: right"></span></a>'.
-
-                                  "</div>
-                          </div>",
+                              <div class='col-sm-3' style='text-align:right' > $popover </div>"
+                            . $btt_logout
+                            . '</div>',
                             'items' => [
                                 ['label' => '', 'template' => '<a href="{url}"  accesskey="b">{icon}<u>B</u>alcão{label}</a>', 'url' => ['/venda/venda'],],
                                 ['label' => '', 'template' => '<a href="{url}"  accesskey="h">{icon}Fol<u>h</u>a de Vendas{label}</a>', 'url' => ['/venda/folha'],],
@@ -220,7 +219,7 @@ AppAsset::register($this);
                                     ]
                                 ],
                                 ['label' => 'Tap List', 'url' => ['/produto/tap-list']],
-                                  ['label' => 'Cardápio app', 'url' => ['/produto/cardapio-app']],
+                                ['label' => 'Cardápio app', 'url' => ['/produto/cardapio-app']],
                                 ['options' => ['style' => 'background-color:#ddd;margin-top: 0px;']],
                                 ['label' => 'Todas as Vendas', 'url' => ['/venda/index']],
                                 ['label' => '', 'template' => '<a href="{url}"  accesskey="t">{icon}Clien<u>t</u>es{label}</a>', 'url' => ['/cliente/index']],
@@ -240,6 +239,7 @@ AppAsset::register($this);
                                 ['label' => '1) Atualizar', 'template' => '<a href="{url}"  target="_blank">{icon}{label}</a>', 'url' => ['/update/atualizar']],
                                 ['label' => '2) Atualizar Banco', 'template' => '<a href="{url}"  target="_blank">{icon}{label}</a>', 'url' => ['/update/atualizar-banco']],
                                 ['label' => 'Versões', 'template' => '<a href="{url}"  target="_blank">{icon}{label}</a>', 'url' => ['/update/versoes']],
+                                ['label' => 'Logout', 'url' => array('/site/logout', Yii::$app->request->csrfParam => Yii::$app->request->csrfToken), 'visible' => !Yii::$app->user->getIsGuest()]
                             ],]
                         );
                         ?>

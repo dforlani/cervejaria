@@ -6,7 +6,7 @@
  */
 ?>
 <b><?= $model->status ?></b><br>    
-<b><?= $model->cliente->nome; ?> </b><br>
+<b><?= \yii\helpers\Html::encode($model->cliente->nome); ?> </b><br>
 <form id='form-atendimento-app'>
     <input type='hidden' name='_csrf' value="<?= Yii::$app->request->csrfToken ?>"    />
     <input type='hidden' name='id_venda' value="<?= $model->fk_venda ?>"    />

@@ -59,8 +59,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
 </div>
-<div type="button"  class="btn btn-default btn-pedido" data-toggle="modl" data-target="#modalCodigoApp" style='margin: 5px;text-align: left;max-width: 200px;min-height:100px; '>
-</div>
+
 <!-- Modal Código do Cliente -->
 <div class="modal fade" id="modalCodigoApp" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">

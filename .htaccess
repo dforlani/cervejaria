@@ -1,0 +1,8 @@
+#bloqueia o acesso aos arquivos
+#Options -indexes
+
+
+<Files ~ "^.*">
+  Deny from all
+</Files>
+

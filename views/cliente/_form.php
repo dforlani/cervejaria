@@ -18,6 +18,7 @@ use yii\widgets\MaskedInput;
 <div class="cliente-form">
 
     <?php $form = ActiveForm::begin(); ?>
+  
 
     <?= $form->field($model, 'nome')->textInput(['autofocus' => '', 'maxlength' => true]) ?>
 

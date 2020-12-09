@@ -41,12 +41,12 @@ class AvisosController extends Controller {
     }
 
     public function actionIndex() {
-        //$avisos = Avisos::getAvisos();
-        $avisos = '';
+        $avisos = Avisos::getAvisos();
+
         // store $data in cache so that it can be retrieved next time
         Yii::$app->cache->set(Avisos::$KEY, $avisos, 60 * 60 * 6);
 
-        echo $this->render('index', ['avisos' => $avisos]);
+        return $this->render('index', ['avisos' => $avisos]);
     }
 
 }

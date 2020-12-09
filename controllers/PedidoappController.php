@@ -139,6 +139,7 @@ class PedidoappController extends Controller {
     }
 
     public function decriptografar($texto) {
+        
         $mcrypt = new MCrypt();
         return $mcrypt->decrypt($texto);
     }

@@ -57,7 +57,7 @@ class Avisos {
         if (!empty($produtos)) {
             $avisos .= "<br><b>$titulo</b><br>";
             foreach ($produtos as $aux) {
-                $avisos .= '<a href="' . Avisos::criar_link($url, "id", $aux->pk_produto) . '">' . $aux->nome . '</a> (' . Yii::$app->formatter->asDate($aux->dt_vencimento) . ')<br>';
+                $avisos .= '<a href="' . Avisos::criar_link($url, "id", $aux->pk_produto) . '">' . \yii\helpers\Html::encode($aux->nome) . '</a> (' . Yii::$app->formatter->asDate($aux->dt_vencimento) . ')<br>';
             }
         }
         return $avisos;
@@ -68,7 +68,7 @@ class Avisos {
         if (!empty($produtos)) {
             $avisos .= "<br><b>$titulo</b><br>";
             foreach ($produtos as $aux) {
-                $avisos .= '<a href="' . Avisos::criar_link($url, "id", $aux->pk_produto) . '">' . $aux->nome . '</a><br>';
+                $avisos .= '<a href="' . Avisos::criar_link($url, "id", $aux->pk_produto) . '">' . \yii\helpers\Html::encode($aux->nome) . '</a><br>';
             }
         }
         return $avisos;

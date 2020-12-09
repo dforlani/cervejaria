@@ -8,10 +8,11 @@ use app\models\UploadForm;
 use Yii;
 use yii\data\ArrayDataProvider;
 use yii\filters\AccessControl;
-use yii\filters\VerbFilter;
 use yii\web\Controller;
+use yii\web\HttpException;
 use yii\web\Response;
 use yii\web\UploadedFile;
+use const YII_ENV_TEST;
 
 class SiteController extends Controller {
 
@@ -27,7 +28,6 @@ class SiteController extends Controller {
                     [
                         'actions' => ['logout'],
                         'allow' => true,
-                        
                     ],
                     [
                         'actions' => ['login'],
@@ -70,19 +70,18 @@ class SiteController extends Controller {
      */
     public function actionLogin() {
         if (!Yii::$app->user->isGuest) {
-         
+
             return $this->goHome();
-            
         }
-  
-        
+
+
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         }
 
-        
+
         $model->senha = '';
         return $this->render('login', [
                     'model' => $model,
@@ -94,9 +93,20 @@ class SiteController extends Controller {
      *
      * @return Response
      */
-    public function actionLogout() {
-        Yii::$app->user->logout();
+//    public function actionLogout() {
+//        Yii::$app->user->logout();
+//
+//        return $this->goHome();
+//    }
 
+    public function actionLogout() {
+//        echo $token .'<br>';
+//        echo Yii::$app->request->csrfToken.'<br>';
+//        exit();
+//        if ($token !== Yii::$app->request->csrfToken)
+//            throw new HttpException(400, Yii::t('app', 'Invalid request. Please do not repeat this request again.'));
+
+        Yii::$app->user->logout();
         return $this->goHome();
     }
 

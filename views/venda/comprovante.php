@@ -17,8 +17,8 @@ use yii\widgets\ActiveForm;
     <?= Yii::$app->formatter->asDatetime(date('Y-m-d H:i:s')); ?><br>
     <div style='text-align:center; font-size:14px'> Cervejaria Paraíso</div>
 
-    Cliente: <?= (!empty($model->cliente) ? $model->cliente->nome : '') ?><br>
-    Comanda: <?= (!empty($model->comanda) ? $model->comanda->numero : '') ?><br>
+    Cliente: <?= (!empty($model->cliente) ? \yii\helpers\Html::encode($model->cliente->nome) : '') ?><br>
+    Comanda: <?= (!empty($model->comanda) ? \yii\helpers\Html::encode($model->comanda->numero) : '') ?><br>
 
     <hr>
     <table style='font-size:11px'> 

@@ -30,7 +30,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'rowOptions' => function ($model, $index, $widget, $grid) {
-
             if ($model->getEstoqueTotal() - $model->estoque_vendido <= $model->estoque_minimo) {
                 return ['class' => 'danger'];
             } else {
