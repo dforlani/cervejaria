@@ -23,4 +23,3 @@ git checkout v2.19.0
 //merge da versão atual com alguma outra
 git merge v1.3.1
 
-https://freemyip.com/update?token=1c21c89afc1d5907bf8373e0&domain=cerveme.freemyip.com

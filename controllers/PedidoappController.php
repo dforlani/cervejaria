@@ -42,7 +42,7 @@ class PedidoappController extends Controller {
                     ],
                     [
                         'allow' => true,
-                        'roles' => ['@'],
+//                        'roles' => ['@'],
                     ],
                 ],
             ],
