@@ -17,14 +17,16 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
+    
     <?=
     $form->field($model, 'is_ativo')->widget(SwitchInput::classname(), ['pluginOptions' => [
             'onText' => 'Sim',
             'offText' => 'Não',
     ]]);
     ?>
-
-
+    <span style="color: red;font-size: 13px"> <b>(Ao menos um entrada precisa estar ativa, para que o produto possa ser vendido)</b></span>
+    <br>
+    <br>
     <?= $form->field($model, 'nr_lote')->textInput(['maxlength' => true]) ?>
 
     <?=

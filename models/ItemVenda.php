@@ -74,21 +74,34 @@ class ItemVenda extends \yii\db\ActiveRecord {
     }
 
     public function afterSave($insert, $changedAttributes) {
-        //atualiza a quantidade de produtos disponiveis atuais
         $produto = $this->preco->produto;
+
+
+        //atualiza a quantidade de produtos disponiveis atuais
+        //TODO CÓDIGO ABAIXO MANTIDO PRA MANTER COMPATIBILIDADE, DE QUANDO AINDA NÃO HAVIA O SISTEMA DE ENTRADAS, REMOVÊ-LO SE TUDO DER CERTO
         $produto->estoque_vendido = $produto->estoque_vendido + $this->quantidade * $this->preco->quantidade;
         $produto->save();
+
+
         if ($produto->estoque_minimo >= ( $produto->getEstoqueTotal() - $produto->estoque_vendido)) {
             Yii::$app->session->setFlash('error', "Estoque mínimo para o produto {$produto->nome} atingido.");
         }
+        //FIM DO TODO DE REMOÇÃO POR COMPATIBILIDADE
+        //obtem a entrada que está ativa, pra adicionar o vendido
+        if (!empty($produto)) {
+            $entrada_ativa = $produto->getEntradaAtiva();
+            $entrada_ativa->quantidade_vendida = $entrada_ativa->quantidade_vendida + $this->quantidade * $this->preco->quantidade;
+            $entrada_ativa->save();
+        }
+
         return parent::afterSave($insert, $changedAttributes);
     }
 
     public function beforeValidate() {
         $this->preco_final = $this->preco_unitario * $this->quantidade;
         if (!empty($this->preco) && !empty($this->preco->produto)) {
-            if(!$this->is_desconto_promocional){
-              $this->preco_custo_item = $this->preco->produto->custo_compra_producao * $this->preco->quantidade * $this->quantidade;
+            if (!$this->is_desconto_promocional) {
+                $this->preco_custo_item = $this->preco->produto->custo_compra_producao * $this->preco->quantidade * $this->quantidade;
             }
         } else {
             $this->preco_custo_item = 0;
@@ -97,10 +110,23 @@ class ItemVenda extends \yii\db\ActiveRecord {
     }
 
     public function afterDelete() {
-        //retorno o valor do estoque se cancelar a venda do item
         $produto = $this->preco->produto;
+
+
+        //TODO CÓDIGO ABAIXO MANTIDO PRA MANTER COMPATIBILIDADE DE QUANDO AINDA NÃO HAVIA O SISTEMA DE ENTRADAS, REMOVÊ-LO SE TUDO DER CERTO
+        //retorno o valor do estoque se cancelar a venda do item
         $produto->estoque_vendido = $produto->estoque_vendido - $this->quantidade * $this->preco->quantidade;
         $produto->save();
+        //FIM DO TODO DE REMOÇÃO POR COMPATIBILIDADE
+        
+        //obtem a entrada que está ativa, pra devolver a quantidade vendida pro estoque
+        if (!empty($produto)) {
+            $entrada_ativa = $produto->getEntradaAtiva();
+            $entrada_ativa->quantidade_vendida = $entrada_ativa->quantidade_vendida - $this->quantidade * $this->preco->quantidade;
+            $entrada_ativa->save();
+        }
+
+
         parent::afterDelete();
     }
 

@@ -176,4 +176,8 @@ class Produto extends \yii\db\ActiveRecord {
         }   
         return $total;
     }
+    
+    public function getEntradaAtiva(){
+        return Entrada::find()->where(['fk_produto'=>$this->pk_produto])->one();
+    }
 }
