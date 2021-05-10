@@ -30,6 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'fk_usuario',
             'fk_produto',
             'quantidade',
+            'quantidade_vendida',
             'dt_entrada',
             //'custo',
 

@@ -121,7 +121,6 @@ $this->params['breadcrumbs'][] = 'Update';
                 'dataProvider' => $dataProviderPreco,
                 //'filterModel' => $searchModelPreco,
                 'columns' => [
-                 
                     'denominacao',
                     [
                         'contentOptions' => ['style' => 'text-align:right;'],
@@ -304,16 +303,35 @@ $this->params['breadcrumbs'][] = 'Update';
                 'dataProvider' => $dataProviderEntrada,
                 //'filterModel' => $searchModelEntrada,
                 'columns' => [
-                    'nr_lote',
+                    [
+                        'attribute' => 'nr_lote',
+                        'contentOptions' => ['style' => 'text-align:right;'],
+                    ],
                     [
                         'attribute' => 'quantidade',
+                        'value' => function($model) {
+                            return Yii::$app->formatter->asDecimal($model->quantidade, 3);
+                        },
+                        'contentOptions' => ['style' => 'text-align:right;'],
+                        'filter' => false
+                    ],
+//                
+                    [
+                        'attribute' => 'quantidade_vendida',
+                        'value' => function($model) {
+                            return Yii::$app->formatter->asDecimal($model->quantidade_vendida, 3);
+                        },
+                        'contentOptions' => ['style' => 'text-align:right;'],
                         'filter' => false
                     ],
                     [
                         'attribute' => 'custo_fabricacao',
+                        'value' => function($model) {
+                            return Yii::$app->formatter->asDecimal($model->custo_fabricacao, 3);
+                        },
+                        'contentOptions' => ['style' => 'text-align:right;'],
                         'filter' => false
                     ],
-                
                     [
                         'attribute' => 'dt_fabricacao',
                         'format' => 'date',
@@ -324,19 +342,18 @@ $this->params['breadcrumbs'][] = 'Update';
                         'format' => 'date',
                         'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
                     ],
-                    
                     [
                         'class' => 'yii\grid\ActionColumn',
                         'header' => 'Ações',
                         'headerOptions' => ['style' => 'color:#337ab7'],
-                        'template' => '{delete}',
+                        'template' => '{update} {delete}',
                         'buttons' => [
-//                            'update' => function ($url, $model) {
-//                                return Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['update-entrada', 'pk_entrada' => $model->pk_entrada], [
-//                                            'class' => 'update-entrada',
-//                                            'title' => 'Atualizar',
-//                                ]);
-//                            },
+                            'update' => function ($url, $model) {
+                                return Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['update-entrada', 'pk_entrada' => $model->pk_entrada], [
+                                            'class' => 'update-entrada',
+                                            'title' => 'Atualizar',
+                                ]);
+                            },
 //                         
                             'delete' => function($url, $model) {
                                 return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['delete-entrada', 'pk_entrada' => $model->pk_entrada], [

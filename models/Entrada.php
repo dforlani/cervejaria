@@ -11,10 +11,11 @@ use Yii;
  * @property string $fk_usuario
  * @property int|null $fk_produto
  * @property float|null $quantidade
-
+ * @property float|null $quantidade_vendida
+ * @property string|null $dt_entrada
+ * @property float|null $custo_fabricacao
  * @property string|null $dt_fabricacao
  * @property string|null $dt_vencimento
- * @property float|null $custo_fabricacao
  * @property string|null $nr_lote
  *
  * @property Produto $fkProduto
@@ -29,7 +30,7 @@ class Entrada extends \yii\db\ActiveRecord
     {
         return 'entrada';
     }
-    
+
     public function __construct($fk_produto = null, $quantidade= null, $custo_fabricacao= null, $dt_fabricacao= null, $dt_vencimento= null, $nr_lote= null ){
         $this->fk_produto = $fk_produto;
         $this->fk_usuario = 'dforlani';
@@ -52,10 +53,10 @@ class Entrada extends \yii\db\ActiveRecord
         return [
             [['fk_usuario'], 'required'],
             [['fk_produto'], 'integer'],
-            [['quantidade'], 'number'],
-            [['custo_fabricacao'], 'safe'],
-            [[ 'dt_fabricacao', 'dt_vencimento'], 'safe'],
-            [['fk_usuario', 'nr_lote'], 'string', 'max' => 20],
+            [['quantidade', 'quantidade_vendida', 'custo_fabricacao'], 'number'],
+            [['dt_entrada', 'dt_fabricacao', 'dt_vencimento'], 'safe'],
+            [['fk_usuario'], 'string', 'max' => 20],
+            [['nr_lote'], 'string', 'max' => 50],
             [['fk_produto'], 'exist', 'skipOnError' => true, 'targetClass' => Produto::className(), 'targetAttribute' => ['fk_produto' => 'pk_produto']],
             [['fk_usuario'], 'exist', 'skipOnError' => true, 'targetClass' => Usuario::className(), 'targetAttribute' => ['fk_usuario' => 'login']],
         ];
@@ -71,11 +72,12 @@ class Entrada extends \yii\db\ActiveRecord
             'fk_usuario' => 'Fk Usuario',
             'fk_produto' => 'Fk Produto',
             'quantidade' => 'Quantidade',
-            'dt_fabricacao' =>'Fabricação',
-            
-            'dt_vencimento' => 'Vencimento',
-            'custo_fabricacao' => 'Custo de Fabricação',
-            'nr_lote' => 'Lote',
+            'quantidade_vendida' => 'Quantidade Vendida',
+            'dt_entrada' => 'Dt Entrada',
+            'custo_fabricacao' => 'Custo Fabricação',
+            'dt_fabricacao' => 'Data Fabricação',
+            'dt_vencimento' => 'Data Vencimento',
+            'nr_lote' => 'Nr Lote',
         ];
     }
 

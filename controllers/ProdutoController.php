@@ -8,10 +8,11 @@ use app\models\Preco;
 use app\models\PrecoSearch;
 use app\models\Produto;
 use app\models\ProdutoSearch;
+use kartik\grid\EditableColumnAction;
 use kartik\mpdf\Pdf;
 use Yii;
-use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -43,6 +44,21 @@ class ProdutoController extends Controller {
 //                ],
 //            ],
         ];
+    }
+    
+       
+   public function actionEditEntrada($id) {
+        $model = $this->findModelEntrada($id);
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+            $model->load(Yii::$app->request->post());
+
+
+        if ($model->save()) {
+            return ['output' => Yii::$app->formatter->asDecimal($model->quantidade, 3), 'message' => ''];
+        } else {
+            return ['output' => '', 'message' => 'Não salvou: ' . implode(',', $model->getErrorSummary(true))];
+        }
     }
 
     /**
@@ -506,7 +522,7 @@ class ProdutoController extends Controller {
 
     public function actionUpdateEntrada($pk_entrada = null) {
 
-        $model = $this->findModelEntrada($pk_preco);
+        $model = $this->findModelEntrada($pk_entrada);
 
         if ($model->load(Yii::$app->request->post())) {
             if ($model->save()) {

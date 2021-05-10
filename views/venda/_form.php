@@ -86,9 +86,9 @@ use yii\widgets\Pjax;
                              <div style=";font-size: 18px;">                              
                                 <?php
                                 if ($model->hasFalta())
-                                    echo "Falta: <b><span style='color:red'> {$model->getSaldoFormatedBR()}</span></b>";
+                                    echo " <b><span style='color:red'> Falta: {$model->getSaldoFormatedBR()}</span></b>";
                                 elseif ($model->hasTroco())
-                                    echo "Troco: <b><span style='color:green'> {$model->getSaldoFormatedBR()}</span></b>";
+                                    echo " <b><span style='color:green'> Troco: {$model->getSaldoFormatedBR()}</span></b>";
                                 else
                                     echo $model->getSaldoFormatedBR();
                                 ?>

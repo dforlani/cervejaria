@@ -475,7 +475,13 @@ ALTER TABLE `caixa`
 
         $this->atualizaBanco("ALTER TABLE `entrada` CHANGE `custo` `custo_fabricacao` DECIMAL(10,2) NULL DEFAULT NULL; ALTER TABLE `entrada` ADD `nr_lote` VARCHAR(20) NULL AFTER `custo`;ALTER TABLE `entrada` ADD `dt_vencimento` DATE NULL AFTER `custo`;ALTER TABLE `entrada` ADD `dt_fabricacao` DATE NULL AFTER `custo`;INSERT INTO `entrada`(fk_usuario, `fk_produto`, `quantidade`, `dt_fabricacao`, `dt_vencimento`, `nr_lote`) (select 'dforlani', pk_produto, estoque_inicial, dt_fabricacao, dt_vencimento, nr_lote from produto )", "add_colunas_tabela_entrada", 'Adicionada colunas na tabela de entrada');
 
-
+        $this->atualizaBanco("ALTER TABLE `entrada` ADD `nr_lote` VARCHAR(50) NULL AFTER `custo_fabricacao`;ALTER TABLE `entrada` ADD `dt_vencimento` DATE NULL AFTER `custo_fabricacao`; ALTER TABLE `entrada` ADD `dt_fabricacao` DATE NULL AFTER `custo_fabricacao`;","add_colunas_dt_fabricacao_nr_lote_tabela_entrada", 'Adicionada nova colunas na tabela de entrada');
+        
+        $this->atualizaBanco("ALTER TABLE `entrada` ADD `is_ativo` BOOLEAN NOT NULL DEFAULT FALSE AFTER `nr_lote`;",
+                "add_coluna_IS_ATIVO", 
+                'Adicionada nova colunas is_ativo pra entrada');
+        
+        
 
         echo '<br><br>ATUALIZAÇÃO DO BANCO ENCERRADA<br>';
     }

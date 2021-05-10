@@ -35,6 +35,12 @@
 
 <h2>Notas de versão</h2>
 <div class="notasVersaoStyle">
+    <a href="#" id="v140" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.4.0 (10/05/2021)</a>
+    <ul id="nv138" style="display:">        
+        <li><b>Produtos e Cervejas</b>Adicionado mecanismo de inclusão de lotes de entrada.</li>                                     
+    </ul>
+</div>
+<div class="notasVersaoStyle">
     <a href="#" id="v139" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.3.9 (20/05/2020)</a>
     <ul id="nv138" style="display:">        
         <li><b>Vendas</b>Adicionado sistema de observações.</li>                                     

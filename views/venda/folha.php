@@ -85,9 +85,9 @@
                 <div>
                     <?php
                     if ($venda->hasFalta())
-                        echo "Falta: <b><span style='color:red'> {$venda->getSaldoFormatedBR()}</span></b>";
+                        echo " <b><span style='color:red'> Falta: {$venda->getSaldoFormatedBR()}</span></b>";
                     elseif ($venda->hasTroco())
-                        echo "Troco: <b><span style='color:green'> {$venda->getSaldoFormatedBR()}</span></b>";
+                        echo " <b><span style='color:green'> Troco: {$venda->getSaldoFormatedBR()}</span></b>";
                     else
                         echo $venda->getSaldoFormatedBR();
                     ?>

@@ -18,7 +18,7 @@ class EntradaSearch extends Entrada
     {
         return [
             [['pk_entrada', 'fk_produto'], 'integer'],
-            [['fk_usuario'], 'safe'],
+            [['fk_usuario', 'quantidade_vendida', 'quantidade'], 'safe'],
             [['quantidade', 'custo_fabricacao'], 'number'],
         ];
     }
