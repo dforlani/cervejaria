@@ -3,6 +3,7 @@
 use app\models\Entrada;
 use kartik\datecontrol\DateControl;
 use kartik\number\NumberControl;
+use kartik\widgets\SwitchInput;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
@@ -15,6 +16,14 @@ use yii\widgets\ActiveForm;
 <div class="entrada-form">
 
     <?php $form = ActiveForm::begin(); ?>
+
+    <?=
+    $form->field($model, 'is_ativo')->widget(SwitchInput::classname(), ['pluginOptions' => [
+            'onText' => 'Sim',
+            'offText' => 'Não',
+    ]]);
+    ?>
+
 
     <?= $form->field($model, 'nr_lote')->textInput(['maxlength' => true]) ?>
 
@@ -81,7 +90,7 @@ use yii\widgets\ActiveForm;
 
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Salvar', ['class' => 'btn btn-success']) ?>
     </div>
     <?= $form->field($model, 'pk_entrada')->hiddenInput()->label('') ?>
 

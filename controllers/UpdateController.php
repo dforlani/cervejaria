@@ -481,6 +481,10 @@ ALTER TABLE `caixa`
                 "add_coluna_IS_ATIVO", 
                 'Adicionada nova colunas is_ativo pra entrada');
         
+        //insere entradas baseadas nos produtos
+        $this->atualizaBanco("INSERT INTO `entrada`(`fk_produto`, fk_usuario, `quantidade`, `quantidade_vendida`, `dt_fabricacao`, `dt_vencimento`, `nr_lote`, `is_ativo`) SELECT pk_produto, 'dforlani', estoque_inicial, estoque_vendido, dt_fabricacao, dt_vencimento, nr_lote, 1 from produto",
+                "insert_novas_entradas",
+                "Entradas inseridas");
         
 
         echo '<br><br>ATUALIZAÇÃO DO BANCO ENCERRADA<br>';

@@ -21,17 +21,16 @@ use Yii;
  * @property Produto $fkProduto
  * @property Usuario $fkUsuario
  */
-class Entrada extends \yii\db\ActiveRecord
-{
+class Entrada extends \yii\db\ActiveRecord {
+
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'entrada';
     }
 
-    public function __construct($fk_produto = null, $quantidade= null, $custo_fabricacao= null, $dt_fabricacao= null, $dt_vencimento= null, $nr_lote= null ){
+    public function __construct($fk_produto = null, $quantidade = null, $custo_fabricacao = null, $dt_fabricacao = null, $dt_vencimento = null, $nr_lote = null) {
         $this->fk_produto = $fk_produto;
         $this->fk_usuario = 'dforlani';
         $this->quantidade = $quantidade;
@@ -40,19 +39,15 @@ class Entrada extends \yii\db\ActiveRecord
         $this->dt_vencimento = $dt_vencimento;
         $this->nr_lote = $nr_lote;
     }
-    
-   
-            
-    
 
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['fk_usuario'], 'required'],
             [['fk_produto'], 'integer'],
+            [['is_ativo'], 'boolean'],
             [['quantidade', 'quantidade_vendida', 'custo_fabricacao'], 'number'],
             [['dt_entrada', 'dt_fabricacao', 'dt_vencimento'], 'safe'],
             [['fk_usuario'], 'string', 'max' => 20],
@@ -65,8 +60,7 @@ class Entrada extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'pk_entrada' => 'Pk Entrada',
             'fk_usuario' => 'Fk Usuario',
@@ -86,9 +80,20 @@ class Entrada extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getProduto()
-    {
+    public function getProduto() {
         return $this->hasOne(Produto::className(), ['pk_produto' => 'fk_produto']);
+    }
+
+    public function beforeSave($insert) {
+        if (!parent::beforeSave($insert)) {
+            return false;
+        }
+
+        ///como só pode ter um ativo por vez, busca qual é o ativo e altera os demais pra não ativos
+        if($this->is_ativo){
+            Entrada::updateAll(['is_ativo'=> false],['fk_produto'=>$this->fk_produto]);
+        }
+        return true;
     }
 
     /**
@@ -96,8 +101,8 @@ class Entrada extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getFkUsuario()
-    {
+    public function getFkUsuario() {
         return $this->hasOne(Usuario::className(), ['login' => 'fk_usuario']);
     }
+
 }

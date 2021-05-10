@@ -223,7 +223,7 @@ $this->params['breadcrumbs'][] = 'Update';
     </div>
 </div>
 <br>
-<div class='panel panel-success' >
+<div class='panel panel-danger' >
     <div class="panel-heading">
         <h1 class="panel-title"><b> Entradas</b> </h1>
 
@@ -303,6 +303,11 @@ $this->params['breadcrumbs'][] = 'Update';
                 'dataProvider' => $dataProviderEntrada,
                 //'filterModel' => $searchModelEntrada,
                 'columns' => [
+                     [
+                        'attribute' => 'is_ativo',
+                         'format'=>'boolean',
+                        'contentOptions' => ['style' => 'text-align:right;'],
+                    ],
                     [
                         'attribute' => 'nr_lote',
                         'contentOptions' => ['style' => 'text-align:right;'],
