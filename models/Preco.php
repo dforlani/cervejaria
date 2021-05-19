@@ -86,7 +86,10 @@ class Preco extends \yii\db\ActiveRecord {
 
     public static function getArrayProdutosPrecos() {
         $lista = [];
-        $precos = Preco::find()->where('is_vendavel IS TRUE')->joinWith('produto')->orderBy('nome, denominacao')->all();
+        $precos = Preco::find()->where('is_vendavel IS TRUE AND is_ativo = TRUE')
+                ->joinWith(['produto', 'produto.entradas'])
+                ->orderBy('nome, denominacao')
+                ->all();
         foreach ($precos as $preco) {
             $lista[$preco->pk_preco] = $preco->getNomeProdutoPlusDenominacao();
         }

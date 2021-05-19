@@ -52,6 +52,19 @@ $this->params['breadcrumbs'][] = $this->title;
                 'expandOneOnly' => true
             ],
             [
+                'label' => 'Lote Ativo',
+                'value' => function($model) {
+                    return $model->temLoteAtivo();
+                },
+                'format' => 'boolean',
+                'contentOptions' => function ($model, $key, $index, $column) {
+                    return ['style' => 'text-align:right;font-size:12px;'
+                        . 'background-color:' . ($model->temLoteAtivo() ? '' : '#ff6666')
+                        . ';color:' . ($model->temLoteAtivo() ? '' : 'white')
+                    ];
+                },
+            ],
+            [
                 'class' => 'kartik\grid\EditableColumn',
                 'attribute' => 'is_vendavel',
                 'filter' => [1 => 'Sim', 0 => 'Não'],
@@ -72,7 +85,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'nome',
                 'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
             ],
-                               [
+            [
                 'attribute' => 'estoqueTotalVendido',
                 'format' => 'currency',
                 'header' => 'Total Vendido',

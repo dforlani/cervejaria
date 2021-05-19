@@ -205,14 +205,19 @@ class Produto extends \yii\db\ActiveRecord {
             return 0;
         }
     }
-    
-        public function getEstoqueVendidoLoteAtivo() {
+
+    public function getEstoqueVendidoLoteAtivo() {
         $entrada_ativa = $this->getEntradaAtiva();
         if (!empty($entrada_ativa)) {
             return $entrada_ativa->quantidade_vendida;
         } else {
             return 0;
         }
+    }
+
+    public function temLoteAtivo() {
+        $entrada_ativa = $this->getEntradaAtiva();
+        return !empty($entrada_ativa);
     }
 
 }

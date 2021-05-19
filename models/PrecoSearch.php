@@ -2,9 +2,9 @@
 
 namespace app\models;
 
+use app\models\Preco;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Preco;
 
 /**
  * PrecoSearch represents the model behind the search form of `app\models\Preco`.
@@ -37,7 +37,7 @@ class PrecoSearch extends Preco {
      *
      * @return ActiveDataProvider
      */
-    public function search($params, $is_sort_pos_cardapio = false) {
+    public function search($params, $is_sort_pos_cardapio = false, $is_vendavel = false, $has_entrada_ativa = false) {
         $query = Preco::find();
 
         // add conditions that should always apply here
@@ -62,7 +62,19 @@ class PrecoSearch extends Preco {
             'quantidade' => $this->quantidade,
             'codigo_barras' => $this->codigo_barras,
             'tipo_cardapio' => $this->tipo_cardapio
-        ]);        
+        ]);   
+        
+        if($is_vendavel){
+            //precisa ser vendavel
+            $query->joinWith('produto');
+            $query->andFilterCompare('is_vendavel', true);            
+        }
+        
+        if($has_entrada_ativa){
+            //precisa ter entrada ativa
+            $query->joinWith('produto.entradas');
+            $query->andFilterCompare('is_ativo', true); 
+        }
 
         $query->andFilterWhere(['like', 'denominacao', $this->denominacao]);
         
@@ -72,5 +84,7 @@ class PrecoSearch extends Preco {
 
         return $dataProvider;
     }
+    
+      
 
 }

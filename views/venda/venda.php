@@ -102,18 +102,18 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class = "row">
                     <div class = "col-sm-7" style = "">
                         <?php
-                        if (!empty($modelItem))
+                        if (!empty($modelItem)) {
                             echo $this->render('item/_item', [
                                 'model' => $model,
                                 'modelItem' => $modelItem,
                                 'dataProviderItem' => $dataProviderItem,
                                 'searchModelItem' => $searchModelItem,
-                            ])
-                            ?>
+                            ]);
+                        }
+                        ?>
                     </div>
+                    
                     <div class = "col-sm-5" style = "">
-
-
                         <?=
                         $this->render('_tap_list', [
                             'tapListProvider' => $tapListProvider,

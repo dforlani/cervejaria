@@ -18,7 +18,7 @@ class ProdutoSearch extends Produto {
     public function rules() {
         return [
             [['pk_produto'], 'integer'],
-            [['nome', 'auxHasPromocao', 'tipo_produto','is_vendavel'], 'safe'],
+            [['nome', 'auxHasPromocao', 'tipo_produto', 'is_vendavel'], 'safe'],
             [['estoque_vendido'], 'number'],
         ];
     }
@@ -45,7 +45,10 @@ class ProdutoSearch extends Produto {
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort' => ['defaultOrder' => ['nome' => SORT_ASC]]
+            'sort' => ['defaultOrder' => ['nome' => SORT_ASC]],
+            'pagination' => [
+                'pageSize' => 40,
+            ],
         ]);
 
         $this->load($params);
@@ -67,7 +70,7 @@ class ProdutoSearch extends Produto {
 
         $query->andFilterWhere(['like', 'nome', $this->nome]);
         $query->andFilterWhere(['like', 'tipo_produto', $this->tipo_produto]);
-    
+
         return $dataProvider;
     }
 

@@ -74,7 +74,7 @@ use yii\widgets\Pjax;
                                 <span><?php echo $model->getValorTotalPago() ?></span>
                             </div>
 
-                           
+
 
 
                         </div>
@@ -83,7 +83,7 @@ use yii\widgets\Pjax;
                                 <label>Final:</label>
                                 <b><span id='valor_final' ><?php echo Yii::$app->formatter->asCurrency($model->valor_final) ?></span></b>
                             </div >
-                             <div style=";font-size: 18px;">                              
+                            <div style=";font-size: 18px;">                              
                                 <?php
                                 if ($model->hasFalta())
                                     echo " <b><span style='color:red'> Falta: {$model->getSaldoFormatedBR()}</span></b>";
@@ -94,7 +94,7 @@ use yii\widgets\Pjax;
                                 ?>
                             </div>
                         </div>
-                        
+
                     </div>
 
                     <br>
@@ -103,7 +103,7 @@ use yii\widgets\Pjax;
                     <br>
 
 
-                    <span style="font-size:20px;color:blue"> <?php echo !empty($model->observacao)? "<b>Observação: ".$model->observacao ."</b>": ""?></span>
+                    <span style="font-size:20px;color:blue"> <?php echo!empty($model->observacao) ? "<b>Observação: " . $model->observacao . "</b>" : "" ?></span>
                 </div>
             </div>
         </div>
