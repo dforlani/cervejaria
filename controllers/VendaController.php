@@ -228,7 +228,9 @@ class VendaController extends Controller {
         Yii::$app->response->format = Response::FORMAT_JSON;
         $preco = Preco::findOne($id);
         if (!empty($preco)) {
-            return ['preco' => $preco->preco, 'estoque_atual' => ($preco->produto->estoque_inicial - $preco->produto->estoque_vendido) . ' ' . $preco->produto->unidadeMedida->unidade_medida];
+            $estoque_disponivel = $preco->produto->getEntradaAtiva()->getEstoqueDisponivel();
+            
+            return ['preco' => $preco->preco, 'estoque_atual' => $estoque_disponivel . ' ' . $preco->produto->unidadeMedida->unidade_medida];
         } else
             return '';
     }

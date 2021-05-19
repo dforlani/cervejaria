@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "item_venda".
@@ -19,7 +21,7 @@ use Yii;
  * @property Preco $fkPreco
  *  @property string $dt_inclusao
  */
-class ItemVenda extends \yii\db\ActiveRecord {
+class ItemVenda extends ActiveRecord {
 
     /**
      * {@inheritdoc}
@@ -60,14 +62,14 @@ class ItemVenda extends \yii\db\ActiveRecord {
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getVenda() {
         return $this->hasOne(Venda::className(), ['pk_venda' => 'fk_venda']);
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
     public function getPreco() {
         return $this->hasOne(Preco::className(), ['pk_preco' => 'fk_preco']);
@@ -78,20 +80,26 @@ class ItemVenda extends \yii\db\ActiveRecord {
 
 
         //atualiza a quantidade de produtos disponiveis atuais
-        //TODO CÓDIGO ABAIXO MANTIDO PRA MANTER COMPATIBILIDADE, DE QUANDO AINDA NÃO HAVIA O SISTEMA DE ENTRADAS, REMOVÊ-LO SE TUDO DER CERTO
+        //TODO CÓDIGO ABAIXO MANTIDO PRA MANTER COMPATIBILIDADE DE QUANDO AINDA NÃO HAVIA O SISTEMA DE ENTRADAS, REMOVÊ-LO SE TUDO DER CERTO
         $produto->estoque_vendido = $produto->estoque_vendido + $this->quantidade * $this->preco->quantidade;
         $produto->save();
 
 
-        if ($produto->estoque_minimo >= ( $produto->getEstoqueTotal() - $produto->estoque_vendido)) {
-            Yii::$app->session->setFlash('error', "Estoque mínimo para o produto {$produto->nome} atingido.");
-        }
+//        if ($produto->estoque_minimo >= ( $produto->getEstoqueTotal() - $produto->estoque_vendido)) {
+//            Yii::$app->session->setFlash('error', "Estoque mínimo para o produto {$produto->nome} atingido.");
+//        }
         //FIM DO TODO DE REMOÇÃO POR COMPATIBILIDADE
-        //obtem a entrada que está ativa, pra adicionar o vendido
+        //Substituição pelo sistema antigo de controle, obtem a entrada que está ativa, pra adicionar o vendido
         if (!empty($produto)) {
             $entrada_ativa = $produto->getEntradaAtiva();
-            $entrada_ativa->quantidade_vendida = $entrada_ativa->quantidade_vendida + $this->quantidade * $this->preco->quantidade;
-            $entrada_ativa->save();
+            if (!empty($entrada_ativa)) {
+                $entrada_ativa->quantidade_vendida = $entrada_ativa->quantidade_vendida + $this->quantidade * $this->preco->quantidade;
+                $entrada_ativa->save();
+            }
+
+            if ($produto->estoque_minimo >= $entrada_ativa->getEstoqueDisponivel()) {
+                Yii::$app->session->setFlash('error', "Estoque mínimo para o produto {$produto->nome} atingido.");
+            }
         }
 
         return parent::afterSave($insert, $changedAttributes);
@@ -118,12 +126,13 @@ class ItemVenda extends \yii\db\ActiveRecord {
         $produto->estoque_vendido = $produto->estoque_vendido - $this->quantidade * $this->preco->quantidade;
         $produto->save();
         //FIM DO TODO DE REMOÇÃO POR COMPATIBILIDADE
-        
         //obtem a entrada que está ativa, pra devolver a quantidade vendida pro estoque
         if (!empty($produto)) {
             $entrada_ativa = $produto->getEntradaAtiva();
-            $entrada_ativa->quantidade_vendida = $entrada_ativa->quantidade_vendida - $this->quantidade * $this->preco->quantidade;
-            $entrada_ativa->save();
+            if (!empty($entrada_ativa)) {
+                $entrada_ativa->quantidade_vendida = $entrada_ativa->quantidade_vendida - $this->quantidade * $this->preco->quantidade;
+                $entrada_ativa->save();
+            }
         }
 
 

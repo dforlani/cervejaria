@@ -28,7 +28,7 @@ use yii\widgets\ActiveForm;
         }
     }
     /**
-     * Quando muda o produto selecionado, este atualiza o preço unitário dele e calcula sozinho o valo final
+     * Quando muda o produto selecionado, este atualiza o preço unitário dele e calcula sozinho o valor final
      * @returns {undefined}
      */
     function changeProduto() {

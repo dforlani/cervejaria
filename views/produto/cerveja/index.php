@@ -30,14 +30,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'headerRowOptions' => ['style' => 'text-align:right;font-size:12px;'],
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'rowOptions' => function ($model, $index, $widget, $grid) {
-
-            if ($model->getEstoqueTotal() - $model->estoque_vendido <= $model->estoque_minimo) {
-                return ['class' => 'danger'];
-            } else {
-                return [];
-            }
-        },
+//        'rowOptions' => function ($model, $index, $widget, $grid) {
+//            if ($model->getEstoqueDisponivel() <= $model->estoque_minimo) {
+//                return ['class' => 'danger'];
+//            } else {
+//                return [];
+//            }
+//        },
         'columns' => [
             [
                 'class' => 'kartik\grid\ExpandRowColumn',
@@ -55,45 +54,66 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'class' => 'kartik\grid\EditableColumn',
-                 'filter'=>[1=>'Sim', 0=>'Não'],
+                'filter' => [1 => 'Sim', 0 => 'Não'],
                 'attribute' => 'is_vendavel',
-                'value' => function($model){
+                'value' => function($model) {
                     return Yii::$app->formatter->asBoolean($model->is_vendavel);
                 },
                 'editableOptions' => function ($model, $key, $index) {
                     return [
-                    'header' => 'Pra Vender?',
-                    'inputType' => Editable::INPUT_SWITCH,
-                      'formOptions' => ['action' => ['altera-produto-is-vendavel', 'id' => $model->pk_produto]],
-                ];
-                            
+                        'header' => 'Pra Vender?',
+                        'inputType' => Editable::INPUT_SWITCH,
+                        'formOptions' => ['action' => ['altera-produto-is-vendavel', 'id' => $model->pk_produto]],
+                    ];
                 },
                 'hAlign' => 'right',
                 'vAlign' => 'middle',
             ],
-           
             [
                 'attribute' => 'nome',
                 'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
             ],
             [
-                'attribute' => 'estoque_inicial',
+                'attribute' => 'estoqueTotalVendido',
                 'format' => 'currency',
+                'header' => 'Total Vendido',
                 'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
             ],
             [
-                'attribute' => 'estoque_vendido',
+                'attribute' => 'estoqueVendidoLoteAtivo',
                 'format' => 'currency',
+                'header' => 'Vendido do Lote Ativo',
                 'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
             ],
             [
-                'label' => 'Estoque Atual',
+                'attribute' => 'estoqueDisponivelLoteAtivo',
                 'format' => 'currency',
-                'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
-                'value' => function($model) {
-                    return $model->getEstoqueTotal() - $model->estoque_vendido;
-                }
+                'header' => 'Dispon. Lote Ativo',
+                'contentOptions' => function ($model, $key, $index, $column) {
+                    return ['style' => 'text-align:right;font-size:12px;'
+                        . 'background-color:' . ($model->getEstoqueMinimodoLoteAtivoAtingido() ? '#ff6666' : '')
+                        . ';color:' . ($model->getEstoqueMinimodoLoteAtivoAtingido() ? 'white' : '')
+                    ];
+                },
             ],
+//            [
+//                'attribute' => 'estoque_inicial',
+//                'format' => 'currency',
+//                'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
+//            ],
+//            [
+//                'attribute' => 'estoque_vendido',
+//                'format' => 'currency',
+//                'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
+//            ],
+//            [
+//                'label' => 'Estoque Atual',
+//                'format' => 'currency',
+//                'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
+//                'value' => function($model) {
+//                    return $model->getEstoqueTotal() - $model->estoque_vendido;
+//                }
+//            ],
             [
                 'attribute' => 'estoque_minimo',
                 'format' => 'currency',
@@ -103,16 +123,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'unidadeMedida.unidade_medida',
                 'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
             ],
-            [
-                'attribute' => 'dt_fabricacao',
-                'format' => 'date',
-                'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
-            ],
-            [
-                'attribute' => 'dt_vencimento',
-                'format' => 'date',
-                'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
-            ],
+//            [
+//                'attribute' => 'dt_fabricacao',
+//                'format' => 'date',
+//                'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
+//            ],
+//            [
+//                'attribute' => 'dt_vencimento',
+//                'format' => 'date',
+//                'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
+//            ],
             [
                 'attribute' => 'auxHasPromocao',
                 'label' => 'Promoção?',

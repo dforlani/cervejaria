@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use kartik\tabs\TabsX;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Produto */
@@ -18,3 +19,12 @@ $this->params['breadcrumbs'][] = $this->title;
     ]) ?>
 
 </div>
+
+<?php 
+
+// Above
+echo TabsX::widget([
+    'items'=>$items,
+    'position'=>TabsX::POS_ABOVE,
+    'encodeLabels'=>false
+]);

@@ -22,7 +22,6 @@ class Produto extends \yii\db\ActiveRecord {
     public static $TIPO_CERVEJA = 'Cerveja';
     public $auxHasPromocao;
     public static $URL = "produto/update";
-    
     public $custo_fabricacao;
 
     /**
@@ -88,7 +87,7 @@ class Produto extends \yii\db\ActiveRecord {
             'nr_lote' => 'Número do Lote',
             'teor_alcoolico' => 'Teor Alcoólico',
             'ibu' => 'IBU',
-            'custo_fabricacao' =>"Custo Fabricação",
+            'custo_fabricacao' => "Custo Fabricação",
             'tipo_produto' => 'Tipo de Produto',
             'custo_compra_producao' => 'Preço de Custo da Unidade de Medida'
         ];
@@ -150,8 +149,8 @@ class Produto extends \yii\db\ActiveRecord {
      * @return type
      */
     public static function getProdutosVencidos($tipo_produto = 'Outro') {
-      
-        return Produto::find()->where('dt_vencimento  <= NOW() AND tipo_produto like "' . $tipo_produto. '"')->orderBy('dt_vencimento ASC')->all();
+
+        return Produto::find()->where('dt_vencimento  <= NOW() AND tipo_produto like "' . $tipo_produto . '"')->orderBy('dt_vencimento ASC')->all();
     }
 
     /**
@@ -159,25 +158,61 @@ class Produto extends \yii\db\ActiveRecord {
      * @return type
      */
     public static function getProdutosComPromocaoAtiva($tipo_produto = 'Outro') {
-        return Produto::find()->where('is_promocao_ativa IS TRUE AND tipo_produto like "' . $tipo_produto. '"')->joinWith('precos')->orderBy('nome')->all();
+        return Produto::find()->where('is_promocao_ativa IS TRUE AND tipo_produto like "' . $tipo_produto . '"')->joinWith('precos')->orderBy('nome')->all();
     }
 
-    
     /**
      * Retorna a soma de todos os estoques de entradas já adicionados
      */
-    public function getEstoqueTotal(){
+    public function getEstoqueTotal() {
         $total = 0;
         $entradas = $this->entradas;
-        if(!empty($entradas)){
-            foreach($entradas as $entrada){        
-                $total += empty($entrada->quantidade)? 0:$entrada->quantidade;
+        if (!empty($entradas)) {
+            foreach ($entradas as $entrada) {
+                $total += empty($entrada->quantidade) ? 0 : $entrada->quantidade;
             }
-        }   
+        }
         return $total;
     }
-    
-    public function getEntradaAtiva(){
-        return Entrada::find()->where(['fk_produto'=>$this->pk_produto])->one();
+
+    /**
+     * Retorna a soma de todos os estoques de entradas já adicionados
+     */
+    public function getEstoqueTotalVendido() {
+        $total = 0;
+        $entradas = $this->entradas;
+        if (!empty($entradas)) {
+            foreach ($entradas as $entrada) {
+                $total += empty($entrada->quantidade_vendida) ? 0 : $entrada->quantidade_vendida;
+            }
+        }
+        return $total;
     }
+
+    public function getEstoqueMinimodoLoteAtivoAtingido() {
+        return $this->getEstoqueDisponivelLoteAtivo() <= $this->estoque_minimo;
+    }
+
+    public function getEntradaAtiva() {
+        return Entrada::find()->where(['fk_produto' => $this->pk_produto, 'is_ativo' => true])->one();
+    }
+
+    public function getEstoqueDisponivelLoteAtivo() {
+        $entrada_ativa = $this->getEntradaAtiva();
+        if (!empty($entrada_ativa)) {
+            return $entrada_ativa->quantidade - $entrada_ativa->quantidade_vendida;
+        } else {
+            return 0;
+        }
+    }
+    
+        public function getEstoqueVendidoLoteAtivo() {
+        $entrada_ativa = $this->getEntradaAtiva();
+        if (!empty($entrada_ativa)) {
+            return $entrada_ativa->quantidade_vendida;
+        } else {
+            return 0;
+        }
+    }
+
 }

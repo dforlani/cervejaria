@@ -72,6 +72,7 @@ class Entrada extends \yii\db\ActiveRecord {
             'dt_fabricacao' => 'Data Fabricação',
             'dt_vencimento' => 'Data Vencimento',
             'nr_lote' => 'Nr Lote',
+            'is_ativo'=>'Ativo'
         ];
     }
 
@@ -90,10 +91,16 @@ class Entrada extends \yii\db\ActiveRecord {
         }
 
         ///como só pode ter um ativo por vez, busca qual é o ativo e altera os demais pra não ativos
-        if($this->is_ativo){
-            Entrada::updateAll(['is_ativo'=> false],['fk_produto'=>$this->fk_produto]);
+        if($this->is_ativo && !empty($this->pk_entrada)){
+            Entrada::updateAll(['is_ativo'=> false],'fk_produto = '.$this->fk_produto.' AND pk_entrada != '.$this->pk_entrada);
+        }else{
+            Entrada::updateAll(['is_ativo'=> false],'fk_produto = '.$this->fk_produto);
         }
         return true;
+    }
+    
+    public function getEstoqueDisponivel(){
+        return $this->quantidade - $this->quantidade_vendida;
     }
 
     /**
