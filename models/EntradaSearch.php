@@ -64,6 +64,8 @@ class EntradaSearch extends Entrada
             'quantidade' => $this->quantidade,           
             'custo_fabricacao' => $this->custo_fabricacao,
         ]);
+        
+        $query->orderBy("pk_entrada DESC");
 
         $query->andFilterWhere(['like', 'fk_usuario', $this->fk_usuario]);
 

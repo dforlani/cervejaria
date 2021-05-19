@@ -9,6 +9,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
+use kartik\tabs\TabsX;
 
 /* @var $this View */
 /* @var $model Produto */
@@ -29,14 +30,14 @@ use yii\widgets\ActiveForm;
 </script>
 
 <div class="produto-form">
-   <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(); ?>
 
     <div class="container-fluid">
         <?= $form->field($model, 'is_vendavel')->checkbox([1 => 'Sim', 0 => 'Não']) ?>
         <?= $form->field($model, 'nome')->textInput(['maxlength' => true, 'autofocus' => '']) ?>
 
         <div class="row">
-         
+
             <div class="col-sm-3" >  
                 <?=
                 $form->field($model, 'estoque_minimo')->widget(NumberControl::classname(), [
@@ -72,7 +73,7 @@ use yii\widgets\ActiveForm;
                 ])->label('Unidade de Medida');
                 ?>
             </div>
-            
+
             <div class="col-sm-3" >  
                 <?php
                 echo $form->field($model, 'custo_compra_producao')->widget(NumberControl::classname(), [
@@ -84,7 +85,7 @@ use yii\widgets\ActiveForm;
                 ]);
                 ?>
                 <span style="color:blue;font-size:12px">Insira aqui o Preço de Custo do <b><span style="color:blue;font-weight:bold" class='hlp_custo_compra_producao'> <?= (@$model->unidadeMedida->unidade_medida) ?></b>. Vai ser utilizado para calcular o preço líquido.  </span>             
-                
+
 
             </div>
             <div class="col-sm-3" >  
@@ -101,7 +102,7 @@ use yii\widgets\ActiveForm;
             </div>
         </div>
 
-           <br>
+        <br>
         <?php if ($model->isNewRecord) { ?>
             <div class="row">
                 <div class='panel panel-success' >
@@ -211,11 +212,4 @@ use yii\widgets\ActiveForm;
 
 </div>
 
-<?php 
 
-// Above
-echo TabsX::widget([
-    'items'=>$items,
-    'position'=>TabsX::POS_ABOVE,
-    'encodeLabels'=>false
-]);
