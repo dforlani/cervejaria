@@ -205,6 +205,8 @@ class Produto extends \yii\db\ActiveRecord {
             return 0;
         }
     }
+    
+  
 
     public function getEstoqueVendidoLoteAtivo() {
         $entrada_ativa = $this->getEntradaAtiva();

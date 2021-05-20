@@ -70,7 +70,7 @@ foreach ($resultado as $index => $agrupamentos) {
                 responsive: true,
                 title: {
                     display: true,
-                    text: 'Venda de Litros de Cerveja'
+                    text: 'Venda de Cerveja'
                 },
                 tooltips: {
                     position: position,

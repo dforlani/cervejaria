@@ -80,7 +80,9 @@ class ItemVendaSearch extends ItemVenda {
         return $dataProvider;
     }
 
-    public static function searchGrafico($por_dia, $por_hora, $por_dia_semana, $por_mes_agregado, $por_mes, $por_produto, $apenas_vendas_pagas, $por_cliente, $data_inicial, $data_final, $por_gasto, $por_litro) {
+    public static function searchGrafico($por_dia, $por_hora, $por_dia_semana, $por_mes_agregado,
+            $por_mes, $por_produto, $apenas_vendas_pagas, $por_cliente, $data_inicial,
+            $data_final, $por_gasto, $por_litro, $cervejas_selecionadas, $por_forma_venda) {
         $query = ItemVendaSearch::find();
         $groupBy = [];
         $order = [];
@@ -89,14 +91,14 @@ class ItemVendaSearch extends ItemVenda {
 
         if ($por_hora) {
             $select[] = 'DATE_FORMAT(dt_inclusao,"%H") as aux_temporizador';
-
-            if ($por_litro)
+            if ($por_litro) {
                 $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)), 2) as aux_quantidade';
+                $order['aux_quantidade'] = SORT_DESC;
+            }
             if ($por_gasto)
                 $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.preco_final)), 2) as aux_gasto';
             $groupBy[] = 'HOUR(dt_inclusao)';
             $order['HOUR(dt_inclusao)'] = SORT_ASC;
-            $order['aux_quantidade'] = SORT_DESC;
         } elseif ($por_dia) {
             $select[] = 'DATE_FORMAT(dt_inclusao, "%d/%m") as aux_temporizador';
 
@@ -108,7 +110,6 @@ class ItemVendaSearch extends ItemVenda {
 
             $groupBy[] = 'aux_temporizador';
             $order['aux_temporizador'] = SORT_ASC;
-            // $order['aux_quantidade'] = SORT_DESC;
         } elseif ($por_dia_semana) {
             if ($por_litro)
                 $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)), 2) as aux_quantidade';
@@ -144,14 +145,22 @@ class ItemVendaSearch extends ItemVenda {
         }
 
         if ($por_produto) {
-            $groupBy[] = 'fk_produto';
-            $select[] = 'produto.nome as aux_nome_produto';
-            // $order['produto.nome'] = SORT_ASC;
+
+            if ($por_forma_venda) {
+                $groupBy[] = 'fk_produto';
+                $groupBy[] = 'pk_preco';
+                $select[] = 'CONCAT(produto.nome," - " ,preco.denominacao) as aux_nome_produto';
+            } else {
+                $groupBy[] = 'fk_produto';
+                $select[] = 'produto.nome as aux_nome_produto';
+            }
         } elseif ($por_cliente) {
             $select[] = 'cliente.nome as aux_nome_cliente';
             $groupBy[] = 'aux_nome_cliente';
             $order['aux_nome_cliente'] = SORT_ASC;
         }
+
+
 
         $data_inicial_convertida = date("Y-m-d", strtotime(str_replace('/', '-', $data_inicial)));
         $data_final_convertida = date("Y-m-d", strtotime(str_replace('/', '-', $data_final)));
@@ -166,6 +175,11 @@ class ItemVendaSearch extends ItemVenda {
             $query->andWhere('pk_item_venda = -1');
         }
 
+        //adiciona as cervejas selecionadas, se for pra filtras
+        if (!empty($cervejas_selecionadas)) {
+            $query->andWhere(['IN', 'pk_produto', $cervejas_selecionadas]);
+        }
+
         $query->groupBy($groupBy);
         $query->orderBy($order);
         $query->joinWith(['preco' => function (ActiveQuery $query) {
@@ -177,17 +191,25 @@ class ItemVendaSearch extends ItemVenda {
 
         //monta o array de resultado por produto, por cliente ou total  
         if ($por_produto) {
-            foreach ($query->all() as $item) {
-                $resultado[$item->aux_nome_produto.' L'][$item->aux_temporizador] = $item->aux_quantidade;
-                $resultado[$item->aux_nome_produto.' R$'][$item->aux_temporizador] = $item->aux_gasto;
-                
+            $result = $query->all();
+//            print_r($result);
+            foreach ($result as $item) {
+                if ($por_litro)
+                    $resultado[$item->aux_nome_produto . ' L'][$item->aux_temporizador] = $item->aux_quantidade;
+                if ($por_gasto)
+                    $resultado[$item->aux_nome_produto . ' R$'][$item->aux_temporizador] = $item->aux_gasto;
             }
         } elseif ($por_cliente) {
-            foreach ($query->all() as $item) {
-                $resultado[!empty($item->aux_nome_cliente) ? $item->aux_nome_cliente." L" : "Sem Identificação L"][$item->aux_temporizador] = $item->aux_quantidade;
-                $resultado[!empty($item->aux_nome_cliente) ? $item->aux_nome_cliente." R$" : "Sem Identificação R$"][$item->aux_temporizador] = $item->aux_gasto;
+            $result = $query->all();
+            foreach ($result as $item) {
+                if ($por_litro)
+                    $resultado[!empty($item->aux_nome_cliente) ? $item->aux_nome_cliente . " L" : "Sem Identificação L"][$item->aux_temporizador] = $item->aux_quantidade;
+                if ($por_gasto)
+                    $resultado[!empty($item->aux_nome_cliente) ? $item->aux_nome_cliente . " R$" : "Sem Identificação R$"][$item->aux_temporizador] = $item->aux_gasto;
             }
-        } 
+        }
+
+        //ordena em ordem alfabética
         ksort($resultado);
 
 
@@ -222,11 +244,20 @@ class ItemVendaSearch extends ItemVenda {
     }
 
     public static function removeExtremidades(array &$resultado) {
+        //busca extremidades pra não remover
+        $extremidades = [];
+        foreach ($resultado as $index => $agrupamentos) {
+            foreach ($agrupamentos as $tempo => $valor) {
+                if(!empty($valor))
+                    $extremidades[$tempo] = $valor;
+            }
+        }
+
         //remove as extremidades não utilizadas
         foreach ($resultado as $index => &$agrupamentos) {
             //remove os itens vazios da esquerda, até encontrar algum item com valor
             foreach ($agrupamentos as $tempo => $valor) {
-                if (empty($valor)) {
+                if (empty($valor) && !isset($extremidades[$tempo])) {
                     unset($agrupamentos[$tempo]);
                 } else {
                     break;

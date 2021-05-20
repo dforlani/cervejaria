@@ -2,6 +2,7 @@
 
 use app\models\VendaSearch;
 use kartik\field\FieldRange;
+use kartik\widgets\Select2;
 use kartik\widgets\SwitchInput;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
@@ -11,7 +12,7 @@ use yii\web\View;
 /* @var $searchModel VendaSearch */
 /* @var $dataProvider ActiveDataProvider */
 
-$this->title = 'Gráfico de Vendas de Litros de Cerveja';
+$this->title = 'Gráfico de Vendas de Cerveja';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -119,7 +120,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
 <div class="venda-index" style="padding: 10px">
-
     <h1><?= Html::encode($this->title) ?></h1>
     <form>
         <div class="row" style="padding: 20px">
@@ -158,8 +158,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         echo SwitchInput::widget(['name' => 'por_cliente', 'id' => 'por_cliente', 'value' => $por_cliente]);
                         ?>
                     </div>
-
-
                 </div>
             </div>
         </div>
@@ -176,6 +174,28 @@ $this->params['breadcrumbs'][] = $this->title;
                     'separator' => ' ← até →',
                     'type' => FieldRange::INPUT_DATE,
                 ]);
+                ?>
+            </div>
+
+            <div class="col-md-3">
+                <label class="control-label">Filtrar Produtos</label>
+                <?php
+                echo Select2::widget([
+                    'name' => 'cervejas_selecionadas',
+                    'data' => $cervejas,
+                    'value' => $cervejas_selecionadas,
+                    'options' => [
+                        'placeholder' => 'Selecione os produtos ...',
+                        'multiple' => true
+                    ],
+                ]);
+                ?>
+            </div>
+
+            <div class="col-md-3">
+                <?php
+                echo '<label class="control-label">Por forma de Venda</label>';
+                echo SwitchInput::widget(['name' => 'por_forma_venda', 'id' => 'por_forma_venda', 'value' => $por_forma_venda]);
                 ?>
             </div>
         </div>
