@@ -103,18 +103,42 @@ $this->params['breadcrumbs'][] = $this->title;
             }
             verificaPorPeriodoSelecionado(data);
         });
-        //não vai permitir que por_cliente e por_produto estejam selecionados ao mesmo tempo
+        
+        
+       //não vai permitir que por_cliente e por_produto e forma de venda estejam selecionados ao mesmo tempo que produto
         $('#por_cliente').on('switchChange.bootstrapSwitch', function (e, data) {
             if (data) {
-                $('#por_produto').bootstrapSwitch('state', !data, true);
+                $('#por_produto').bootstrapSwitch('state', !data, false);
+                $('#por_forma_venda').bootstrapSwitch('state', !data, false);
             }
+            verificaPorTipoAMostrar(data);
         });
-        //não vai permitir que por_cliente e por_produto estejam selecionados ao mesmo tempo
+       //não vai permitir que por_cliente e por_produto e forma de venda estejam selecionados ao mesmo tempo que produto
         $('#por_produto').on('switchChange.bootstrapSwitch', function (e, data) {
             if (data) {
-                $('#por_cliente').bootstrapSwitch('state', !data, true);
+                $('#por_cliente').bootstrapSwitch('state', !data, false);
+                $('#por_forma_venda').bootstrapSwitch('state', !data, false);
             }
+            verificaPorTipoAMostrar(data);
         });
+        
+           //não vai permitir que por_cliente e por_produto e forma de venda estejam selecionados ao mesmo tempo que produto
+        $('#por_forma_venda').on('switchChange.bootstrapSwitch', function (e, data) {
+            if (data) {
+                $('#por_cliente').bootstrapSwitch('state', !data, false);
+                $('#por_produto').bootstrapSwitch('state', !data, false);
+            }
+            verificaPorTipoAMostrar(data);
+        });
+        
+          function verificaPorTipoAMostrar(data) {
+            if (($('#por_cliente').bootstrapSwitch('state') == false)
+                    && ($('#por_produto').bootstrapSwitch('state') == false)
+                    && ($('#por_forma_venda').bootstrapSwitch('state') == false)                   
+                    ) {
+                $('#por_produto').bootstrapSwitch('state', !data, true);
+            }
+        }
     });
 </script>
 
@@ -124,8 +148,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <form>
         <div class="row" style="padding: 20px">
             <div class="col-md-4">
-                <div class="row" style="margin-right: 10px;border-bottom: 5px solid red;">
+                <div class="row" style="margin-right: 10px;border-bottom: 5px solid blue;">
                     <div class="col-md-6" >
+                        <br>
                         <?php
                         echo '<label class="control-label">Por Gasto</label>';
                         echo SwitchInput::widget(['name' => 'por_gasto', 'id' => 'por_gasto', 'value' => $por_gasto]);
@@ -133,6 +158,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     </div>
 
                     <div class="col-md-6">
+                        <br>
                         <?php
                         echo '<label class="control-label">Por Litro</label>';
                         echo SwitchInput::widget(['name' => 'por_litro', 'id' => 'por_litro', 'value' => $por_litro]);
@@ -140,10 +166,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="row"  style="border-bottom: 5px solid red;">
-                    <div class="col-md-6">  
-
+                    <div class="col-md-4">  
+                        <br>
                         <?php
                         echo '<label class="control-label">Por Produto</label>';
                         echo SwitchInput::widget(['name' => 'por_produto', 'id' => 'por_produto', 'value' => $por_produto]);
@@ -151,8 +177,15 @@ $this->params['breadcrumbs'][] = $this->title;
 
                     </div>
 
-                    <div class="col-md-6">               
+                    <div class="col-md-4">
+                        <?php
+                        echo '<label class="control-label">Por Produto e Forma de Venda</label>';
+                        echo SwitchInput::widget(['name' => 'por_forma_venda', 'id' => 'por_forma_venda', 'value' => $por_forma_venda]);
+                        ?>
+                    </div>
 
+                    <div class="col-md-4">               
+<br>
                         <?php
                         echo '<label class="control-label">Por Cliente</label>';
                         echo SwitchInput::widget(['name' => 'por_cliente', 'id' => 'por_cliente', 'value' => $por_cliente]);
@@ -192,12 +225,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 ?>
             </div>
 
-            <div class="col-md-3">
-                <?php
-                echo '<label class="control-label">Por forma de Venda</label>';
-                echo SwitchInput::widget(['name' => 'por_forma_venda', 'id' => 'por_forma_venda', 'value' => $por_forma_venda]);
-                ?>
-            </div>
+
         </div>
         <div class="row" style="padding: 20px;">
             <div class='col-md-12' style="margin-right: 10px" >

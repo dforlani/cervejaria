@@ -38,6 +38,7 @@
     <a href="#" id="v140" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.4.0 (10/05/2021)</a>
     <ul id="nv138" style="display:">        
         <li><b>Produtos e Cervejas</b>Adicionado mecanismo de inclusão de lotes de entrada.</li>                                     
+        <li><b>Gráficos</b>Gráfico por gasto dos clientes e filtragem de produtos.</li>                                     
     </ul>
 </div>
 <div class="notasVersaoStyle">
