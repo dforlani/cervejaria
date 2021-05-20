@@ -19,6 +19,7 @@ class ItemVendaSearch extends ItemVenda {
     public $aux_nome_produto;
     public $aux_nome_cliente;
     public $aux_dia_semana;
+    public $aux_gasto;
 
     /**
      * {@inheritdoc}
@@ -52,10 +53,10 @@ class ItemVendaSearch extends ItemVenda {
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-             'sort'=> ['defaultOrder' => [
-                 'is_desconto_promocional'=>SORT_ASC, 
-                 'dt_inclusao'=>SORT_DESC
-                 ]]
+            'sort' => ['defaultOrder' => [
+                    'is_desconto_promocional' => SORT_ASC,
+                    'dt_inclusao' => SORT_DESC
+                ]]
         ]);
 
         $this->load($params);
@@ -79,7 +80,7 @@ class ItemVendaSearch extends ItemVenda {
         return $dataProvider;
     }
 
-    public static function searchGrafico($por_dia, $por_hora, $por_dia_semana, $por_mes_agregado, $por_mes, $por_produto, $apenas_vendas_pagas, $por_cliente, $data_inicial, $data_final) {
+    public static function searchGrafico($por_dia, $por_hora, $por_dia_semana, $por_mes_agregado, $por_mes, $por_produto, $apenas_vendas_pagas, $por_cliente, $data_inicial, $data_final, $por_gasto, $por_litro) {
         $query = ItemVendaSearch::find();
         $groupBy = [];
         $order = [];
@@ -88,35 +89,58 @@ class ItemVendaSearch extends ItemVenda {
 
         if ($por_hora) {
             $select[] = 'DATE_FORMAT(dt_inclusao,"%H") as aux_temporizador';
-            $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)), 2) as aux_quantidade';
+
+            if ($por_litro)
+                $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)), 2) as aux_quantidade';
+            if ($por_gasto)
+                $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.preco_final)), 2) as aux_gasto';
             $groupBy[] = 'HOUR(dt_inclusao)';
             $order['HOUR(dt_inclusao)'] = SORT_ASC;
             $order['aux_quantidade'] = SORT_DESC;
         } elseif ($por_dia) {
             $select[] = 'DATE_FORMAT(dt_inclusao, "%d/%m") as aux_temporizador';
-            $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)), 2) as aux_quantidade';
+
+            if ($por_litro)
+                $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)), 2) as aux_quantidade';
+            if ($por_gasto)
+                $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.preco_final)), 2) as aux_gasto';
+
+
             $groupBy[] = 'aux_temporizador';
             $order['aux_temporizador'] = SORT_ASC;
             // $order['aux_quantidade'] = SORT_DESC;
         } elseif ($por_dia_semana) {
+            if ($por_litro)
+                $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)), 2) as aux_quantidade';
+            if ($por_gasto)
+                $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.preco_final)), 2) as aux_gasto';
+
             $select[] = 'WEEKDAY(dt_inclusao) as aux_temporizador';
-            $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)), 2) as aux_quantidade';
             $groupBy[] = 'WEEKDAY(dt_inclusao)';
             $order['WEEKDAY(dt_inclusao)'] = SORT_ASC;
             // $order['aux_quantidade'] = SORT_DESC;
         } elseif ($por_mes_agregado) {
+            if ($por_litro)
+                $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)), 2) as aux_quantidade';
+            if ($por_gasto)
+                $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.preco_final)), 2) as aux_gasto';
 
-            $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)), 2) as aux_quantidade';
+
             $select[] = 'DATE_FORMAT(`dt_venda`, "%m" ) AS  aux_temporizador';
-            $order['MONTH(dt_venda)'] = SORT_ASC;  
-            $groupBy[] = 'MONTH(dt_venda)';            
+            $order['MONTH(dt_venda)'] = SORT_ASC;
+            $groupBy[] = 'MONTH(dt_venda)';
         } elseif ($por_mes) {
-            $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)), 2) as aux_quantidade';
+            if ($por_litro)
+                $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)), 2) as aux_quantidade';
+            if ($por_gasto)
+                $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.preco_final)), 2) as aux_gasto';
+
+
             $select[] = 'DATE_FORMAT(`dt_venda`, "%m/%y" ) AS  aux_temporizador';
             $order['MONTH(dt_venda)'] = SORT_ASC;
             $order['YEAR(dt_venda)'] = SORT_ASC;
             $groupBy[] = 'YEAR(dt_venda)';
-            $groupBy[] = 'MONTH(dt_venda)';            
+            $groupBy[] = 'MONTH(dt_venda)';
         }
 
         if ($por_produto) {
@@ -154,15 +178,17 @@ class ItemVendaSearch extends ItemVenda {
         //monta o array de resultado por produto, por cliente ou total  
         if ($por_produto) {
             foreach ($query->all() as $item) {
-                $resultado[$item->aux_nome_produto][$item->aux_temporizador] = $item->aux_quantidade;
+                $resultado[$item->aux_nome_produto.' L'][$item->aux_temporizador] = $item->aux_quantidade;
+                $resultado[$item->aux_nome_produto.' R$'][$item->aux_temporizador] = $item->aux_gasto;
+                
             }
         } elseif ($por_cliente) {
             foreach ($query->all() as $item) {
-                $resultado[!empty($item->aux_nome_cliente) ? $item->aux_nome_cliente:"Sem Identificação" ][$item->aux_temporizador] = $item->aux_quantidade;
+                $resultado[!empty($item->aux_nome_cliente) ? $item->aux_nome_cliente." L" : "Sem Identificação L"][$item->aux_temporizador] = $item->aux_quantidade;
+                $resultado[!empty($item->aux_nome_cliente) ? $item->aux_nome_cliente." R$" : "Sem Identificação R$"][$item->aux_temporizador] = $item->aux_gasto;
             }
-        } else {
-            $resultado['total'] = ArrayHelper::map($query->all(), 'aux_temporizador', 'aux_quantidade');
-        }
+        } 
+        ksort($resultado);
 
 
         //faz o merge do array resultado com arrays que possuem todos os dias, horas e etc, para completar lacunas de tempo
@@ -184,7 +210,7 @@ class ItemVendaSearch extends ItemVenda {
             foreach ($resultado as $index => $agrupamentos) {
                 $resultado[$index] = array_replace(TempoUtil::getMeseDoAno(), $agrupamentos);
             }
-        }elseif ($por_mes) {
+        } elseif ($por_mes) {
             foreach ($resultado as $index => $agrupamentos) {
                 $resultado[$index] = array_replace(TempoUtil::getMeseDoAnoNoPeriodo($data_inicial_convertida, $data_final_convertida), $agrupamentos);
             }

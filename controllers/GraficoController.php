@@ -12,7 +12,7 @@ use yii\web\Controller;
  */
 class GraficoController extends Controller {
 
-      public function behaviors() {
+    public function behaviors() {
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),
@@ -32,7 +32,7 @@ class GraficoController extends Controller {
 //            ],
         ];
     }
-    
+
     public function actionTeste() {
 
 
@@ -41,7 +41,10 @@ class GraficoController extends Controller {
     }
 
     public function actionVendas() {
+        
 
+        $por_gasto = isset($_GET['por_gasto']) ? $_GET['por_gasto'] : false;
+        $por_litro = isset($_GET['por_litro']) ? $_GET['por_litro'] : false;
         $por_hora = isset($_GET['por_hora']) ? $_GET['por_hora'] : false;
         $por_dia = isset($_GET['por_dia']) ? $_GET['por_dia'] : false;
         $por_dia_semana = isset($_GET['por_dia_semana']) ? $_GET['por_dia_semana'] : false;
@@ -53,17 +56,24 @@ class GraficoController extends Controller {
         $data_inicial = isset($_GET['data_inicial']) ? $_GET['data_inicial'] : '01/' . date('m/Y'); //primeiro dia do mês atual
         $data_final = isset($_GET['data_final']) ? $_GET['data_final'] : date('t/m/Y'); //último dia do mês atual
 
+        if(empty($_GET)){
+            $por_litro = true;
+            $por_produto = true;
+            $por_dia = true;
+        }
 
-        $resultado = ItemVendaSearch::searchGrafico($por_dia, $por_hora, $por_dia_semana, $por_mes_agregado, $por_mes, $por_produto, $apenas_vendas_pagas, $por_cliente, $data_inicial, $data_final);
+        $resultado = ItemVendaSearch::searchGrafico($por_dia, $por_hora, $por_dia_semana, $por_mes_agregado, $por_mes, $por_produto, $apenas_vendas_pagas, $por_cliente, $data_inicial, $data_final, $por_gasto, $por_litro);
 
 
         return $this->render('vendas', [
+                    'por_gasto' => $por_gasto,
+                    'por_litro' => $por_litro,
                     'resultado' => $resultado,
                     'por_hora' => $por_hora,
                     'por_dia_semana' => $por_dia_semana,
                     'por_dia' => $por_dia,
                     'por_mes_agregado' => $por_mes_agregado,
-            'por_mes' => $por_mes,
+                    'por_mes' => $por_mes,
                     'por_produto' => $por_produto,
                     'por_cliente' => $por_cliente,
                     'apenas_vendas_pagas' => $apenas_vendas_pagas,

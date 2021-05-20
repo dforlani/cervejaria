@@ -51,6 +51,9 @@ $this->registerJsFile(
 foreach ($resultado as $index => $agrupamentos) {
     echo "{
                         label: '$index',
+                             fill: false,
+                              
+                              " . (substr_count($index, "R$") > 0 ? "borderDash: [5, 5]," : "") . "
                         borderColor: randomColorGenerator(), 
                         backgroundColor: randomColorGenerator(), 
                         data: " . json_encode(array_values($resultado[$index])) . ",
@@ -63,7 +66,7 @@ foreach ($resultado as $index => $agrupamentos) {
             },
             options: {
                 maintainAspectRatio: false,
-                
+
                 responsive: true,
                 title: {
                     display: true,
