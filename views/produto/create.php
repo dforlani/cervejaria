@@ -21,10 +21,10 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <?php 
-
-// Above
-echo TabsX::widget([
-    'items'=>$items,
-    'position'=>TabsX::POS_ABOVE,
-    'encodeLabels'=>false
-]);
+//
+//// Above
+//echo TabsX::widget([
+//    'items'=>$items,
+//    'position'=>TabsX::POS_ABOVE,
+//    'encodeLabels'=>false
+//]);

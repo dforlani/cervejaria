@@ -45,13 +45,12 @@ class ProdutoController extends Controller {
 //            ],
         ];
     }
-    
-       
-   public function actionEditEntrada($id) {
+
+    public function actionEditEntrada($id) {
         $model = $this->findModelEntrada($id);
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-            $model->load(Yii::$app->request->post());
+        $model->load(Yii::$app->request->post());
 
 
         if ($model->save()) {
@@ -160,9 +159,9 @@ class ProdutoController extends Controller {
         $model->tipo_produto = Produto::$TIPO_OUTRO;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-              $entrada = new Entrada($model->pk_produto, $model->estoque_inicial, $model->custo_fabricacao, $model->dt_fabricacao, $model->dt_vencimento, $model->nr_lote);
+            $entrada = new Entrada($model->pk_produto, $model->estoque_inicial, $model->custo_fabricacao, $model->dt_fabricacao, $model->dt_vencimento, $model->nr_lote);
             $entrada->save();
-            
+
             Yii::$app->session->setFlash('warning', "Produto inserido, cadastre as formas de venda.");
             $this->redirect(['update', 'id' => $model->pk_produto]);
         }
