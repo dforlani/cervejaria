@@ -101,7 +101,9 @@ class VendaSearch extends Venda {
             $groupBy[] = 'MONTH(dt_pagamento)';
             $groupBy[] = 'YEAR(dt_pagamento)';
             $select[] = 'DATE_FORMAT(`dt_pagamento`, "%m/%Y" ) AS  dt_pagamento';
-            $order['dt_pagamento'] = SORT_ASC;
+            $order['YEAR(dt_pagamento)'] = SORT_ASC;
+            $order['MONTH(dt_pagamento)'] = SORT_ASC;
+            
         }
 
         if ($por_produto) {

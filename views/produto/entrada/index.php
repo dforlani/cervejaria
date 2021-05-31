@@ -20,12 +20,19 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <?= GridView::widget([
+    <?=
+    GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'rowOptions' => function ($model, $index, $widget, $grid) {
+            if ($model->is_ativo) {
+                return ['class' => 'danger'];
+            } else {
+                return [];
+            }
+        },
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
             'pk_entrada',
             'fk_usuario',
             'fk_produto',
@@ -33,10 +40,10 @@ $this->params['breadcrumbs'][] = $this->title;
             'quantidade_vendida',
             'dt_entrada',
             //'custo',
-
             ['class' => 'yii\grid\ActionColumn'],
         ],
-    ]); ?>
+    ]);
+    ?>
 
 
 </div>

@@ -143,17 +143,14 @@ class ItemVendaSearch extends ItemVenda {
             $groupBy[] = 'YEAR(dt_venda)';
             $groupBy[] = 'MONTH(dt_venda)';
         }
-
+        if ($por_forma_venda) {
+            $groupBy[] = 'fk_produto';
+            $groupBy[] = 'pk_preco';
+            $select[] = 'CONCAT(produto.nome," - " ,preco.denominacao) as aux_nome_produto';
+        } else
         if ($por_produto) {
-
-            if ($por_forma_venda) {
-                $groupBy[] = 'fk_produto';
-                $groupBy[] = 'pk_preco';
-                $select[] = 'CONCAT(produto.nome," - " ,preco.denominacao) as aux_nome_produto';
-            } else {
-                $groupBy[] = 'fk_produto';
-                $select[] = 'produto.nome as aux_nome_produto';
-            }
+            $groupBy[] = 'fk_produto';
+            $select[] = 'produto.nome as aux_nome_produto';
         } elseif ($por_cliente) {
             $select[] = 'cliente.nome as aux_nome_cliente';
             $groupBy[] = 'aux_nome_cliente';
@@ -190,9 +187,8 @@ class ItemVendaSearch extends ItemVenda {
 
 
         //monta o array de resultado por produto, por cliente ou total  
-        if ($por_produto) {
+        if ($por_produto || $por_forma_venda) {
             $result = $query->all();
-//            print_r($result);
             foreach ($result as $item) {
                 if ($por_litro)
                     $resultado[$item->aux_nome_produto . ' L'][$item->aux_temporizador] = $item->aux_quantidade;
@@ -248,7 +244,7 @@ class ItemVendaSearch extends ItemVenda {
         $extremidades = [];
         foreach ($resultado as $index => $agrupamentos) {
             foreach ($agrupamentos as $tempo => $valor) {
-                if(!empty($valor))
+                if (!empty($valor))
                     $extremidades[$tempo] = $valor;
             }
         }

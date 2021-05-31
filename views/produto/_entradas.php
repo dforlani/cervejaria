@@ -6,7 +6,6 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\JsExpression;
 use yii\widgets\Pjax;
-
 ?>
 <div class='panel panel-danger' >
     <div class="panel-heading">
@@ -87,6 +86,13 @@ use yii\widgets\Pjax;
             GridView::widget([
                 'dataProvider' => $dataProviderEntrada,
                 //'filterModel' => $searchModelEntrada,
+                'rowOptions' => function ($model, $index, $widget, $grid) {
+                    if ($model->is_ativo) {
+                        return ['style' => 'background-color:#34ebd8'];
+                    } else {
+                        return [];
+                    }
+                },
                 'columns' => [
                     [
                         'attribute' => 'is_ativo',

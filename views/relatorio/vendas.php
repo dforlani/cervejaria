@@ -173,7 +173,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
         'showFooter' => true,
         'floatHeader' => true,
-        'floatHeaderOptions' => ['scrollingTop' => '50'],
+        'floatHeaderOptions' => ['scrollingTop' => '50', 'position'=>'absolute'],
         'footerRowOptions' => ['style' => 'font-weight:bold;text-align:right;text-decoration: underline;'],
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
