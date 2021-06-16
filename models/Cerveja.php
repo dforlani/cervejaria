@@ -41,7 +41,7 @@ class Cerveja extends Produto {
         return parent::getProdutosComPromocaoAtiva(Cerveja::$TIPO);
     }
     
-    public function getArrayCervejas(){
+    public static function getArrayCervejas(){
         return \yii\helpers\ArrayHelper::map(Produto::find()->where('tipo_produto like "'.Produto::$TIPO_CERVEJA.'"')->orderBy('nome')->all(), 'pk_produto', 'nome') ;
     }
 
