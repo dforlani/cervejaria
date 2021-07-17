@@ -119,7 +119,6 @@ class ItemVendaSearch extends ItemVenda {
             $select[] = 'WEEKDAY(dt_inclusao) as aux_temporizador';
             $groupBy[] = 'WEEKDAY(dt_inclusao)';
             $order['WEEKDAY(dt_inclusao)'] = SORT_ASC;
-            
         } elseif ($por_mes_agregado) {
             if ($por_litro)
                 $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)), 2) as aux_quantidade';
@@ -127,9 +126,9 @@ class ItemVendaSearch extends ItemVenda {
                 $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.preco_final)), 2) as aux_gasto';
 
 
-            $select[] = 'DATE_FORMAT(`dt_venda`, "%m" ) AS  aux_temporizador';
-            $order['MONTH(dt_venda)'] = SORT_ASC;
-            $groupBy[] = 'MONTH(dt_venda)';
+            $select[] = 'DATE_FORMAT(`dt_inclusao`, "%m" ) AS  aux_temporizador';
+            $order['MONTH(dt_inclusao)'] = SORT_ASC;
+            $groupBy[] = 'MONTH(dt_inclusao)';
         } elseif ($por_mes) {
             if ($por_litro)
                 $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)), 2) as aux_quantidade';
@@ -137,14 +136,14 @@ class ItemVendaSearch extends ItemVenda {
                 $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.preco_final)), 2) as aux_gasto';
 
 
-            $select[] = 'DATE_FORMAT(`dt_venda`, "%m/%y" ) AS  aux_temporizador';
-            $order['dt_venda'] = SORT_ASC;
-            
+            $select[] = 'DATE_FORMAT(`dt_inclusao`, "%m/%y" ) AS  aux_temporizador';
+            $order['dt_inclusao'] = SORT_ASC;
+
 //            $order['MONTH(dt_venda)'] = SORT_ASC;
 //            
 //            $order['YEAR(dt_venda)'] = SORT_ASC;
-            $groupBy[] = 'YEAR(dt_venda)';
-            $groupBy[] = 'MONTH(dt_venda)';
+            $groupBy[] = 'YEAR(dt_inclusao)';
+            $groupBy[] = 'MONTH(dt_inclusao)';
         }
         if ($por_forma_venda) {
             $groupBy[] = 'fk_produto';
@@ -164,6 +163,7 @@ class ItemVendaSearch extends ItemVenda {
 
         $data_inicial_convertida = date("Y-m-d", strtotime(str_replace('/', '-', $data_inicial)));
         $data_final_convertida = date("Y-m-d", strtotime(str_replace('/', '-', $data_final)));
+
 
         $query->select($select);
 
@@ -211,7 +211,6 @@ class ItemVendaSearch extends ItemVenda {
         //ordena em ordem alfabética
         ksort($resultado);
 
-
         //faz o merge do array resultado com arrays que possuem todos os dias, horas e etc, para completar lacunas de tempo
         if ($por_hora) {
             foreach ($resultado as $index => $agrupamentos) {
@@ -232,9 +231,9 @@ class ItemVendaSearch extends ItemVenda {
                 $resultado[$index] = array_replace(TempoUtil::getMeseDoAno(), $agrupamentos);
             }
         } elseif ($por_mes) {
-     
+
             foreach ($resultado as $index => $agrupamento) {
-               
+
                 $resultado[$index] = array_replace(TempoUtil::getMeseDoAnoNoPeriodo($data_inicial_convertida, $data_final_convertida), $agrupamento);
             }
         }
