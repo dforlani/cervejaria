@@ -53,9 +53,14 @@ class TempoUtil {
     }
     
     public static function getMeseDoAnoNoPeriodo($inicio, $fim) {
+          
+            
         $resultado = [];
         $d_inicio = new DateTime($inicio);
+        //envia pro início do mês, pois o sistema de adicionar um mês, pula fevereiro se tiver no dia 31/0
+        $d_inicio = $d_inicio->modify('first day of this month');
         $d_fim = new DateTime($fim);
+        $d_fim = $d_fim->modify('first day of this month');
         $resultado[$d_inicio->format('m/y')] = 0;
 
         $intervalo = new DateInterval('P1M');
@@ -64,11 +69,9 @@ class TempoUtil {
             $count++;
              
             $d_inicio->add($intervalo);
+            
             $resultado[$d_inicio->format('m/y')] = 0;
         }    
-        
-
-
         return $resultado;
     }
     

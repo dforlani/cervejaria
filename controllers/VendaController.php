@@ -401,6 +401,8 @@ class VendaController extends Controller {
             $pdf = new Pdf([
                 // set to use core fonts only
                 'mode' => Pdf::MODE_CORE,
+                
+//                'tempPath'=>('../runtime/mpdf'),
                 // A4 paper format
                 'format' => Pdf::FORMAT_A4,
                 // portrait orientation
@@ -414,7 +416,7 @@ class VendaController extends Controller {
                 'cssFile' => '@vendor/kartik-v/yii2-mpdf/src/assets/kv-mpdf-bootstrap.min.css',
                 // any css to be embedded if required
                 'cssInline' => '.kv-heading-1{font-size:18px}',
-                'tempPath' => Yii::getAlias('@web/runtime/mpdf/'),
+                'tempPath' => Yii::getAlias('@app/runtime/mpdf/'),
                 'filename' => '../pdf/vendas/' . @$model->cliente->nome . '-' . @$model->comanda->numero . '-' . $model->getData_Venda_Formato_Linha() . '.pdf',
                 // set mPDF properties on the fly
                 'options' => ['title' => @$model->cliente->nome . ' - ' . $model->dt_venda,

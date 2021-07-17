@@ -119,7 +119,7 @@ class ItemVendaSearch extends ItemVenda {
             $select[] = 'WEEKDAY(dt_inclusao) as aux_temporizador';
             $groupBy[] = 'WEEKDAY(dt_inclusao)';
             $order['WEEKDAY(dt_inclusao)'] = SORT_ASC;
-            // $order['aux_quantidade'] = SORT_DESC;
+            
         } elseif ($por_mes_agregado) {
             if ($por_litro)
                 $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)), 2) as aux_quantidade';
@@ -138,8 +138,11 @@ class ItemVendaSearch extends ItemVenda {
 
 
             $select[] = 'DATE_FORMAT(`dt_venda`, "%m/%y" ) AS  aux_temporizador';
-            $order['MONTH(dt_venda)'] = SORT_ASC;
-            $order['YEAR(dt_venda)'] = SORT_ASC;
+            $order['dt_venda'] = SORT_ASC;
+            
+//            $order['MONTH(dt_venda)'] = SORT_ASC;
+//            
+//            $order['YEAR(dt_venda)'] = SORT_ASC;
             $groupBy[] = 'YEAR(dt_venda)';
             $groupBy[] = 'MONTH(dt_venda)';
         }
@@ -229,8 +232,10 @@ class ItemVendaSearch extends ItemVenda {
                 $resultado[$index] = array_replace(TempoUtil::getMeseDoAno(), $agrupamentos);
             }
         } elseif ($por_mes) {
-            foreach ($resultado as $index => $agrupamentos) {
-                $resultado[$index] = array_replace(TempoUtil::getMeseDoAnoNoPeriodo($data_inicial_convertida, $data_final_convertida), $agrupamentos);
+     
+            foreach ($resultado as $index => $agrupamento) {
+               
+                $resultado[$index] = array_replace(TempoUtil::getMeseDoAnoNoPeriodo($data_inicial_convertida, $data_final_convertida), $agrupamento);
             }
         }
 
