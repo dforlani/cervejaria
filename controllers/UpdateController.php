@@ -486,6 +486,10 @@ ALTER TABLE `caixa`
                 "insert_novas_entradas",
                 "Entradas inseridas");
         
+             //ativar e desativar formas de venda
+        $this->atualizaBanco(" ALTER TABLE `preco` ADD `ativo` BOOLEAN NOT NULL DEFAULT TRUE AFTER `tipo_cardapio`;",
+                "update_forma_venda_ativar",
+                "Ativar e Desativar formas de venda");
 
         echo '<br><br>ATUALIZAÇÃO DO BANCO ENCERRADA<br>';
     }

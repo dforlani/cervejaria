@@ -46,6 +46,24 @@ class ProdutoController extends Controller {
         ];
     }
 
+    public function actions() {
+        return ArrayHelper::merge(parent::actions(), [
+//Função pra salvar a edição em EditColumn da GRID
+                    'edit-forma-venda-ativa' => [// identifier for your editable column action
+                        'class' => EditableColumnAction::className(), // action class name
+                        'modelClass' => Preco::className(), // the model for the record being edited
+                        'outputValue' => function ($model, $attribute, $key, $index) {
+                            return $model->$attribute ? "Sim" : "Não";      // return any custom output value if desired
+                        },
+                        'outputMessage' => function($model, $attribute, $key, $index) {
+                            return '';                                  // any custom error to return after model save
+                        },
+                        'showModelErrors' => true, // show model validation errors after save
+                        'errorOptions' => ['header' => '']               // error summary HTML options
+                    ],
+        ]);
+    }
+
     public function actionEditEntrada($id) {
         $model = $this->findModelEntrada($id);
         Yii::$app->response->format = Response::FORMAT_JSON;
@@ -119,6 +137,25 @@ class ProdutoController extends Controller {
 
         if ($model->save()) {
             return ['output' => Yii::$app->formatter->asCurrency($model->preco), 'message' => ''];
+        } else {
+            return ['output' => '', 'message' => 'Zicou e não salvou'];
+        }
+    }
+
+    public function actionAlteraFormaVendaAtiva($id) {
+        $model = $this->findModelPreco($id);
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        
+        if (isset($_POST['ativo'])) {//temos duas telas que enviam de formas diferentes a requisição          
+            $preco['Preco']['ativo'] = $_POST['ativo'];
+
+            $model->load($preco);
+        } else {
+            $model->load(Yii::$app->request->post());
+        }
+
+        if ($model->save()) {
+            return ['output' => Yii::$app->formatter->asBoolean($model->ativo), 'message' => ''];
         } else {
             return ['output' => '', 'message' => 'Zicou e não salvou'];
         }

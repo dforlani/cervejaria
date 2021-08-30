@@ -87,8 +87,10 @@ use yii\web\View;
 
 
                 <?php
-                echo $form->field($model, 'quantidade')->widget(NumberControl::classname(), [
-                    'maskedInputOptions' => [
+                
+                echo  $form->field($model, 'quantidade')->widget(NumberControl::classname(), [
+                    'readonly' => !$model->isNewRecord,
+                    'maskedInputOptions' => [                        
                         'prefix' => ' ',
                         'suffix' => '  ' . (!empty($model->produto->unidadeMedida) ? $model->produto->unidadeMedida->unidade_medida : 'Sem Unidade de Medida'),
                         'allowMinus' => false,

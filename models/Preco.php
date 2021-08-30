@@ -13,6 +13,7 @@ use Yii;
  * @property int $tipo_cardapio
  * @property string $denominacao
  * @property string $preco
+ *  @property interger $ativo
  * @property double $quantidade
  * @property double $promocao_quantidade_atingir
  * @property double $promocao_desconto_aplicar
@@ -39,7 +40,7 @@ class Preco extends \yii\db\ActiveRecord {
     public function rules() {
         return [
             [['fk_produto',], 'required'],
-            [['pk_preco', 'fk_produto', 'codigo_barras'], 'integer'],
+            [['pk_preco', 'fk_produto', 'codigo_barras', 'ativo'], 'integer'],
             [['preco', 'quantidade', 'promocao_quantidade_atingir', 'promocao_desconto_aplicar'], 'number'],
             [['denominacao'], 'string', 'max' => 100],
             [['promocao_desconto_aplicar'], 'number', 'max' => 0.0000001, 'tooBig' => 'O Valor do Desconto deve ser negativo'],
@@ -86,7 +87,7 @@ class Preco extends \yii\db\ActiveRecord {
 
     public static function getArrayProdutosPrecos() {
         $lista = [];
-        $precos = Preco::find()->where('is_vendavel IS TRUE AND is_ativo = TRUE')
+        $precos = Preco::find()->where('is_vendavel IS TRUE AND is_ativo = TRUE and ativo = TRUE')
                 ->joinWith(['produto', 'produto.entradas'])
                 ->orderBy('nome, denominacao')
                 ->all();

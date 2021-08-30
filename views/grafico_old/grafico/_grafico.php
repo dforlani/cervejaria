@@ -45,10 +45,10 @@ $this->registerJsFile(
         return {
             type: 'line',
             data: {
-                labels: <?= json_encode(array_keys($graficoResultado[key($graficoResultado)])) ?>,
+                labels: <?= json_encode(array_keys($resultado[key($resultado)])) ?>,
                 datasets: [
 <?php
-foreach ($graficoResultado as $index => $agrupamentos) {
+foreach ($resultado as $index => $agrupamentos) {
     echo "{
                         label: '$index',
                              fill: false,
@@ -56,7 +56,7 @@ foreach ($graficoResultado as $index => $agrupamentos) {
                               " . (substr_count($index, "R$") > 0 ? "borderDash: [5, 5]," : "") . "
                         borderColor: randomColorGenerator(), 
                         backgroundColor: randomColorGenerator(), 
-                        data: " . json_encode(array_values($graficoResultado[$index])) . ",
+                        data: " . json_encode(array_values($resultado[$index])) . ",
                         fill: false,
                         lineTension: 0
                     },";

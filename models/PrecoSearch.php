@@ -37,7 +37,7 @@ class PrecoSearch extends Preco {
      *
      * @return ActiveDataProvider
      */
-    public function search($params, $is_sort_pos_cardapio = false, $is_vendavel = false, $has_entrada_ativa = false) {
+    public function search($params, $is_sort_pos_cardapio = false, $is_vendavel = false, $has_entrada_ativa = false, $preco_ativo = null) {
         $query = Preco::find();
 
         // add conditions that should always apply here
@@ -74,6 +74,10 @@ class PrecoSearch extends Preco {
             //precisa ter entrada ativa
             $query->joinWith('produto.entradas');
             $query->andFilterCompare('is_ativo', true); 
+        }
+        
+        if($preco_ativo){
+            $query->andWhere(['ativo'=> true]);
         }
 
         $query->andFilterWhere(['like', 'denominacao', $this->denominacao]);

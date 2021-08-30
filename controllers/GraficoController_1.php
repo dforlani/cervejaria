@@ -11,7 +11,7 @@ use yii\web\Controller;
 /**
  * VendaController implements the CRUD actions for Venda model.
  */
-class RelatorioController extends Controller {
+class GraficoController extends Controller {
 
     public function behaviors() {
         return [
@@ -21,20 +21,15 @@ class RelatorioController extends Controller {
                     'delete' => ['POST'],
                 ],
             ],
-//            'access' => [
-//                'class' => AccessControl::className(),
-//                'rules' => [
-//                    [
-//                        'allow' => true,
-//                        'roles' => ['@'],
-//                    ],
-//
-//                ],
-//            ],
+
         ];
     }
 
     public function actionVendas() {
+
+
+        $por_gasto = isset($_GET['por_gasto']) ? $_GET['por_gasto'] : false;
+        $por_litro = isset($_GET['por_litro']) ? $_GET['por_litro'] : false;
         $por_hora = isset($_GET['por_hora']) ? $_GET['por_hora'] : false;
         $por_dia = isset($_GET['por_dia']) ? $_GET['por_dia'] : false;
         $por_dia_semana = isset($_GET['por_dia_semana']) ? $_GET['por_dia_semana'] : false;
@@ -49,24 +44,32 @@ class RelatorioController extends Controller {
         $cervejas_selecionadas = isset($_GET['cervejas_selecionadas']) ? $_GET['cervejas_selecionadas'] : []; //último dia do mês atual
 
         if (empty($_GET)) {
-
+            $por_litro = true;
             $por_produto = true;
             $por_dia = true;
         }
 
         $cervejas = Cerveja::getArrayCervejas();
+        
+        $resultado = ItemVendaSearch::searchGrafico($por_dia, $por_hora, $por_dia_semana, 
+                $por_mes_agregado, $por_mes, $por_produto, $apenas_vendas_pagas, 
+                $por_cliente, $data_inicial, $data_final, $por_gasto, $por_litro,
+                $cervejas_selecionadas, $por_forma_venda);
 
-        $dataProvider = ItemVendaSearch::searchRelatorio($por_dia, $por_hora, $por_dia_semana,
-                        $por_mes_agregado, $por_mes, $por_produto, $apenas_vendas_pagas,
-                        $por_cliente, $data_inicial, $data_final,
-                        $cervejas_selecionadas, $por_forma_venda);
+        
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $resultado,
+        ]);
 
 
         return $this->render('vendas', [
-                    'dataProvider' => $dataProvider,
-                    'por_forma_venda' => $por_forma_venda,
+            'dataProvider' => $dataProvider,
+            'por_forma_venda' => $por_forma_venda,
                     'cervejas' => $cervejas,
                     'cervejas_selecionadas' => $cervejas_selecionadas,
+                    'por_gasto' => $por_gasto,
+                    'por_litro' => $por_litro,
+                    'resultado' => $resultado,
                     'por_hora' => $por_hora,
                     'por_dia_semana' => $por_dia_semana,
                     'por_dia' => $por_dia,
@@ -76,8 +79,7 @@ class RelatorioController extends Controller {
                     'por_cliente' => $por_cliente,
                     'apenas_vendas_pagas' => $apenas_vendas_pagas,
                     'data_inicial' => $data_inicial,
-                    'data_final' => $data_final,
-                    'por_forma_venda' => $por_forma_venda
+                    'data_final' => $data_final
         ]);
     }
 

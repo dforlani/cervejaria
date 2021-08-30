@@ -2,8 +2,10 @@
 
 namespace app\controllers;
 
+use app\models\Cerveja;
 use app\models\ItemVendaSearch;
-use yii\filters\AccessControl;
+use app\models\VendaSearch;
+use Yii;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 
@@ -20,24 +22,7 @@ class GraficoController extends Controller {
                     'delete' => ['POST'],
                 ],
             ],
-//            'access' => [
-//                'class' => AccessControl::className(),
-//                'rules' => [
-//                    [
-//                        'allow' => true,
-//                        'roles' => ['@'],
-//                    ],
-//
-//                ],
-//            ],
         ];
-    }
-
-    public function actionTeste() {
-
-
-
-        return $this->render('teste');
     }
 
     public function actionVendas() {
@@ -64,23 +49,23 @@ class GraficoController extends Controller {
             $por_dia = true;
         }
 
-        $cervejas = \app\models\Cerveja::getArrayCervejas();
-        
-        $resultado = ItemVendaSearch::searchGrafico($por_dia, $por_hora, $por_dia_semana, 
-                $por_mes_agregado, $por_mes, $por_produto, $apenas_vendas_pagas, 
-                $por_cliente, $data_inicial, $data_final, $por_gasto, $por_litro,
-                $cervejas_selecionadas, $por_forma_venda);
+        $cervejas = Cerveja::getArrayCervejas();
 
-        
+        $graficoResultado = ItemVendaSearch::searchGrafico($por_dia, $por_hora, $por_dia_semana,
+                        $por_mes_agregado, $por_mes, $por_produto, $apenas_vendas_pagas,
+                        $por_cliente, $data_inicial, $data_final, $por_gasto, $por_litro,
+                        $cervejas_selecionadas, $por_forma_venda);
+
 
 
         return $this->render('vendas', [
-            'por_forma_venda' => $por_forma_venda,
+                    
+                    'por_forma_venda' => $por_forma_venda,
                     'cervejas' => $cervejas,
                     'cervejas_selecionadas' => $cervejas_selecionadas,
                     'por_gasto' => $por_gasto,
                     'por_litro' => $por_litro,
-                    'resultado' => $resultado,
+                    'graficoResultado' => $graficoResultado,
                     'por_hora' => $por_hora,
                     'por_dia_semana' => $por_dia_semana,
                     'por_dia' => $por_dia,

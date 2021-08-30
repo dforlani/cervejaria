@@ -91,6 +91,25 @@ use yii\widgets\Pjax;
                 'dataProvider' => $dataProviderPreco,
                 //'filterModel' => $searchModelPreco,
                 'columns' => [
+                    [
+                        'contentOptions' => ['style' => 'text-align:right;'],
+                        'attribute' => 'ativo',
+                        'value' => function($model) {
+                            return Editable::widget([
+                                        // 'inputType' => Editable::INPUT_HIDDEN,
+                                        'model' => $model,
+                                        'value' => Yii::$app->formatter->asBoolean($model->ativo),
+                                        'asPopover' => false,
+                                        'size' => 'md',
+                                        'name' => 'ativo',
+                                        'inputType' => Editable::INPUT_SWITCH,
+                                        'formOptions' => ['action' => ['altera-forma-venda-ativa', 'id' => $model->pk_preco]],
+                                    
+                                            ]
+                            );
+                        },
+                        'format' => 'raw'
+                    ],
                     'denominacao',
                     [
                         'contentOptions' => ['style' => 'text-align:right;'],

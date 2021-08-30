@@ -6,8 +6,8 @@ use app\components\TempoUtil;
 use app\models\ItemVenda;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
 use yii\db\ActiveQuery;
-use yii\helpers\ArrayHelper;
 
 /**
  * ItemVendaSearch represents the model behind the search form of `app\models\ItemVenda`.
@@ -20,6 +20,15 @@ class ItemVendaSearch extends ItemVenda {
     public $aux_nome_cliente;
     public $aux_dia_semana;
     public $aux_gasto;
+    public $pagamentos;
+    public $pagamentos_liquido;
+    public $quantidade;
+    public $unidade_medida;
+    public $nome_cliente;
+    public $produto;
+    public $itens_sem_preco_custo;
+    public $pagamentos_bruto;
+    public $dt_pagamento;
 
     /**
      * {@inheritdoc}
@@ -62,13 +71,6 @@ class ItemVendaSearch extends ItemVenda {
         $this->load($params);
 
 
-        //RETIRADO PQ DÁ CONFLITO COM O BEFOREVALIDATE, JÁ QUE O BEFORE ADICIONA UM VALOR E ISSO INFLUI NO FILTRO
-        //if (!$this->validate()) {
-        // uncomment the following line if you do not want to return any records when validation fails
-        // $query->where('0=1');
-        //  return $dataProvider;
-        // }
-        // grid filtering conditions
         $query->andFilterWhere([
             'fk_venda' => $this->fk_venda,
             'fk_preco' => $this->fk_preco,
@@ -79,6 +81,250 @@ class ItemVendaSearch extends ItemVenda {
 
         return $dataProvider;
     }
+
+    public static function searchRelatorio($por_dia, $por_hora, $por_dia_semana, $por_mes_agregado,
+            $por_mes, $por_produto, $apenas_vendas_pagas, $por_cliente, $data_inicial,
+            $data_final, $cervejas_selecionadas, $por_forma_venda) {
+        $query = ItemVendaSearch::find();
+        $groupBy = [];
+        $order = [];
+        $select = [];
+        $resultado = [];
+
+        $select[] = 'unidade_medida';
+
+        if ($por_hora) {
+            $select[] = 'DATE_FORMAT(dt_inclusao,"%H") as aux_temporizador';
+
+            $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)), 2) as aux_quantidade';
+
+            $order['aux_quantidade'] = SORT_DESC;
+
+            $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.preco_final)), 2) as pagamentos_bruto';
+            $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.preco_final - preco_custo_item )), 2) as pagamentos_liquido';
+            $groupBy[] = 'HOUR(dt_inclusao)';
+            $order['HOUR(dt_inclusao)'] = SORT_ASC;
+        } elseif ($por_dia) {
+            $select[] = 'DATE_FORMAT(dt_inclusao, "%d/%m/%Y") as aux_temporizador';
+
+            $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)), 2) as aux_quantidade';
+
+            $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.preco_final)), 2) as pagamentos_bruto';
+            $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.preco_final - preco_custo_item )), 2) as pagamentos_liquido';
+
+
+            $groupBy[] = 'aux_temporizador';
+            $order['aux_temporizador'] = SORT_ASC;
+        } elseif ($por_dia_semana) {
+
+            $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)), 2) as aux_quantidade';
+
+            $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.preco_final)), 2) as pagamentos_bruto';
+            $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.preco_final - preco_custo_item )), 2) as pagamentos_liquido';
+
+            $select[] = 'WEEKDAY(dt_inclusao) as aux_temporizador';
+            $groupBy[] = 'WEEKDAY(dt_inclusao)';
+            $order['WEEKDAY(dt_inclusao)'] = SORT_ASC;
+        } elseif ($por_mes_agregado) {
+
+            $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)), 2) as aux_quantidade';
+
+            $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.preco_final)), 2) as pagamentos_bruto';
+            $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.preco_final - preco_custo_item )), 2) as pagamentos_liquido';
+
+
+            $select[] = 'DATE_FORMAT(`dt_inclusao`, "%m" ) AS  aux_temporizador';
+            $order['MONTH(dt_inclusao)'] = SORT_ASC;
+            $groupBy[] = 'MONTH(dt_inclusao)';
+        } elseif ($por_mes) {
+
+            $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)), 2) as aux_quantidade';
+
+            $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.preco_final)), 2) as pagamentos_bruto';
+            $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.preco_final - preco_custo_item )), 2) as pagamentos_liquido';
+
+
+            $select[] = 'DATE_FORMAT(`dt_inclusao`, "%m/%y" ) AS  aux_temporizador';
+            $order['dt_inclusao'] = SORT_ASC;
+            $groupBy[] = 'YEAR(dt_inclusao)';
+            $groupBy[] = 'MONTH(dt_inclusao)';
+        }
+        if ($por_forma_venda) {
+            $groupBy[] = 'fk_produto';
+            $groupBy[] = 'pk_preco';
+            $select[] = 'CONCAT(produto.nome," - " ,preco.denominacao) as aux_nome_produto';
+        } else
+        if ($por_produto) {
+            $groupBy[] = 'fk_produto';
+            $select[] = 'produto.nome as aux_nome_produto';
+        } elseif ($por_cliente) {
+            $select[] = 'cliente.nome as aux_nome_cliente';
+            $groupBy[] = 'aux_nome_cliente';
+            $order['aux_nome_cliente'] = SORT_ASC;
+        }
+
+
+
+        $data_inicial_convertida = date("Y-m-d", strtotime(str_replace('/', '-', $data_inicial)));
+        $data_final_convertida = date("Y-m-d", strtotime(str_replace('/', '-', $data_final)));
+
+
+        $query->select($select);
+
+        $query->andWhere("dt_inclusao BETWEEN  '$data_inicial_convertida' AND '$data_final_convertida 23:59:59.999'");
+        //$query->andWhere(['like', 'tipo_produto', Produto::$TIPO_CERVEJA]);
+
+        //precisa ter ao menos algo selecionado para que a consulta seja feita
+        if (!($por_hora || $por_dia_semana || $por_dia || $por_mes_agregado || $por_mes || $por_produto || $apenas_vendas_pagas || $por_cliente)) {
+            $query->andWhere('pk_item_venda = -1');
+        }
+
+        //adiciona as cervejas selecionadas, se for pra filtras
+        if (!empty($cervejas_selecionadas)) {
+            $query->andWhere(['IN', 'fk_produto', $cervejas_selecionadas]);
+        }
+
+        $query->groupBy($groupBy);
+        $query->orderBy($order);
+        $query->joinWith(['preco' => function (ActiveQuery $query) {
+                $query->joinWith(['produto' => function (ActiveQuery $query) {
+                        $query->joinWith('unidadeMedida');
+                    }]);
+            }, 'venda', 'venda.cliente']);
+
+
+//        echo $query->createCommand()->rawSql;
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $query->all(),
+        ]);
+
+
+        return $dataProvider;
+    }
+
+//    public static function searchRelatorio($por_dia, $por_hora, $por_dia_semana, $por_mes_agregado,
+//            $por_mes, $por_produto, $apenas_vendas_pagas, $por_cliente, $data_inicial,
+//            $data_final, $por_gasto, $por_litro, $cervejas_selecionadas, $por_forma_venda) {
+//        $query = ItemVendaSearch::find();
+//        $groupBy = [];
+//        $order = [];
+//        $select = [];
+//        $resultado = [];
+//
+//
+//        $select[] = 'SUM(item_venda.preco_final) as pagamentos';
+//        $select[] = 'SUM(item_venda.preco_final - item_venda.preco_custo_item) as pagamentos_liquido';
+//        $select[] = 'SUM(if(is_desconto_promocional = FALSE AND item_venda.preco_custo_item = 0,1,0)) as itens_sem_preco_custo';
+//
+//        if ($por_hora) {
+//            $select[] = 'DATE_FORMAT(dt_inclusao,"%H") as aux_temporizador';
+//            if ($por_litro) {
+//                $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)), 2) as aux_quantidade';
+//                $order['aux_quantidade'] = SORT_DESC;
+//            }
+//            if ($por_gasto)
+//                $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.preco_final)), 2) as aux_gasto';
+//            $groupBy[] = 'HOUR(dt_inclusao)';
+//            $order['HOUR(dt_inclusao)'] = SORT_ASC;
+//        } elseif ($por_dia) {
+//            $select[] = 'DATE_FORMAT(dt_inclusao, "%d/%m") as aux_temporizador';
+//            $select[] = 'dt_pagamento';
+//
+//            if ($por_litro)
+//                $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)), 2) as aux_quantidade';
+//            if ($por_gasto)
+//                $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.preco_final)), 2) as aux_gasto';
+//
+//
+//            $groupBy[] = 'dt_pagamento';
+//            $order['dt_pagamento'] = SORT_ASC;
+//        } elseif ($por_dia_semana) {
+//            if ($por_litro)
+//                $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)), 2) as aux_quantidade';
+//            if ($por_gasto)
+//                $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.preco_final)), 2) as aux_gasto';
+//
+//            $select[] = 'WEEKDAY(dt_inclusao) as aux_temporizador';
+//            $groupBy[] = 'WEEKDAY(dt_inclusao)';
+//            $order['WEEKDAY(dt_inclusao)'] = SORT_ASC;
+//        } elseif ($por_mes_agregado) {
+//            if ($por_litro)
+//                $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)), 2) as aux_quantidade';
+//            if ($por_gasto)
+//                $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.preco_final)), 2) as aux_gasto';
+//
+//
+//            $select[] = 'DATE_FORMAT(`dt_inclusao`, "%m" ) AS  aux_temporizador';
+//            $order['MONTH(dt_inclusao)'] = SORT_ASC;
+//            $groupBy[] = 'MONTH(dt_inclusao)';
+//        } elseif ($por_mes) {
+//            if ($por_litro)
+//                $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)), 2) as aux_quantidade';
+//            if ($por_gasto)
+//                $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.preco_final)), 2) as aux_gasto';
+//
+//            $select[] = 'DATE_FORMAT(`dt_pagamento`, "%m/%Y" ) AS  dt_pagamento';
+//            $select[] = 'DATE_FORMAT(`dt_inclusao`, "%m/%y" ) AS  aux_temporizador';
+//            $order['dt_inclusao'] = SORT_ASC;
+//            $groupBy[] = 'YEAR(dt_inclusao)';
+//            $groupBy[] = 'MONTH(dt_inclusao)';
+//        }
+//        if ($por_forma_venda) {
+//            $groupBy[] = 'fk_produto';
+//            $groupBy[] = 'pk_preco';
+//            $select[] = 'CONCAT(produto.nome," - " ,preco.denominacao) as aux_nome_produto';
+//        } else
+//        if ($por_produto) {
+//            $groupBy[] = 'fk_produto';
+//            $select[] = 'produto.nome as aux_nome_produto';
+//            $select[] = 'SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)) as aux_quantidade';
+//            $select[] = 'unidade_medida';
+//            $order['aux_nome_produto'] = SORT_ASC;
+//        } elseif ($por_cliente) {
+//            $select[] = 'cliente.nome as aux_nome_cliente';
+//            $groupBy[] = 'aux_nome_cliente';
+//            $order['aux_nome_cliente'] = SORT_ASC;
+//        }
+//
+//
+//
+//        $data_inicial_convertida = date("Y-m-d", strtotime(str_replace('/', '-', $data_inicial)));
+//        $data_final_convertida = date("Y-m-d", strtotime(str_replace('/', '-', $data_final)));
+//
+//
+//        $query->select($select);
+//
+//        $query->andWhere("dt_inclusao BETWEEN  '$data_inicial_convertida' AND '$data_final_convertida 23:59:59.999'");
+//        $query->andWhere(['like', 'tipo_produto', Produto::$TIPO_CERVEJA]);
+//
+//        //precisa ter ao menos algo selecionado para que a consulta seja feita
+//        if (!($por_hora || $por_dia_semana || $por_dia || $por_mes_agregado || $por_mes || $por_produto || $apenas_vendas_pagas || $por_cliente)) {
+//            $query->andWhere('pk_item_venda = -1');
+//        }
+//
+//        //adiciona as cervejas selecionadas, se for pra filtras
+//        if (!empty($cervejas_selecionadas)) {
+//            $query->andWhere(['IN', 'pk_produto', $cervejas_selecionadas]);
+//        }
+//
+//        $query->groupBy($groupBy);
+//        $query->orderBy($order);
+//        $query->joinWith(['preco' => function (ActiveQuery $query) {
+//                $query->joinWith(['produto' => function (ActiveQuery $query) {
+//                        $query->joinWith('unidadeMedida');
+//                    }]);
+//            }, 'venda', 'venda.cliente']);
+//            
+////            echo $query->createCommand()->rawSql;
+//
+//
+//        $dataProvider = new ArrayDataProvider([
+//            'allModels' => $query->all(),
+//        ]);
+//
+//
+//        return $dataProvider;
+//    }
 
     public static function searchGrafico($por_dia, $por_hora, $por_dia_semana, $por_mes_agregado,
             $por_mes, $por_produto, $apenas_vendas_pagas, $por_cliente, $data_inicial,
@@ -138,10 +384,6 @@ class ItemVendaSearch extends ItemVenda {
 
             $select[] = 'DATE_FORMAT(`dt_inclusao`, "%m/%y" ) AS  aux_temporizador';
             $order['dt_inclusao'] = SORT_ASC;
-
-//            $order['MONTH(dt_venda)'] = SORT_ASC;
-//            
-//            $order['YEAR(dt_venda)'] = SORT_ASC;
             $groupBy[] = 'YEAR(dt_inclusao)';
             $groupBy[] = 'MONTH(dt_inclusao)';
         }
@@ -149,6 +391,7 @@ class ItemVendaSearch extends ItemVenda {
             $groupBy[] = 'fk_produto';
             $groupBy[] = 'pk_preco';
             $select[] = 'CONCAT(produto.nome," - " ,preco.denominacao) as aux_nome_produto';
+            $order['aux_nome_produto'] = SORT_ASC;
         } else
         if ($por_produto) {
             $groupBy[] = 'fk_produto';
@@ -168,7 +411,7 @@ class ItemVendaSearch extends ItemVenda {
         $query->select($select);
 
         $query->andWhere("dt_inclusao BETWEEN  '$data_inicial_convertida' AND '$data_final_convertida 23:59:59.999'");
-        $query->andWhere(['like', 'tipo_produto', Produto::$TIPO_CERVEJA]);
+        //$query->andWhere(['like', 'tipo_produto', Produto::$TIPO_CERVEJA]);
 
         //precisa ter ao menos algo selecionado para que a consulta seja feita
         if (!($por_hora || $por_dia_semana || $por_dia || $por_mes_agregado || $por_mes || $por_produto || $apenas_vendas_pagas || $por_cliente)) {

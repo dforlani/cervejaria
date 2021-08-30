@@ -2,6 +2,7 @@
 
 use app\models\VendaSearch;
 use kartik\field\FieldRange;
+use kartik\tabs\TabsX;
 use kartik\widgets\Select2;
 use kartik\widgets\SwitchInput;
 use yii\data\ActiveDataProvider;
@@ -103,9 +104,9 @@ $this->params['breadcrumbs'][] = $this->title;
             }
             verificaPorPeriodoSelecionado(data);
         });
-        
-        
-       //não vai permitir que por_cliente e por_produto e forma de venda estejam selecionados ao mesmo tempo que produto
+
+
+        //não vai permitir que por_cliente e por_produto e forma de venda estejam selecionados ao mesmo tempo que produto
         $('#por_cliente').on('switchChange.bootstrapSwitch', function (e, data) {
             if (data) {
                 $('#por_produto').bootstrapSwitch('state', !data, false);
@@ -113,7 +114,7 @@ $this->params['breadcrumbs'][] = $this->title;
             }
             verificaPorTipoAMostrar(data);
         });
-       //não vai permitir que por_cliente e por_produto e forma de venda estejam selecionados ao mesmo tempo que produto
+        //não vai permitir que por_cliente e por_produto e forma de venda estejam selecionados ao mesmo tempo que produto
         $('#por_produto').on('switchChange.bootstrapSwitch', function (e, data) {
             if (data) {
                 $('#por_cliente').bootstrapSwitch('state', !data, false);
@@ -121,8 +122,8 @@ $this->params['breadcrumbs'][] = $this->title;
             }
             verificaPorTipoAMostrar(data);
         });
-        
-           //não vai permitir que por_cliente e por_produto e forma de venda estejam selecionados ao mesmo tempo que produto
+
+        //não vai permitir que por_cliente e por_produto e forma de venda estejam selecionados ao mesmo tempo que produto
         $('#por_forma_venda').on('switchChange.bootstrapSwitch', function (e, data) {
             if (data) {
                 $('#por_cliente').bootstrapSwitch('state', !data, false);
@@ -130,11 +131,11 @@ $this->params['breadcrumbs'][] = $this->title;
             }
             verificaPorTipoAMostrar(data);
         });
-        
-          function verificaPorTipoAMostrar(data) {
+
+        function verificaPorTipoAMostrar(data) {
             if (($('#por_cliente').bootstrapSwitch('state') == false)
                     && ($('#por_produto').bootstrapSwitch('state') == false)
-                    && ($('#por_forma_venda').bootstrapSwitch('state') == false)                   
+                    && ($('#por_forma_venda').bootstrapSwitch('state') == false)
                     ) {
                 $('#por_produto').bootstrapSwitch('state', !data, true);
             }
@@ -185,7 +186,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     </div>
 
                     <div class="col-md-4">               
-<br>
+                        <br>
                         <?php
                         echo '<label class="control-label">Por Cliente</label>';
                         echo SwitchInput::widget(['name' => 'por_cliente', 'id' => 'por_cliente', 'value' => $por_cliente]);
@@ -286,12 +287,14 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <div>
-
-
     <?php
-    if (!empty($resultado)) {
-        echo $this->render('_grafico', ['resultado' => $resultado]);
+    $grafico = "";
+    if (!empty($graficoResultado)) {
+        echo $this->render('_grafico', ['graficoResultado' => $graficoResultado]);
+      
     }
+
+ 
     ?>
 
 </div>

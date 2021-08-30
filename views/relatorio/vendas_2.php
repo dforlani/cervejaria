@@ -13,7 +13,7 @@ use yii\web\View;
 /* @var $searchModel VendaSearch */
 /* @var $dataProvider ActiveDataProvider */
 
-$this->title = 'Relatório de Vendas';
+$this->title = 'Gráfico de Vendas de Cerveja';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -148,7 +148,25 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
     <form>
         <div class="row" style="padding: 20px">
+            <div class="col-md-4">
+                <div class="row" style="margin-right: 10px;border-bottom: 5px solid blue;">
+                    <div class="col-md-6" >
+                        <br>
+                        <?php
+                        echo '<label class="control-label">Por Gasto</label>';
+                        echo SwitchInput::widget(['name' => 'por_gasto', 'id' => 'por_gasto', 'value' => $por_gasto]);
+                        ?>
+                    </div>
 
+                    <div class="col-md-6">
+                        <br>
+                        <?php
+                        echo '<label class="control-label">Por Litro</label>';
+                        echo SwitchInput::widget(['name' => 'por_litro', 'id' => 'por_litro', 'value' => $por_litro]);
+                        ?>
+                    </div>
+                </div>
+            </div>
             <div class="col-md-6">
                 <div class="row"  style="border-bottom: 5px solid red;">
                     <div class="col-md-4">  
@@ -231,7 +249,29 @@ $this->params['breadcrumbs'][] = $this->title;
                         ?>
                     </div>
 
-           
+                    <div class="col-md-2" >
+                        <?php
+                        echo '<label class="control-label">Consolidado hora</label>';
+                        echo SwitchInput::widget(['name' => 'por_hora', 'id' => 'por_hora', 'value' => $por_hora]);
+                        ?>
+                    </div>
+
+
+                    <div class="col-md-3">
+                        <br>
+                        <?php
+                        echo '<label class="control-label">Consolidado dia da semana</label>';
+                        echo SwitchInput::widget(['name' => 'por_dia_semana', 'id' => 'por_dia_semana', 'value' => $por_dia_semana]);
+                        ?>
+                    </div>
+
+                    <div class="col-md-3">
+                        <br>
+                        <?php
+                        echo '<label class="control-label">Consolidado Mês</label>';
+                        echo SwitchInput::widget(['name' => 'por_mes_agregado', 'id' => 'por_mes_agregado', 'value' => $por_mes_agregado]);
+                        ?>
+                    </div>
                 </div>
             </div>
         </div>
@@ -248,21 +288,40 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div>
     <?php
+    $grafico = "";
     $relatorio = "";
-    if (!empty($dataProvider)) {
-        
-        echo $this->render('_relatorio', [
-            'jaca'=>'lmlkmklmklmkl',
-            'dataProvider' => $dataProvider,
+    if (!empty($graficoResultado)) {
+        $grafico = $this->render('_grafico', ['graficoResultado' => $graficoResultado]);
+        $relatorio = $this->render('_relatorio', ['dataProvider' => $dataProvider, 
             'por_dia' => $por_dia,
-            'por_mes' => $por_mes,
-            'por_produto' => $por_produto,
-            'por_cliente' => $por_cliente,
-            'apenas_vendas_pagas' => $apenas_vendas_pagas,
-            'data_inicial' => $data_inicial,
-            'por_forma_venda' => $por_forma_venda,
-            'data_final' => $data_final]);
+                    'por_mes' => $por_mes,
+                    'por_produto' => $por_produto,
+                    'por_cliente' => $por_cliente,
+                    'apenas_vendas_pagas' => $apenas_vendas_pagas,
+                    'data_inicial' => $data_inicial,
+                    'data_final' => $data_final]);
     }
+
+    $items = [
+        [
+            'label' => 'Gráfico ',
+            'content' => $grafico,
+            'active' => true,
+        ],
+        [
+            'label' => ' Relatório ',
+            'content' => $relatorio,
+            'active' => false,
+        ],
+    ];
+
+    echo TabsX::widget([
+        'bordered' => true,
+        'items' => $items,
+        'position' => TabsX::POS_ABOVE,
+        'encodeLabels' => false,
+        'id' => "tabsTermo"
+    ]);
     ?>
 
 </div>
