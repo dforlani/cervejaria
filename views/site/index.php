@@ -35,8 +35,17 @@
 
 <h2>Notas de versão</h2>
 <div class="notasVersaoStyle">
+    <a href="#" id="v150" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.5.0 (11/09/2021)</a>
+    <ul id="nv150" style="display:">        
+        <li><b>Relatório</b>Adicionadas novas formas de relatório.</li>                                     
+        <li><b>Formas de Venda</b>Adicionado mecanismo para impedir a venda de forma de venda inativados.</li> 
+        <li><b>Formas de Venda</b>Bloqueada edição de quantidade nas formas de venda.</li> 
+        <li><b>Comprovante</b>Ajustado relógio do comprovante.</li>                
+    </ul>
+</div>
+<div class="notasVersaoStyle">
     <a href="#" id="v140" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.4.0 (10/05/2021)</a>
-    <ul id="nv138" style="display:">        
+    <ul id="nv140" style="display:">        
         <li><b>Produtos e Cervejas</b>Adicionado mecanismo de inclusão de lotes de entrada.</li>                                     
         <li><b>Gráficos</b>Gráfico por gasto dos clientes e filtragem de produtos.</li>                                     
     </ul>
