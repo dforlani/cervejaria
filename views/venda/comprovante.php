@@ -14,7 +14,10 @@ use yii\widgets\ActiveForm;
 </script>
 
 <div style='width: 150px; margin-left: 20px; font-size:10px'>
-    <?= Yii::$app->formatter->asDatetime(date('Y-m-d H:i:s')); ?><br>
+    <?php
+    $d = new DateTime('now', new DateTimeZone('America/Bahia'));    
+    ?>
+    <?= Yii::$app->formatter->asDatetime($d); ?><br>
     <div style='text-align:center; font-size:14px'> Cervejaria Paraíso</div>
 
     Cliente: <?= (!empty($model->cliente) ? \yii\helpers\Html::encode($model->cliente->nome) : '') ?><br>
@@ -46,18 +49,18 @@ use yii\widgets\ActiveForm;
             if (!empty($itens)) {
                 //gera os totais
                 $totais = [];
-                
+
                 foreach ($itens as $item) {
-                    if(!$item->is_desconto_promocional) {//pra separar descontos de itens comprados
+                    if (!$item->is_desconto_promocional) {//pra separar descontos de itens comprados
                         $totais[$item->fk_preco]['nome'] = $item->preco->getNomeProdutoPlusDenominacaoSemBarras();
                         $totais[$item->fk_preco]['quantidade'] = (isset($totais[$item->fk_preco]['quantidade']) ? $totais[$item->fk_preco]['quantidade'] + $item->quantidade : $item->quantidade);
                         $totais[$item->fk_preco]['preco_unitario'] = $item->preco_unitario;
                         $totais[$item->fk_preco]['preco_final'] = (isset($totais[$item->fk_preco]['preco_final']) ? $totais[$item->fk_preco]['preco_final'] + $item->preco_final : $item->preco_final);
                     } else {
-                        $totais[$item->fk_preco.'promocao']['nome'] = 'Desconto - '.$item->preco->getNomeProdutoPlusDenominacaoSemBarras();
-                        $totais[$item->fk_preco.'promocao']['quantidade'] = (isset($totais[$item->fk_preco.'promocao']['quantidade']) ? $totais[$item->fk_preco.'promocao']['quantidade'] + $item->quantidade : $item->quantidade);
-                        $totais[$item->fk_preco.'promocao']['preco_unitario'] = $item->preco_unitario;
-                        $totais[$item->fk_preco.'promocao']['preco_final'] = (isset($totais[$item->fk_preco.'promocao']['preco_final']) ? $totais[$item->fk_preco.'promocao']['preco_final'] + $item->preco_final : $item->preco_final);                                                
+                        $totais[$item->fk_preco . 'promocao']['nome'] = 'Desconto - ' . $item->preco->getNomeProdutoPlusDenominacaoSemBarras();
+                        $totais[$item->fk_preco . 'promocao']['quantidade'] = (isset($totais[$item->fk_preco . 'promocao']['quantidade']) ? $totais[$item->fk_preco . 'promocao']['quantidade'] + $item->quantidade : $item->quantidade);
+                        $totais[$item->fk_preco . 'promocao']['preco_unitario'] = $item->preco_unitario;
+                        $totais[$item->fk_preco . 'promocao']['preco_final'] = (isset($totais[$item->fk_preco . 'promocao']['preco_final']) ? $totais[$item->fk_preco . 'promocao']['preco_final'] + $item->preco_final : $item->preco_final);
                     }
                 }
 
@@ -88,7 +91,7 @@ use yii\widgets\ActiveForm;
     <br>
     <hr>
     <div style="text-align: left">
-          
+
         Valor Total: <?= Yii::$app->formatter->asCurrency($model->valor_total) ?> <br>
         Desconto: <?= Yii::$app->formatter->asCurrency($model->desconto) ?> <br>
         Pago:<?php echo $model->getValorTotalPago() ?><br>
@@ -100,7 +103,7 @@ use yii\widgets\ActiveForm;
         else
             echo $model->getSaldoFormatedBR();
         ?><br>
-         
+
         <b>Valor Final</b>: <?= Yii::$app->formatter->asCurrency($model->valor_final) ?> <br>    
     </div>
 </div>
