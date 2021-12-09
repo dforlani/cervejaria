@@ -20,6 +20,9 @@ class Produto extends \yii\db\ActiveRecord {
 
     public static $TIPO_OUTRO = 'Outro';
     public static $TIPO_CERVEJA = 'Cerveja';
+    public static $TIPO_APERITIVO = 'Aperitivo';
+    public static $TIPO_BEBIDA = 'Bebida';
+    public static $TIPO_DRINK = 'Drink';
     public $auxHasPromocao;
     public static $URL = "produto/update";
     public $custo_fabricacao;
@@ -127,7 +130,18 @@ class Produto extends \yii\db\ActiveRecord {
     }
 
     public static function getTiposProdutos() {
-        return ['Cerveja' => 'Cerveja', 'Outro' => 'Outro'];
+        return ['Cerveja' => 'Cerveja', 'Bebida' => 'Bebida', 'Drink' => 'Drink', 'Aperitivo' => 'Aperitivo', 'Outro' => 'Outro',];
+    }
+
+    public static function getTiposProdutosNaoCerveja() {
+        //remove o tipo cerveja
+        $array = Produto::getTiposProdutos();
+        $index = array_search(Produto::$TIPO_CERVEJA, $array );
+        if ($index !== FALSE) {
+            unset($array[$index]);
+        }
+
+        return $array;
     }
 
     public function isCerveja() {
@@ -205,8 +219,6 @@ class Produto extends \yii\db\ActiveRecord {
             return 0;
         }
     }
-    
-  
 
     public function getEstoqueVendidoLoteAtivo() {
         $entrada_ativa = $this->getEntradaAtiva();

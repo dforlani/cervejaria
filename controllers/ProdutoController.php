@@ -2,12 +2,14 @@
 
 namespace app\controllers;
 
+use app\models\Configuracao;
 use app\models\Entrada;
 use app\models\EntradaSearch;
 use app\models\Preco;
 use app\models\PrecoSearch;
 use app\models\Produto;
 use app\models\ProdutoSearch;
+use DateTime;
 use kartik\grid\EditableColumnAction;
 use kartik\mpdf\Pdf;
 use Yii;
@@ -84,8 +86,9 @@ class ProdutoController extends Controller {
      */
     public function actionIndex() {
         $searchModel = new ProdutoSearch();
-        $_GET['ProdutoSearch']['tipo_produto'] = 'Outro';
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+//        $_GET['ProdutoSearch']['tipo_produto'] = ;
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, Produto::getTiposProdutosNaoCerveja());
+
 
         return $this->render('index', [
                     'searchModel' => $searchModel,
@@ -99,8 +102,8 @@ class ProdutoController extends Controller {
      */
     public function actionCerveja() {
         $searchModel = new ProdutoSearch();
-        $_GET['ProdutoSearch']['tipo_produto'] = 'Cerveja';
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+//        $_GET['ProdutoSearch']['tipo_produto'] = ;
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, [Produto::$TIPO_CERVEJA]);
 
         return $this->render('cerveja/index', [
                     'searchModel' => $searchModel,
@@ -145,7 +148,7 @@ class ProdutoController extends Controller {
     public function actionAlteraFormaVendaAtiva($id) {
         $model = $this->findModelPreco($id);
         Yii::$app->response->format = Response::FORMAT_JSON;
-        
+
         if (isset($_POST['ativo'])) {//temos duas telas que enviam de formas diferentes a requisição          
             $preco['Preco']['ativo'] = $_POST['ativo'];
 
@@ -308,6 +311,19 @@ class ProdutoController extends Controller {
 
         if ($model->save()) {
             return ['output' => Yii::$app->formatter->asBoolean($model->is_vendavel), 'message' => ''];
+        } else {
+            return ['output' => '', 'message' => 'Não salvou: ' . implode(',', $model->getErrorSummary(true))];
+        }
+    }
+
+    public function actionAlteraProdutoTipo($id) {
+        $model = $this->findModel($id);
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $index = array_shift($_POST['Produto']);
+        $model->tipo_produto = $index['tipo_produto'];
+
+        if ($model->save()) {
+            return ['output' => $model->tipo_produto, 'message' => ''];
         } else {
             return ['output' => '', 'message' => 'Não salvou: ' . implode(',', $model->getErrorSummary(true))];
         }
@@ -683,6 +699,46 @@ class ProdutoController extends Controller {
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionCardapioAutomatico() {
+        $conf_aux = Configuracao::getConfiguracaoByTipo("tempo_em_minutos_para_cardapio_automatico");
+        if ($conf_aux->valor != 0) {//se o valor é igual a zero, não gera o backup
+            $minutos_minimo_pro_cardapio = $conf_aux->valor;
+            $conf_aux = Configuracao::getConfiguracaoByTipo("dia_e_hora_desde_ultimo_cardapio_automatico");
+            $ultimo_cardapio = new DateTime($conf_aux->valor);
+            $agora = new DateTime("now");
+
+            $interval = $agora->diff($ultimo_cardapio);
+            $minutos_passado = $interval->format('%i');
+
+
+            if (true || $minutos_passado >= $minutos_minimo_pro_cardapio) {
+
+                $drinks = Produto::find()->where(['is_vendavel' => true, 'tipo_produto' => Produto::$TIPO_DRINK])->orderBy('nome')->all();
+                $bebidas = Produto::find()->where(['is_vendavel' => true, 'tipo_produto' => Produto::$TIPO_BEBIDA])->orderBy('nome')->all();
+                $cervejas = Produto::find()->where(['is_vendavel' => true, 'tipo_produto' => Produto::$TIPO_CERVEJA])->orderBy('nome')->all();
+                $aperitivos = Produto::find()->where(['is_vendavel' => true, 'tipo_produto' => Produto::$TIPO_APERITIVO])->orderBy('nome')->all();
+
+                $content = $this->renderPartial('gera_cardapio', [
+                    'drinks' => $drinks,
+                    'bebidas' => $bebidas,
+                    'cervejas' => $cervejas,
+                    'aperitivos' => $aperitivos
+                ]);
+                $text = new \Mpdf\Mpdf();
+                ob_end_clean();
+
+                $mpdf = new \Mpdf\Mpdf();
+                //$mpdf->showImageErrors = true;
+//                $mpdf->debug = true;
+                $mpdf->WriteHTML($content);
+                $mpdf->Output('../pdf/cardapio/cardapio.pdf', 'F');
+                exit;
+                
+            }
+            echo $minutos_passado;
+        }
     }
 
 }

@@ -475,21 +475,40 @@ ALTER TABLE `caixa`
 
         $this->atualizaBanco("ALTER TABLE `entrada` CHANGE `custo` `custo_fabricacao` DECIMAL(10,2) NULL DEFAULT NULL; ALTER TABLE `entrada` ADD `nr_lote` VARCHAR(20) NULL AFTER `custo`;ALTER TABLE `entrada` ADD `dt_vencimento` DATE NULL AFTER `custo`;ALTER TABLE `entrada` ADD `dt_fabricacao` DATE NULL AFTER `custo`;INSERT INTO `entrada`(fk_usuario, `fk_produto`, `quantidade`, `dt_fabricacao`, `dt_vencimento`, `nr_lote`) (select 'dforlani', pk_produto, estoque_inicial, dt_fabricacao, dt_vencimento, nr_lote from produto )", "add_colunas_tabela_entrada", 'Adicionada colunas na tabela de entrada');
 
-        $this->atualizaBanco("ALTER TABLE `entrada` ADD `nr_lote` VARCHAR(50) NULL AFTER `custo_fabricacao`;ALTER TABLE `entrada` ADD `dt_vencimento` DATE NULL AFTER `custo_fabricacao`; ALTER TABLE `entrada` ADD `dt_fabricacao` DATE NULL AFTER `custo_fabricacao`;","add_colunas_dt_fabricacao_nr_lote_tabela_entrada", 'Adicionada nova colunas na tabela de entrada');
-        
+        $this->atualizaBanco("ALTER TABLE `entrada` ADD `nr_lote` VARCHAR(50) NULL AFTER `custo_fabricacao`;ALTER TABLE `entrada` ADD `dt_vencimento` DATE NULL AFTER `custo_fabricacao`; ALTER TABLE `entrada` ADD `dt_fabricacao` DATE NULL AFTER `custo_fabricacao`;", "add_colunas_dt_fabricacao_nr_lote_tabela_entrada", 'Adicionada nova colunas na tabela de entrada');
+
         $this->atualizaBanco("ALTER TABLE `entrada` ADD `is_ativo` BOOLEAN NOT NULL DEFAULT FALSE AFTER `nr_lote`;",
-                "add_coluna_IS_ATIVO", 
+                "add_coluna_IS_ATIVO",
                 'Adicionada nova colunas is_ativo pra entrada');
-        
+
         //insere entradas baseadas nos produtos
         $this->atualizaBanco("INSERT INTO `entrada`(`fk_produto`, fk_usuario, `quantidade`, `quantidade_vendida`, `dt_fabricacao`, `dt_vencimento`, `nr_lote`, `is_ativo`) SELECT pk_produto, 'dforlani', estoque_inicial, estoque_vendido, dt_fabricacao, dt_vencimento, nr_lote, 1 from produto",
                 "insert_novas_entradas",
                 "Entradas inseridas");
-        
-             //ativar e desativar formas de venda
+
+        //ativar e desativar formas de venda
         $this->atualizaBanco(" ALTER TABLE `preco` ADD `ativo` BOOLEAN NOT NULL DEFAULT TRUE AFTER `tipo_cardapio`;",
                 "update_forma_venda_ativar",
                 "Ativar e Desativar formas de venda");
+
+        //adicionar novas formas de cardapio
+        $this->atualizaBanco("ALTER TABLE `produto` CHANGE `tipo_produto` `tipo_produto` ENUM('Cerveja','Outro','Aperitivo','Bebida','Drink') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'Outro';",
+                "update_tipos_de_cardapio",
+                "Novas Formas de Cardápio");
+
+
+        //30-10-2019 Inclusão de configuração para indicar de quantos em quantos minutos deve ser feito o backup automático          
+        $this->atualizaBanco("INSERT INTO CONFIGURACAO (tipo, valor) "
+                . "VALUES ('tempo_em_minutos_para_cardapio_automatico', '10');", 
+                "log_tempo_em_minutos_para_cardapio_automatico", 
+                'Inicialização do tempo configurado para fazer o backup automático em 10 minutos');
+
+        //30-10-2019 Inclusão de configuração para indicar a quantos minutos se passaram desde o último backup     
+        $this->atualizaBanco("INSERT INTO CONFIGURACAO (tipo, valor) VALUES "
+                . "('dia_e_hora_desde_ultimo_cardapio_automatico', "
+                . "'2019-10-30 13:27:18');",
+                "log_dia_e_hora_desde_ultimo_cardapio_automatico", 
+                'Inicialização da configuração que indica que dia e hora foi realizado o último backup');
 
         echo '<br><br>ATUALIZAÇÃO DO BANCO ENCERRADA<br>';
     }

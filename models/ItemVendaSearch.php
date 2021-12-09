@@ -84,7 +84,7 @@ class ItemVendaSearch extends ItemVenda {
 
     public static function searchRelatorio($por_dia, $por_hora, $por_dia_semana, $por_mes_agregado,
             $por_mes, $por_produto, $apenas_vendas_pagas, $por_cliente, $data_inicial,
-            $data_final, $cervejas_selecionadas, $por_forma_venda) {
+            $data_final, $cervejas_selecionadas, $por_forma_venda, $apenas_cervejas) {
         $query = ItemVendaSearch::find();
         $groupBy = [];
         $order = [];
@@ -114,7 +114,7 @@ class ItemVendaSearch extends ItemVenda {
 
 
             $groupBy[] = 'aux_temporizador';
-            $order['aux_temporizador'] = SORT_ASC;
+            $order['dt_inclusao'] = SORT_ASC;
         } elseif ($por_dia_semana) {
 
             $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.quantidade * preco.quantidade)), 2) as aux_quantidade';
@@ -148,7 +148,10 @@ class ItemVendaSearch extends ItemVenda {
             $order['dt_inclusao'] = SORT_ASC;
             $groupBy[] = 'YEAR(dt_inclusao)';
             $groupBy[] = 'MONTH(dt_inclusao)';
+        }else{
+              $order['dt_inclusao'] = SORT_ASC;
         }
+        
         if ($por_forma_venda) {
             $groupBy[] = 'fk_produto';
             $groupBy[] = 'pk_preco';
@@ -173,7 +176,6 @@ class ItemVendaSearch extends ItemVenda {
 
         $query->andWhere("dt_inclusao BETWEEN  '$data_inicial_convertida' AND '$data_final_convertida 23:59:59.999'");
         //$query->andWhere(['like', 'tipo_produto', Produto::$TIPO_CERVEJA]);
-
         //precisa ter ao menos algo selecionado para que a consulta seja feita
         if (!($por_hora || $por_dia_semana || $por_dia || $por_mes_agregado || $por_mes || $por_produto || $apenas_vendas_pagas || $por_cliente)) {
             $query->andWhere('pk_item_venda = -1');
@@ -192,8 +194,10 @@ class ItemVendaSearch extends ItemVenda {
                     }]);
             }, 'venda', 'venda.cliente']);
 
+        if ($apenas_cervejas) {
+            $query->andWhere(['like', 'tipo_produto', Produto::$TIPO_CERVEJA]);
+        }
 
-//        echo $query->createCommand()->rawSql;
         $dataProvider = new ArrayDataProvider([
             'allModels' => $query->all(),
         ]);
@@ -412,7 +416,6 @@ class ItemVendaSearch extends ItemVenda {
 
         $query->andWhere("dt_inclusao BETWEEN  '$data_inicial_convertida' AND '$data_final_convertida 23:59:59.999'");
         //$query->andWhere(['like', 'tipo_produto', Produto::$TIPO_CERVEJA]);
-
         //precisa ter ao menos algo selecionado para que a consulta seja feita
         if (!($por_hora || $por_dia_semana || $por_dia || $por_mes_agregado || $por_mes || $por_produto || $apenas_vendas_pagas || $por_cliente)) {
             $query->andWhere('pk_item_venda = -1');
@@ -422,9 +425,9 @@ class ItemVendaSearch extends ItemVenda {
         if (!empty($cervejas_selecionadas)) {
             $query->andWhere(['IN', 'pk_produto', $cervejas_selecionadas]);
         }
-        
-        if($apenas_cervejas_ativas){
-            $query->andWhere(['like','tipo_produto', Produto::$TIPO_CERVEJA]);
+
+        if ($apenas_cervejas_ativas) {
+            $query->andWhere(['like', 'tipo_produto', Produto::$TIPO_CERVEJA]);
         }
 
         $query->groupBy($groupBy);

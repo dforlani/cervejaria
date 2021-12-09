@@ -38,7 +38,7 @@ class ProdutoSearch extends Produto {
      *
      * @return ActiveDataProvider
      */
-    public function search($params) {
+    public function search($params, $tipos) {
         $query = Produto::find();
 
         // add conditions that should always apply here
@@ -70,6 +70,7 @@ class ProdutoSearch extends Produto {
 
         $query->andFilterWhere(['like', 'nome', $this->nome]);
         $query->andFilterWhere(['like', 'tipo_produto', $this->tipo_produto]);
+        $query->andFilterWhere(['in', 'tipo_produto', $tipos]);
 
         return $dataProvider;
     }

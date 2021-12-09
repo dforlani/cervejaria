@@ -52,11 +52,30 @@ AppAsset::register($this);
             }, 1000 * 60);//1 minuto
         }
 
+        //efetua uma chamada na tela de backup para avisá-la de que passou 1 minuto
+        function cardapioAutomatico() {
+            console.log('cardapio');
+            var timer = setTimeout(function () {
+                console.log('cardapio-1');
+                var url = "<?= Url::toRoute(['produto/cardapio-automatico']); ?>";
+                data = null;
+                $.getJSON(url, data,
+                        function (dataResposta, textStatus, jqXHR) {
+
+                        }
+                );
+                //efetua esses aviso por 5 vezes, espara-se que a cada troca de tela isso seja repetido
+                if (counter < 3) {
+                    backupAutomatico();
+                }
+            }, 1000 * 60);//1 minuto
+        }
+
 
 
 
         backupAutomatico();
-
+        cardapioAutomatico();
 
 
         $(document).ready(function () {

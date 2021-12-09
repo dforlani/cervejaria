@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Produto;
 use app\models\ProdutoSearch;
 use kartik\editable\Editable;
 use kartik\grid\GridView;
@@ -152,6 +153,24 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->hasPromocaoAtiva();
                 },
                 'filter' => [1 => 'Sim', 0 => 'Não']
+            ],
+            [
+                'class' => 'kartik\grid\EditableColumn',
+                'attribute' => 'tipo_produto',
+                'filter' => Produto::getTiposProdutos(),
+//                'value' => function($model) {
+//                    return Yii::$app->formatter->asBoolean($model->is_vendavel);
+//                },
+                'editableOptions' => function ($model, $key, $index) {
+                    return [
+                        'header' => 'Tipo',
+                        'inputType' => Editable::INPUT_DROPDOWN_LIST,
+                        'data'=>Produto::getTiposProdutos(),
+                        'formOptions' => ['action' => ['altera-produto-tipo', 'id' => $model->pk_produto]],
+                    ];
+                },
+                'hAlign' => 'right',
+                'vAlign' => 'middle',
             ],
             [
                 'class' => 'yii\grid\ActionColumn',

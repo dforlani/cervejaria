@@ -35,6 +35,9 @@ class RelatorioController extends Controller {
     }
 
     public function actionVendas() {
+        $apenas_cervejas = isset($_GET['apenas_cervejas']) ? $_GET['apenas_cervejas'] : false;
+
+
         $por_hora = isset($_GET['por_hora']) ? $_GET['por_hora'] : false;
         $por_dia = isset($_GET['por_dia']) ? $_GET['por_dia'] : false;
         $por_dia_semana = isset($_GET['por_dia_semana']) ? $_GET['por_dia_semana'] : false;
@@ -59,10 +62,11 @@ class RelatorioController extends Controller {
         $dataProvider = ItemVendaSearch::searchRelatorio($por_dia, $por_hora, $por_dia_semana,
                         $por_mes_agregado, $por_mes, $por_produto, $apenas_vendas_pagas,
                         $por_cliente, $data_inicial, $data_final,
-                        $cervejas_selecionadas, $por_forma_venda);
+                        $cervejas_selecionadas, $por_forma_venda, $apenas_cervejas);
 
 
         return $this->render('vendas', [
+                    'apenas_cervejas' => $apenas_cervejas,
                     'dataProvider' => $dataProvider,
                     'por_forma_venda' => $por_forma_venda,
                     'cervejas' => $cervejas,

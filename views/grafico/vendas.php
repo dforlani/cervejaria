@@ -151,7 +151,7 @@ $this->params['breadcrumbs'][] = $this->title;
             <div class="col-md-2">
 
                 <?php
-                echo '<label class="control-label">Apenas Cervejas Ativas</label>';
+                echo '<label class="control-label">Apenas Cervejas</label>';
                 echo SwitchInput::widget(['name' => 'apenas_cervejas_ativas', 'id' => 'apenas_cervejas_ativas', 'value' => $apenas_cervejas_ativas]);
                 ?>
             </div>

@@ -28,9 +28,11 @@ $colunas[] = [
 
 
 if ($por_produto) {
-    $colunas[] = 'aux_nome_produto';
+    $colunas[] = ['attribute' => 'aux_nome_produto',
+        'header' => 'Produto'];
     $colunas[] = [
         'attribute' => 'aux_quantidade',
+        'header' => 'Quantidade',
         'format' => 'currency',
         'contentOptions' => ['style' => 'text-align:right'],
         'footer' => Yii::$app->formatter->asCurrency(Somatorio::getTotal($dataProvider->models, 'aux_quantidade')),
@@ -43,9 +45,11 @@ if ($por_produto) {
 }
 
 if ($por_forma_venda) {
-    $colunas[] = 'aux_nome_produto';
+    $colunas[] = ['attribute' => 'aux_nome_produto',
+        'header' => 'Produto'];
     $colunas[] = [
         'attribute' => 'aux_quantidade',
+        'header' => 'Quantidade',
         'format' => 'currency',
         'contentOptions' => ['style' => 'text-align:right'],
         'footer' => Yii::$app->formatter->asCurrency(Somatorio::getTotal($dataProvider->models, 'aux_quantidade')),
@@ -57,9 +61,28 @@ if ($por_forma_venda) {
     ];
 }
 
+
+
+
+
+if ($apenas_cervejas && !$por_forma_venda && !$por_produto) {
+    $colunas[] = [
+        'attribute' => 'aux_quantidade',
+        'header' => 'Quantidade',
+        'format' => 'currency',
+        'contentOptions' => ['style' => 'text-align:right'],
+        'footer' => Yii::$app->formatter->asCurrency(Somatorio::getTotal($dataProvider->models, 'aux_quantidade')),
+    ];
+    $colunas[] = [
+        'attribute' => 'unidade_medida',
+        'footer' => ''
+    ];
+}
+
 if ($por_cliente) {
     $colunas[] = [
         'attribute' => 'aux_nome_cliente',
+        'header' => 'Cliente',
         'contentOptions' => ['style' => 'text-align:right'],
     ];
 }
