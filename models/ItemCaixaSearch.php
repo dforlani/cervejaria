@@ -9,13 +9,12 @@ use app\models\ItemCaixa;
 /**
  * CaixaSearch represents the model behind the search form of `app\models\Caixa`.
  */
-class ItemCaixaSearch extends ItemCaixa
-{
+class ItemCaixaSearch extends ItemCaixa {
+
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['fk_caixa', 'pk_item_caixa', 'fk_venda'], 'integer'],
             [['valor_dinheiro', 'valor_debito', 'valor_credito'], 'number'],
@@ -26,8 +25,7 @@ class ItemCaixaSearch extends ItemCaixa
     /**
      * {@inheritdoc}
      */
-    public function scenarios()
-    {
+    public function scenarios() {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
@@ -39,21 +37,21 @@ class ItemCaixaSearch extends ItemCaixa
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
-    {
+    public function search($params) {
         $query = ItemCaixa::find();
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
+            'pagination' => false,
             'query' => $query,
-             'sort'=> ['defaultOrder' => ['dt_movimento'=>SORT_ASC]],
-             'pagination' => [ 'pageSize' => false ],
+            'sort' => ['defaultOrder' => ['dt_movimento' => SORT_ASC]],
+            'pagination' => ['pageSize' => false],
         ]);
 
         $this->load($params);
 
-        if (!$this->validate()) {            
+        if (!$this->validate()) {
             return $dataProvider;
         }
 
@@ -64,12 +62,13 @@ class ItemCaixaSearch extends ItemCaixa
             'fk_venda' => $this->fk_venda,
             'valor_debito' => $this->valor_debito,
             'valor_credito' => $this->valor_credito,
-            'valor_dinheiro' => $this->valor_dinheiro,            
+            'valor_dinheiro' => $this->valor_dinheiro,
         ]);
-        
+
 
         $query->andFilterWhere(['like', 'tipo', $this->tipo]);
 
         return $dataProvider;
     }
+
 }

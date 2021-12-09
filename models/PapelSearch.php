@@ -9,13 +9,12 @@ use app\models\Papel;
 /**
  * PapelSearch represents the model behind the search form of `app\models\Papel`.
  */
-class PapelSearch extends Papel
-{
+class PapelSearch extends Papel {
+
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['name', 'description', 'rule_name', 'data'], 'safe'],
             [['type', 'created_at', 'updated_at'], 'integer'],
@@ -25,8 +24,7 @@ class PapelSearch extends Papel
     /**
      * {@inheritdoc}
      */
-    public function scenarios()
-    {
+    public function scenarios() {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
@@ -38,13 +36,13 @@ class PapelSearch extends Papel
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
-    {
+    public function search($params) {
         $query = Papel::find();
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
+            'pagination' => false,
             'query' => $query,
         ]);
 
@@ -64,10 +62,11 @@ class PapelSearch extends Papel
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'description', $this->description])
-            ->andFilterWhere(['like', 'rule_name', $this->rule_name])
-            ->andFilterWhere(['like', 'data', $this->data]);
+                ->andFilterWhere(['like', 'description', $this->description])
+                ->andFilterWhere(['like', 'rule_name', $this->rule_name])
+                ->andFilterWhere(['like', 'data', $this->data]);
 
         return $dataProvider;
     }
+
 }

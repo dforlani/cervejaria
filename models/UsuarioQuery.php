@@ -9,13 +9,12 @@ use app\models\Usuario;
 /**
  * UsuarioQuery represents the model behind the search form of `app\models\Usuario`.
  */
-class UsuarioQuery extends Usuario
-{
+class UsuarioQuery extends Usuario {
+
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['login', 'nome', 'sobrenome', 'senha'], 'safe'],
         ];
@@ -24,8 +23,7 @@ class UsuarioQuery extends Usuario
     /**
      * {@inheritdoc}
      */
-    public function scenarios()
-    {
+    public function scenarios() {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
@@ -37,13 +35,13 @@ class UsuarioQuery extends Usuario
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
-    {
+    public function search($params) {
         $query = Usuario::find();
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
+            'pagination' => false,
             'query' => $query,
         ]);
 
@@ -57,10 +55,11 @@ class UsuarioQuery extends Usuario
 
         // grid filtering conditions
         $query->andFilterWhere(['like', 'login', $this->login])
-            ->andFilterWhere(['like', 'nome', $this->nome])
-            ->andFilterWhere(['like', 'sobrenome', $this->sobrenome])
-            ->andFilterWhere(['like', 'senha', $this->senha]);
+                ->andFilterWhere(['like', 'nome', $this->nome])
+                ->andFilterWhere(['like', 'sobrenome', $this->sobrenome])
+                ->andFilterWhere(['like', 'senha', $this->senha]);
 
         return $dataProvider;
     }
+
 }

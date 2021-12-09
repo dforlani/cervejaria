@@ -9,13 +9,12 @@ use app\models\Caixa;
 /**
  * CaixaSearch represents the model behind the search form of `app\models\Caixa`.
  */
-class CaixaSearch extends Caixa
-{
+class CaixaSearch extends Caixa {
+
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['pk_caixa'], 'integer'],
             [['dt_abertura', 'dt_fechamento', 'estado'], 'safe'],
@@ -25,8 +24,7 @@ class CaixaSearch extends Caixa
     /**
      * {@inheritdoc}
      */
-    public function scenarios()
-    {
+    public function scenarios() {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
@@ -38,14 +36,14 @@ class CaixaSearch extends Caixa
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
-    {
+    public function search($params) {
         $query = Caixa::find();
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => false,
         ]);
 
         $this->load($params);
@@ -68,4 +66,5 @@ class CaixaSearch extends Caixa
 
         return $dataProvider;
     }
+
 }

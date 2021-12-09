@@ -9,23 +9,21 @@ use app\models\PedidoApp;
 /**
  * EntradaSearch represents the model behind the search form of `app\models\Entrada`.
  */
-class PedidoAppSearch extends PedidoApp
-{
+class PedidoAppSearch extends PedidoApp {
+
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-           [['status'], 'safe'],
+            [['status'], 'safe'],
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function scenarios()
-    {
+    public function scenarios() {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
@@ -37,13 +35,13 @@ class PedidoAppSearch extends PedidoApp
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
-    {
+    public function search($params) {
         $query = PedidoApp::find();
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
+            'pagination' => false,
             'query' => $query,
         ]);
 
@@ -57,11 +55,12 @@ class PedidoAppSearch extends PedidoApp
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'status' => $this->status,           
+            'status' => $this->status,
         ]);
 
         //$query->andFilterWhere(['like', 'fk_usuario', $this->fk_usuario]);
 
         return $dataProvider;
     }
+
 }

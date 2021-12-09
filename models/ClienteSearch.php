@@ -9,13 +9,12 @@ use app\models\Cliente;
 /**
  * ClienteSearch represents the model behind the search form of `app\models\Cliente`.
  */
-class ClienteSearch extends Cliente
-{
+class ClienteSearch extends Cliente {
+
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['pk_cliente'], 'integer'],
             [['nome', 'telefone', 'cpf', 'dt_nascimento'], 'safe'],
@@ -25,8 +24,7 @@ class ClienteSearch extends Cliente
     /**
      * {@inheritdoc}
      */
-    public function scenarios()
-    {
+    public function scenarios() {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
@@ -38,15 +36,15 @@ class ClienteSearch extends Cliente
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
-    {
+    public function search($params) {
         $query = Cliente::find();
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-             'sort'=> ['defaultOrder' => ['nome'=>SORT_ASC]]
+            'sort' => ['defaultOrder' => ['nome' => SORT_ASC]],
+            'pagination' => false,
         ]);
 
         $this->load($params);
@@ -64,9 +62,10 @@ class ClienteSearch extends Cliente
         ]);
 
         $query->andFilterWhere(['like', 'nome', $this->nome])
-            ->andFilterWhere(['like', 'telefone', $this->telefone])
-            ->andFilterWhere(['like', 'cpf', $this->cpf]);
+                ->andFilterWhere(['like', 'telefone', $this->telefone])
+                ->andFilterWhere(['like', 'cpf', $this->cpf]);
 
         return $dataProvider;
     }
+
 }

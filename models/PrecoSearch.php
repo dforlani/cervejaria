@@ -43,6 +43,7 @@ class PrecoSearch extends Preco {
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
+            'pagination' => false,
             'query' => $query,
         ]);
 
@@ -62,33 +63,31 @@ class PrecoSearch extends Preco {
             'quantidade' => $this->quantidade,
             'codigo_barras' => $this->codigo_barras,
             'tipo_cardapio' => $this->tipo_cardapio
-        ]);   
-        
-        if($is_vendavel){
+        ]);
+
+        if ($is_vendavel) {
             //precisa ser vendavel
             $query->joinWith('produto');
-            $query->andFilterCompare('is_vendavel', true);            
+            $query->andFilterCompare('is_vendavel', true);
         }
-        
-        if($has_entrada_ativa){
+
+        if ($has_entrada_ativa) {
             //precisa ter entrada ativa
             $query->joinWith('produto.entradas');
-            $query->andFilterCompare('is_ativo', true); 
+            $query->andFilterCompare('is_ativo', true);
         }
-        
-        if($preco_ativo){
-            $query->andWhere(['ativo'=> true]);
+
+        if ($preco_ativo) {
+            $query->andWhere(['ativo' => true]);
         }
 
         $query->andFilterWhere(['like', 'denominacao', $this->denominacao]);
-        
-        if($is_sort_pos_cardapio){
+
+        if ($is_sort_pos_cardapio) {
             $query->orderBy('pos_cardapio');
         }
 
         return $dataProvider;
     }
-    
-      
 
 }

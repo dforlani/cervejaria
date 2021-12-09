@@ -9,13 +9,12 @@ use app\models\Comanda;
 /**
  * ComandaSearch represents the model behind the search form of `app\models\Comanda`.
  */
-class ComandaSearch extends Comanda
-{
+class ComandaSearch extends Comanda {
+
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['pk_comanda', 'numero'], 'integer'],
         ];
@@ -24,8 +23,7 @@ class ComandaSearch extends Comanda
     /**
      * {@inheritdoc}
      */
-    public function scenarios()
-    {
+    public function scenarios() {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
@@ -37,14 +35,14 @@ class ComandaSearch extends Comanda
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
-    {
+    public function search($params) {
         $query = Comanda::find();
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => false,
         ]);
 
         $this->load($params);
@@ -63,4 +61,5 @@ class ComandaSearch extends Comanda
 
         return $dataProvider;
     }
+
 }

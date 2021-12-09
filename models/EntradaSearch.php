@@ -9,13 +9,12 @@ use app\models\Entrada;
 /**
  * EntradaSearch represents the model behind the search form of `app\models\Entrada`.
  */
-class EntradaSearch extends Entrada
-{
+class EntradaSearch extends Entrada {
+
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['pk_entrada', 'fk_produto'], 'integer'],
             [['fk_usuario', 'quantidade_vendida', 'quantidade'], 'safe'],
@@ -26,8 +25,7 @@ class EntradaSearch extends Entrada
     /**
      * {@inheritdoc}
      */
-    public function scenarios()
-    {
+    public function scenarios() {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
@@ -39,14 +37,14 @@ class EntradaSearch extends Entrada
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
-    {
+    public function search($params) {
         $query = Entrada::find();
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => false,
         ]);
 
         $this->load($params);
@@ -61,14 +59,15 @@ class EntradaSearch extends Entrada
         $query->andFilterWhere([
             'pk_entrada' => $this->pk_entrada,
             'fk_produto' => $this->fk_produto,
-            'quantidade' => $this->quantidade,           
+            'quantidade' => $this->quantidade,
             'custo_fabricacao' => $this->custo_fabricacao,
         ]);
-        
+
         $query->orderBy("pk_entrada DESC");
 
         $query->andFilterWhere(['like', 'fk_usuario', $this->fk_usuario]);
 
         return $dataProvider;
     }
+
 }

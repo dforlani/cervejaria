@@ -9,13 +9,12 @@ use app\models\UnidadeMedida;
 /**
  * UnidadeMedidaSearch represents the model behind the search form of `app\models\UnidadeMedida`.
  */
-class UnidadeMedidaSearch extends UnidadeMedida
-{
+class UnidadeMedidaSearch extends UnidadeMedida {
+
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['unidade_medida'], 'safe'],
             [['pk_unidade_medida'], 'integer'],
@@ -25,8 +24,7 @@ class UnidadeMedidaSearch extends UnidadeMedida
     /**
      * {@inheritdoc}
      */
-    public function scenarios()
-    {
+    public function scenarios() {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
@@ -38,15 +36,15 @@ class UnidadeMedidaSearch extends UnidadeMedida
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
-    {
+    public function search($params) {
         $query = UnidadeMedida::find();
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
+            'pagination' => false,
             'query' => $query,
-             'sort'=> ['defaultOrder' => ['unidade_medida'=>SORT_ASC]]
+            'sort' => ['defaultOrder' => ['unidade_medida' => SORT_ASC]]
         ]);
 
         $this->load($params);
@@ -66,4 +64,5 @@ class UnidadeMedidaSearch extends UnidadeMedida
 
         return $dataProvider;
     }
+
 }

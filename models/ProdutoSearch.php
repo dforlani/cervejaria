@@ -44,6 +44,7 @@ class ProdutoSearch extends Produto {
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
+            'pagination' => false,
             'query' => $query,
             'sort' => ['defaultOrder' => ['nome' => SORT_ASC]],
             'pagination' => [

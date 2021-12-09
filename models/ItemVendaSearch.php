@@ -61,6 +61,7 @@ class ItemVendaSearch extends ItemVenda {
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
+            'pagination' => false,
             'query' => $query,
             'sort' => ['defaultOrder' => [
                     'is_desconto_promocional' => SORT_ASC,
@@ -148,10 +149,10 @@ class ItemVendaSearch extends ItemVenda {
             $order['dt_inclusao'] = SORT_ASC;
             $groupBy[] = 'YEAR(dt_inclusao)';
             $groupBy[] = 'MONTH(dt_inclusao)';
-        }else{
-              $order['dt_inclusao'] = SORT_ASC;
+        } else {
+            $order['dt_inclusao'] = SORT_ASC;
         }
-        
+
         if ($por_forma_venda) {
             $groupBy[] = 'fk_produto';
             $groupBy[] = 'pk_preco';
@@ -199,7 +200,9 @@ class ItemVendaSearch extends ItemVenda {
         }
 
         $dataProvider = new ArrayDataProvider([
+            'pagination' => false,
             'allModels' => $query->all(),
+            'pagination' => false,
         ]);
 
 
