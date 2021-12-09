@@ -27,7 +27,7 @@ class GraficoController extends Controller {
 
     public function actionVendas() {
 
-
+        $apenas_cervejas_ativas = isset($_GET['apenas_cervejas_ativas']) ? $_GET['apenas_cervejas_ativas'] : false;
         $por_gasto = isset($_GET['por_gasto']) ? $_GET['por_gasto'] : false;
         $por_litro = isset($_GET['por_litro']) ? $_GET['por_litro'] : false;
         $por_hora = isset($_GET['por_hora']) ? $_GET['por_hora'] : false;
@@ -54,12 +54,12 @@ class GraficoController extends Controller {
         $graficoResultado = ItemVendaSearch::searchGrafico($por_dia, $por_hora, $por_dia_semana,
                         $por_mes_agregado, $por_mes, $por_produto, $apenas_vendas_pagas,
                         $por_cliente, $data_inicial, $data_final, $por_gasto, $por_litro,
-                        $cervejas_selecionadas, $por_forma_venda);
+                        $cervejas_selecionadas, $por_forma_venda, $apenas_cervejas_ativas);
 
 
 
         return $this->render('vendas', [
-                    
+                    'apenas_cervejas_ativas' => $apenas_cervejas_ativas,
                     'por_forma_venda' => $por_forma_venda,
                     'cervejas' => $cervejas,
                     'cervejas_selecionadas' => $cervejas_selecionadas,

@@ -328,7 +328,7 @@ class ItemVendaSearch extends ItemVenda {
 
     public static function searchGrafico($por_dia, $por_hora, $por_dia_semana, $por_mes_agregado,
             $por_mes, $por_produto, $apenas_vendas_pagas, $por_cliente, $data_inicial,
-            $data_final, $por_gasto, $por_litro, $cervejas_selecionadas, $por_forma_venda) {
+            $data_final, $por_gasto, $por_litro, $cervejas_selecionadas, $por_forma_venda, $apenas_cervejas_ativas) {
         $query = ItemVendaSearch::find();
         $groupBy = [];
         $order = [];
@@ -421,6 +421,10 @@ class ItemVendaSearch extends ItemVenda {
         //adiciona as cervejas selecionadas, se for pra filtras
         if (!empty($cervejas_selecionadas)) {
             $query->andWhere(['IN', 'pk_produto', $cervejas_selecionadas]);
+        }
+        
+        if($apenas_cervejas_ativas){
+            $query->andWhere(['like','tipo_produto', Produto::$TIPO_CERVEJA]);
         }
 
         $query->groupBy($groupBy);

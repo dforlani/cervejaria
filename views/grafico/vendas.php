@@ -148,6 +148,13 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
     <form>
         <div class="row" style="padding: 20px">
+            <div class="col-md-2">
+
+                <?php
+                echo '<label class="control-label">Apenas Cervejas Ativas</label>';
+                echo SwitchInput::widget(['name' => 'apenas_cervejas_ativas', 'id' => 'apenas_cervejas_ativas', 'value' => $apenas_cervejas_ativas]);
+                ?>
+            </div>
             <div class="col-md-4">
                 <div class="row" style="margin-right: 10px;border-bottom: 5px solid blue;">
                     <div class="col-md-6" >
@@ -227,6 +234,8 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
 
 
+
+
         </div>
         <div class="row" style="padding: 20px;">
             <div class='col-md-12' style="margin-right: 10px" >
@@ -291,10 +300,7 @@ $this->params['breadcrumbs'][] = $this->title;
     $grafico = "";
     if (!empty($graficoResultado)) {
         echo $this->render('_grafico', ['graficoResultado' => $graficoResultado]);
-      
     }
-
- 
     ?>
 
 </div>
