@@ -12,7 +12,6 @@ use yii\web\View;
 /* @var $this View */
 /* @var $searchModel VendaSearch */
 /* @var $dataProvider ActiveDataProvider */
-
 ?>
 
 
@@ -20,21 +19,13 @@ use yii\web\View;
 <?php
 $colunas = [];
 
+$colunas[] = [
+    'attribute' => 'aux_temporizador',
+    'footer' => 'Total',
+    'filter' => false,
+    'header' => "Data"
+];
 
-if ($por_dia) {
-    $colunas[] = [
-        'attribute' => 'aux_temporizador',
-        //'format' => 'date',
-        'footer' => 'Total',
-        'filter' => false,
-    ];
-} elseif ($por_mes) {
-    $colunas[] = [
-        'attribute' => 'aux_temporizador',
-        'footer' => 'Total',
-        'filter' => false,
-    ];
-}
 
 if ($por_produto) {
     $colunas[] = 'aux_nome_produto';
@@ -107,7 +98,6 @@ GridView::widget([
     'floatHeaderOptions' => ['scrollingTop' => '50', 'position' => 'absolute'],
     'footerRowOptions' => ['style' => 'font-weight:bold;text-align:right;text-decoration: underline;'],
     'dataProvider' => $dataProvider,
-    
     'columns' => $colunas
 ]);
 ?>

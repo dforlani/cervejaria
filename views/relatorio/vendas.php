@@ -137,7 +137,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     && ($('#por_produto').bootstrapSwitch('state') == false)
                     && ($('#por_forma_venda').bootstrapSwitch('state') == false)
                     ) {
-                $('#por_produto').bootstrapSwitch('state', !data, true);
+                //$('#por_produto').bootstrapSwitch('state', !data, true);
             }
         }
     });

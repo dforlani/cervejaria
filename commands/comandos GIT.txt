@@ -22,4 +22,3 @@ git checkout v2.19.0
 
 //merge da versão atual com alguma outra
 git merge v1.3.1
-
