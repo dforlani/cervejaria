@@ -6,7 +6,22 @@
  */
 ?>
 <b><?= $model->status ?></b><br>    
-<b><?= \yii\helpers\Html::encode($model->cliente->nome); ?> </b><br>
+
+  <?php  if(!empty($model->venda->fk_comanda)){
+                        ?>
+                        <b><?= substr($model->venda->comanda->numero, 0, 25); ?></b> <br>
+                        <?php }?>
+                        
+                        <?php  if(!empty($model->cliente)){
+                        ?>
+                        <b><?= substr($model->cliente->nome, 0, 25); ?></b> <br>
+                        <?php }?>
+                        <?php  if(!empty($model->venda->nome_temp)){
+                        ?>
+                       
+                        <b><?= substr($model->venda->nome_temp, 0, 25); ?></b> <br>
+                        <?php }?>
+                        
 <form id='form-atendimento-app'>
     <input type='hidden' name='_csrf' value="<?= Yii::$app->request->csrfToken ?>"    />
     <input type='hidden' name='id_venda' value="<?= $model->fk_venda ?>"    />
