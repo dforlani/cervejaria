@@ -510,6 +510,32 @@ ALTER TABLE `caixa`
                 "log_dia_e_hora_desde_ultimo_cardapio_automatico", 
                 'Inicialização da configuração que indica que dia e hora foi realizado o último backup');
 
+        //01-02-2022 Inclusão de observações nos pedidos
+      $this->atualizaBanco("ALTER TABLE `pedido_app` ADD `observacoes` TEXT NULL AFTER `dt_pedido`;",
+                "update_pedido_app_add_observacoes",
+                "Adiciona campo de observações na tabela pedido_app");
+			
+      $this->atualizaBanco("DELETE FROM `comanda` WHERE pk_comanda not in (select fk_comanda from venda where fk_comanda is not null)",
+          "update_remove_comandas_complexas",
+          "Remove os números de comanda muito grandes");
+
+      $this->atualizaBanco(" ALTER TABLE `comanda` CHANGE `numero` `numero` MEDIUMINT(13) NULL DEFAULT NULL; ",
+          "update_tipo_numero_comanda",
+          "Altera o tipo da comanda pra Integer");
+      
+     
+      
+      $this->atualizaBanco("  INSERT INTO `comanda`(`numero`) VALUES (001), (002), (003), (004), (005), (006),(007),(008),(009),(010),(011),(012),(013),(014),(015),(016),(017),(018),(019),(020),(021),(022),(023),(024),(025),(026),(027),(028),(029),(030),(031),(032),(033),(034),(035),(036),(037),(038),(039),(040),(041),(042),(043),(044),(045),(046),(047),(048),(049),(050) ",
+          "update_insert_comandas_simples",
+          "Inclue os números de comandas de 1 até 50");
+      
+      $this->atualizaBanco("ALTER TABLE `venda` ADD `nome_temp` VARCHAR(80) NOT NULL AFTER `fk_usuario_recebeu_pagamento`;",
+          "update_add_nome_temp",
+          "Inclue o campo nome_temp na tabela de vendas");
+      
+      
+    
+      
         echo '<br><br>ATUALIZAÇÃO DO BANCO ENCERRADA<br>';
     }
 

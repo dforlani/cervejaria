@@ -23,6 +23,7 @@ use yii\db\ActiveRecord;
  * @property string $valor_pago_dinheiro
  * @property string $estado
  * @property string $dt_venda
+ * @property string $nome_temp
  * @property string $dt_pagamento
  *
  * @property ItemVenda[] $itemVendas
@@ -61,7 +62,7 @@ class Venda extends ActiveRecord {
             [['valor_total', 'desconto', 'valor_final', 'valor_pago_debito', 'valor_pago_credito', 'valor_pago_dinheiro',], 'number', 'min' => 0],
             [['troco'], 'number', 'max' => 0],
             [['valor_total', 'desconto', 'valor_final', 'valor_pago_debito', 'valor_pago_credito', 'valor_pago_dinheiro', 'troco'], 'default', 'value' => 0],
-            [['estado'], 'string'],
+            [['estado', 'nome_temp'], 'string'],
             [['dt_venda', 'dt_pagamento'], 'safe'],
             [['fk_usuario_iniciou_venda', 'fk_usuario_recebeu_pagamento'], 'string', 'max' => 20],
             [['pk_venda'], 'unique'],
@@ -85,6 +86,7 @@ class Venda extends ActiveRecord {
             'fk_usuario_recebeu_pagamento' => 'Fk Usuario Recebeu Pagamento',
             'valor_total' => 'Valor Total',
             'desconto' => 'Desconto',
+            'nome_temp' => 'Nome',
             'valor_final' => 'Valor Final',
             'valor_pago_debito' => 'Pago em Débito',
             'valor_pago_credito' => 'Pago em Crédito',
@@ -185,7 +187,12 @@ class Venda extends ActiveRecord {
         $lista = [];
         if (!empty($vendas))
             foreach ($vendas as $venda) {
-                $lista[$venda->pk_venda] = (!empty($venda->cliente) ? '' . $venda->cliente->nome : '') . ' => ' . (!empty($venda->comanda) ? $venda->comanda->getComandaComDigitoVerificador() : '');
+                $identificador  = $venda->nome_temp;
+                $identificador  .= (!empty($venda->cliente) ? (!empty($identificador)? " > ":''). $venda->cliente->nome : '');
+                $identificador  .= (!empty($venda->comanda) ? (!empty($identificador)? " > ":'').$venda->comanda->getComandaComDigitoVerificador() : '');
+                
+                $lista[$venda->pk_venda] = $identificador; 
+                    
             }
         return $lista;
     }

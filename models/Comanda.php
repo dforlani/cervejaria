@@ -52,10 +52,10 @@ class Comanda extends \yii\db\ActiveRecord {
 
     public static function getComandasSemVendasAbertas() {
         $comandas = Comanda::findBySql('select * from comanda where pk_comanda not in (select fk_comanda from venda where estado = "aberta" and fk_comanda is not null)')->all();
-        foreach ($comandas as &$comanda){
-            $comanda->numero = $comanda->getComandaComDigitoVerificador();
+     //   foreach ($comandas as &$comanda){
+    //        $comanda->numero = $comanda->getComandaComDigitoVerificador();
             
-        }
+      //  }
         return $comandas;
     }
 

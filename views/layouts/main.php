@@ -89,6 +89,8 @@ AppAsset::register($this);
                         .done(function (data) {
                             $('#divPedidos').html(data);
                         });
+
+                
                 var timer = setTimeout(function () {
 
                     conferePedidosEsperando();

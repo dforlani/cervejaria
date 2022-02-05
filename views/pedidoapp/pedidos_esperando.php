@@ -17,7 +17,22 @@ if (!empty($pedidos)) {
             <div class="panel-body painel-pedido-red" id='div-painel-pedido' >
                 <?php foreach ($pedidos as $pedido) { ?>
                     <div id_pedido='<?= $pedido->pk_pedido_app ?>'  id_venda='<?= $pedido->fk_venda ?>'   type="button"  class="btn btn-default btn-pedido" data-toggle="modal" data-target="#modalPedido" style='margin: 5px;text-align: left;max-width: 200px;min-height:100px; '>
+                        <?php  if(!empty($pedido->venda->fk_comanda)){
+                        ?>
+                        <b><?= substr($pedido->venda->comanda->numero, 0, 25); ?></b> <br>
+                        <?php }?>
+                        
+                        <?php  if(!empty($pedido->cliente)){
+                        ?>
                         <b><?= substr($pedido->cliente->nome, 0, 25); ?></b> <br>
+                        <?php }?>
+                        <?php  if(!empty($pedido->venda->nome_temp)){
+                        ?>
+                       
+                        <b><?= substr($pedido->venda->nome_temp, 0, 25); ?></b> <br>
+                        <?php }?>
+                        
+                         
                         <b><?= $pedido->status ?></b><br>          
 
                         <b>Espera: <span id="espera<?= $pedido->pk_pedido_app ?>"></span></b><br>
@@ -32,7 +47,12 @@ if (!empty($pedidos)) {
                                 <?php
                             }
                         }
-                        ?>
+                       
+                        if(!empty($pedido->observacoes)){?>
+                        <br>
+                        <b>Observações</b>:<br>
+                         <?=substr($pedido->observacoes, 0, 200)   ?>
+                        <?php }?>
                     </div>
                 <?php }
                 ?>

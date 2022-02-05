@@ -14,8 +14,8 @@ use yii\widgets\ActiveForm;
 <script>
     $(document).ready(function(){
         $('#btn_submit').click(function(e){
-            if($('#venda-fk_cliente').val() == ''){
-                if(!confirm('Cliente sem nome. Confirma?')){
+            if(($('#venda-fk_cliente').val() == '')&&($('#venda-nome_temp').val() == '')&&($('#venda-fk_comanda').val() == '')){
+                if(!confirm('Venda sem identificação. Confirma?')){
                     e.preventDefault(); 
                 }
             }
@@ -33,7 +33,16 @@ use yii\widgets\ActiveForm;
 
     <div class = "container-fluid">
         <div class = "row">
-            <div class = "col-sm-4" style = "">
+            <div class = "col-sm-6">
+             <div class = "row">
+            <div class = "col-sm-12" style = "">
+            	<?php
+            	   echo $form->field($model, 'nome_temp')->input('text');
+            	?>
+            </div>
+            </div>
+        <div class = "row">
+            <div class = "col-sm-12" style = "">
                 <?php
                 echo $form->field($model, 'fk_cliente')->widget(Select2::classname(), [
                     'data' => \yii\helpers\ArrayHelper::map(\app\models\Cliente::getClientesSemVendasAbertas(), 'pk_cliente', 'nome'),
@@ -45,7 +54,9 @@ use yii\widgets\ActiveForm;
                 ])->label('C<u>l</u>iente');
                 ?>
             </div>
-            <div class="col-sm-4" style=""> 
+            </div>
+               <div class = "row">
+            <div class="col-sm-12" style=""> 
                 <?php
                 echo $form->field($model, 'fk_comanda')->widget(Select2::classname(), [
                     'data' => \yii\helpers\ArrayHelper::map(\app\models\Comanda::getComandasSemVendasAbertas(), 'pk_comanda', 'numero'),
@@ -56,9 +67,13 @@ use yii\widgets\ActiveForm;
                 ])->label('C<u>o</u>manda');
                 ?>
             </div>
-            <div class="col-sm-4" style=""> 
+            </div>
+            </div>
+              
+              
+            <div class="col-sm-6" style='height:180px;width:180px'> 
                 <br>
-                <?= Html::submitButton(( '<u>N</u>ova Venda'), ['id'=>'btn_submit',  'accesskey'=>"n", 'class' => 'btn btn-success']) ?>
+                <?= Html::submitButton(( '<u>N</u>ova Venda'), ['id'=>'btn_submit', 'style'=>'height:100%;width:100%' ,'accesskey'=>"n", 'class' => 'btn btn-success']) ?>
             </div>
 
         </div>

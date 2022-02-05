@@ -23,5 +23,9 @@
             <?php
         }
     }
-    ?>
+    if(!empty($model->observacoes)){?>
+                        <br>
+                        
+                        <b>Observações</b>: <?= $model->observacoes ?>
+                        <?php }?>
 </form>

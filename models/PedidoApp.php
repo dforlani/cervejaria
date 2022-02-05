@@ -13,6 +13,7 @@ use yii\db\ActiveRecord;
  * @property int $fk_cliente
  * @property string $status
  * @property string $dt_pedido
+  * @property string $observacoes
  * 
  *
  * @property ItemPedidoApp[] $itemPedidoApps
@@ -45,7 +46,7 @@ class PedidoApp extends ActiveRecord{
         return [
             [['fk_cliente'], 'required'],
             [['fk_cliente'], 'integer'],
-            [['status'], 'string'],
+            [['status', 'observacoes'], 'string'],
             [['fk_cliente'], 'exist', 'skipOnError' => true, 'targetClass' => Cliente::className(), 'targetAttribute' => ['fk_cliente' => 'pk_cliente']],
         ];
     }
