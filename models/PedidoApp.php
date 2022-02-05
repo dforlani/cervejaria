@@ -44,7 +44,7 @@ class PedidoApp extends ActiveRecord{
     public function rules()
     {
         return [
-            [['fk_cliente'], 'required'],
+            
             [['fk_cliente'], 'integer'],
             [['status', 'observacoes'], 'string'],
             [['fk_cliente'], 'exist', 'skipOnError' => true, 'targetClass' => Cliente::className(), 'targetAttribute' => ['fk_cliente' => 'pk_cliente']],

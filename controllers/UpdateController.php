@@ -533,6 +533,10 @@ ALTER TABLE `caixa`
           "update_add_nome_temp",
           "Inclue o campo nome_temp na tabela de vendas");
       
+      $this->atualizaBanco("ALTER TABLE `pedido_app` CHANGE `fk_cliente` `fk_cliente` INT(11) NULL;",
+          "update_remove_not_null_fk_cliente_pedido_app",
+          "Remove a obrigação de chave estrangeira com cliente em pedido_app");
+
       
     
       
