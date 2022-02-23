@@ -90,7 +90,7 @@ AppAsset::register($this);
                             $('#divPedidos').html(data);
                         });
 
-                
+
                 var timer = setTimeout(function () {
 
                     conferePedidosEsperando();
@@ -118,6 +118,16 @@ AppAsset::register($this);
                                 window.location.href = "<?= Url::to(['venda/venda']); ?>?id=" + id_venda;
                             }
                         });
+            });
+
+            /**
+             * botão de imprimir pedidos pelo app             */
+            $("#btn-imprimir-pedido").click(function () {
+                id_pedido = $(this).attr('id_pedido');
+                console.log(id_pedido);
+                window.open("<?= Url::to(['pedidoapp/imprimir-pedido']); ?>" + "?id=" + id_pedido, '_blank');
+
+
             });
 
             /**
@@ -157,14 +167,20 @@ AppAsset::register($this);
 
     </script>
     <style>
-        .container {width:1400px;margin:0 auto;}
+        .container {
+      
+            width:auto;
+            margin:0 auto;
+        }
         .painel-pedido-red{
             background-color: red
         }
 
         .painel-pedido-yellow{
             background-color: yellow
-        }   
+        }
+
+  
 
     </style>
 
@@ -221,7 +237,6 @@ AppAsset::register($this);
 
                         //$btt_logout = !Yii::$app->user->getIsGuest()? ' <div class="col-sm-3" style="text-align:right" > <a href="/cervejaria/web/site/logout" title="Logout" type="button" class="btn btn-danger "  data-placement="bottom bottom-right" ><span class="glyphicon glyphicon-log-out" style="text-align: right"></span></a></div>':'';
                         $btt_logout = '';
-
 
                         echo SideNav::widget([
                             'type' => SideNav::TYPE_DEFAULT,
@@ -312,7 +327,8 @@ AppAsset::register($this);
             <div class="modal-body" id='divPedidoAtendimento'>
 
             </div>
-            <div class="modal-footer">               
+            <div class="modal-footer">              
+                <button type="button"  id_venda=""  id_pedido="" class="btn btn-primary glyphicon glyphicon-print" id="btn-imprimir-pedido"></button>
                 <button type="button" id_venda=""  id_pedido=""  id="btn_pedido_pronto" class="btn btn-primary">Pronto</button>
                 <button type="button"  id_venda=""  id_pedido="" class="btn btn-danger" id="btn-cancelar-pedido">Cancelar Pedido</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>

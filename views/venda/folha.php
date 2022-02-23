@@ -13,10 +13,10 @@
         $(".btn-observacao-venda").click(function (event) {
             event.preventDefault();
             id = $(this).attr('id_venda');
-       
+
             $("#btn_salvar_observacao").attr('id_venda', id);
             $('#text-observacao').val($(this).attr('title'));
-      ;
+            ;
 
         });
         /**
@@ -27,7 +27,7 @@
         $("#btn_salvar_observacao").click(function (event) {
             event.preventDefault();
             id = $(this).attr('id_venda');
-        
+
             $("#btn-salvar_observacao").attr('id_pedido', id);
             $.get("salvar-observacao", {'id': id,
                 '_csrf': '<?= Yii::$app->request->csrfToken ?>',
@@ -54,16 +54,17 @@
                         <div class="row">                          
                             <div class="col-sm-6"  style='text-align: left'>
                                 <b> 
-                                	<?= (!empty($venda->nome_temp) ? \yii\helpers\Html::encode($venda->nome_temp) . '<br>' : '' ) ?>
-                                	<?= (!empty($venda->cliente) ? \yii\helpers\Html::encode($venda->cliente->nome) . '<br> ' : '' ) ?>
-                                    <?= (!empty($venda->comanda) ? \yii\helpers\Html::encode($venda->comanda->numero) : '' ) ?>
+                                    <?= (!empty($venda->comanda) ? \yii\helpers\Html::encode($venda->comanda->numero) .'<br>' : '' ) ?>                                    
+                                    <?= (!empty($venda->cliente) ? \yii\helpers\Html::encode($venda->cliente->nome) . '<br> ' : '' ) ?>
+                                    <?= (!empty($venda->nome_temp) ? \yii\helpers\Html::encode($venda->nome_temp) . '<br>' : '' ) ?>
+
                                     <?= (empty($venda->comanda) && empty($venda->cliente) && empty($venda->nome_temp) ? "Sem identificação" : '' ) ?>
                                 </b>
                                 <br>
-                                
+
                             </div>
                             <div class="col-sm-6"  style='text-align: right'>
-                                <div  style="<?= !empty($venda->observacao)?'color:white;background-color:blue;padding: 10px;font-size: 20px;':'padding: 10px;font-size: 20px;' ?> " title="<?= $venda->observacao?>" id_venda='<?= $venda->pk_venda ?>' type="button" class="btn btn-observacao-venda btn-default glyphicon glyphicon-question-sign"  data-toggle="modal" data-target="#modalObervacaoVenda" ></div>
+                                <div  style="<?= !empty($venda->observacao) ? 'color:white;background-color:blue;padding: 10px;font-size: 20px;' : 'padding: 10px;font-size: 20px;' ?> " title="<?= $venda->observacao ?>" id_venda='<?= $venda->pk_venda ?>' type="button" class="btn btn-observacao-venda btn-default glyphicon glyphicon-question-sign"  data-toggle="modal" data-target="#modalObervacaoVenda" ></div>
                             </div>                            
                         </div>
                     </div>

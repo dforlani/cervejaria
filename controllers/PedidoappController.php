@@ -2,12 +2,14 @@
 
 namespace app\controllers;
 
+use app\components\MCrypt;
 use app\models\ItemCaixa;
 use app\models\ItemPedidoApp;
 use app\models\ItemVenda;
 use app\models\PedidoApp;
 use app\models\PedidoAppSearch;
 use app\models\Preco;
+use app\models\Produto;
 use app\models\Venda;
 use Yii;
 use yii\filters\AccessControl;
@@ -15,7 +17,6 @@ use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
-use app\components\MCrypt;
 
 /**
  * PedidowsController controla os pedidos feitos por aplicativo e o atendimentos a eles
@@ -89,21 +90,29 @@ class PedidoappController extends Controller {
      * Retorna o cardápio do tipo cardapio para o App do Cliente
      * @return type
      */
-    public function actionAppGetCardapio() {
+    public function actionAppGetCardapio($tipo_produto = null) {
+        if (empty($tipo_produto)) {
+            $tipo_produto = Preco::$TIPO_CARDAPIO_CARDAPIO;
+        }
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        $cardapio = Preco::find()->where("tipo_cardapio like :tipo_cardapio", [':tipo_cardapio' => Preco::$TIPO_CARDAPIO_CARDAPIO])->orderBy('pos_cardapio')->all();
+        $produtos = Produto::find()
+                ->where("tipo_produto like :tipo_produto AND is_vendavel = 1", [':tipo_produto' => $tipo_produto])
+                ->orderBy('nome')
+                ->all();
 
         $retorno = [];
-        if (!empty($cardapio)) {
-            foreach ($cardapio as $item) {
-
-                $retorno[] = ['fk_preco' => $item->pk_preco,
-                    'denominacao' => $item->denominacao,
-                    'nome' => $item->produto->nome,
-                    'quantidade' => 0,
-                    'preco' => $item->preco
-                ];
+        if (!empty($produtos)) {
+            foreach ($produtos as $produto) {
+                $itens_venda = $produto->precos;
+                foreach ($itens_venda as $item) {
+                    $retorno[] = ['fk_preco' => $item->pk_preco,
+                        'denominacao' => $item->denominacao,
+                        'nome' => $item->produto->nome,
+                        'quantidade' => 0,
+                        'preco' => $item->preco
+                    ];
+                }
             }
         }
 
@@ -117,7 +126,6 @@ class PedidoappController extends Controller {
 
         $this->enableCsrfValidation = false;
 
-
         return parent::beforeAction($action);
     }
 
@@ -127,7 +135,6 @@ class PedidoappController extends Controller {
         $id_venda = &$_POST['id_venda'];
         $id_pedido = &$_POST['id_pedido'];
         $pedido = PedidoApp::findOne($id_pedido);
-
 
         if (!empty($pedido)) {
             $pedido->status = PedidoApp::$CONST_STATUS_CANCELADO_PELO_ATENDENTE;
@@ -158,6 +165,13 @@ class PedidoappController extends Controller {
      * ]
      */
 
+    public function actionImprimirPedido($id) {
+        $model = $this->findModelPedido($id);
+        return $this->renderPartial('imprimir-pedido', [
+                    'model' => $model,
+        ]);
+    }
+
     public function actionAppPedir($codigo_cliente_app) {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
@@ -165,7 +179,6 @@ class PedidoappController extends Controller {
 
 
             $codigo_cliente_app = $this->decriptografar($codigo_cliente_app);
-
 
             //verifica se o cliente tem uma comanda aberta
             $venda = Venda::find()->joinWith('cliente')->where(['codigo_cliente_app' => $codigo_cliente_app, 'estado' => 'aberta'])->one();
@@ -226,13 +239,12 @@ class PedidoappController extends Controller {
 
             $pkVenda = $this->decriptografar($pkVenda);
 
-
             //verifica se o cliente tem uma comanda aberta
             $venda = Venda::find()->where(['pk_venda' => $pkVenda, 'estado' => 'aberta'])->one();
             if (!empty($venda)) {
 
 
-				$observacoes = &$_POST['observacoes'];
+                $observacoes = &$_POST['observacoes'];
                 $itens = &$_POST['itens'];
 
                 if (!empty($itens)) {
@@ -241,7 +253,7 @@ class PedidoappController extends Controller {
                     $pedido = new PedidoApp();
                     $pedido->fk_cliente = $venda->fk_cliente;
                     $pedido->fk_venda = $venda->pk_venda;
-					$pedido->observacoes = $observacoes;
+                    $pedido->observacoes = $observacoes;
 
                     $pedido->status = PedidoApp::$CONST_STATUS_ENVIADO;
 
@@ -495,7 +507,6 @@ class PedidoappController extends Controller {
         $transaction = $connection->beginTransaction();
         $salvoTodos = true;
 
-
         if (!empty($pedido) && (!empty($itens_pedido))) {
             $venda = Venda::findOne($id_venda);
             if (!empty($venda)) {
@@ -530,7 +541,7 @@ class PedidoappController extends Controller {
         return ['success' => 'false'];
     }
 
-       public function actionAppRequisitaPedidosComandaAbertaGarcom($pkVenda) {
+    public function actionAppRequisitaPedidosComandaAbertaGarcom($pkVenda) {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         if (!empty($pkVenda)) {
@@ -570,7 +581,7 @@ class PedidoappController extends Controller {
             }
         }
     }
-    
+
     public function actionAppRequisitaPedidosComandaAberta($codigo_cliente_app) {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
@@ -621,6 +632,14 @@ class PedidoappController extends Controller {
      */
     protected function findModel($id) {
         if (($model = ItemCaixa::findOne($id)) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    protected function findModelPedido($id) {
+        if (($model = PedidoApp::findOne($id)) !== null) {
             return $model;
         }
 

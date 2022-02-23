@@ -16,43 +16,47 @@ if (!empty($pedidos)) {
             </div>
             <div class="panel-body painel-pedido-red" id='div-painel-pedido' >
                 <?php foreach ($pedidos as $pedido) { ?>
-                    <div id_pedido='<?= $pedido->pk_pedido_app ?>'  id_venda='<?= $pedido->fk_venda ?>'   type="button"  class="btn btn-default btn-pedido" data-toggle="modal" data-target="#modalPedido" style='margin: 5px;text-align: left;max-width: 200px;min-height:100px; '>
-                        <?php  if(!empty($pedido->venda->fk_comanda)){
-                        ?>
-                        <b><?= substr($pedido->venda->comanda->numero, 0, 25); ?></b> <br>
-                        <?php }?>
+                    <div id_pedido='<?= $pedido->pk_pedido_app ?>'  id_venda='<?= $pedido->fk_venda ?>'   type="button"  class="btn btn-default btn-pedido" data-toggle="modal" data-target="#modalPedido" style='margin: 5px;text-align: left;width: 98%; '>
                         
-                        <?php  if(!empty($pedido->cliente)){
-                        ?>
-                        <b><?= substr($pedido->cliente->nome, 0, 25); ?></b> <br>
-                        <?php }?>
-                        <?php  if(!empty($pedido->venda->nome_temp)){
-                        ?>
-                       
-                        <b><?= substr($pedido->venda->nome_temp, 0, 25); ?></b> <br>
-                        <?php }?>
-                        
-                         
-                        <b><?= $pedido->status ?></b><br>          
+                            
+                        <?php if (!empty($pedido->venda->fk_comanda)) {
+                            ?>
+                            <b><?= $pedido->venda->comanda->numero?></b> <br>
+                        <?php } ?>
+
+                        <?php if (!empty($pedido->cliente)) {
+                            ?>
+                            <b><?= $pedido->cliente->nome ?></b> <br>
+                        <?php } ?>
+                        <?php if (!empty($pedido->venda->nome_temp)) {
+                            ?>
+
+                            <b><?= $pedido->venda->nome_temp ?></b> <br>
+                        <?php } ?>
+
+
+                            
 
                         <b>Espera: <span id="espera<?= $pedido->pk_pedido_app ?>"></span></b><br>
-
+                        <br>
 
 
                         <?php
                         if (!empty($pedido->itensPedidoApp)) {
                             foreach ($pedido->itensPedidoApp as $item) {
                                 ?>
-                                <?= $item->quantidade . ' - ' . $item->preco->getNomeProdutoPlusDenominacaoSemBarrasLimitado(25) ?><br>    
+                                <?= $item->quantidade . ' - ' . $item->preco->getNomeProdutoPlusDenominacaoSemBarras() ?><br>    
                                 <?php
                             }
                         }
-                       
-                        if(!empty($pedido->observacoes)){?>
-                        <br>
-                        <b>Observações</b>:<br>
-                         <?=substr($pedido->observacoes, 0, 200)   ?>
-                        <?php }?>
+
+                        if (!empty($pedido->observacoes)) {
+                            ?>
+                            <br>
+                            <b>Observações</b>:<br>
+                            <?= $pedido->observacoes ?>
+                    <?php } ?>
+                        
                     </div>
                 <?php }
                 ?>
@@ -74,21 +78,23 @@ if (!empty($pedidos)) {
 
             $.get("<?= Url::to(['pedidoapp/pedido-atendimento']); ?>", {'id': id, '_csrf': '<?= Yii::$app->request->csrfToken ?>'})
                     .done(function (data) {
-                  
+
                         $('#divPedidoAtendimento').html(data);
                         $('#btn_pedido_pronto').attr('id_pedido', id);
                         $('#btn_pedido_pronto').attr('id_venda', id_venda);
                         $('#btn-cancelar-pedido').attr('id_pedido', id);
                         $('#btn-cancelar-pedido').attr('id_venda', id_venda);
+                        $('#btn-imprimir-pedido').attr('id_pedido', id);
+                        $('#btn-imprimir-pedido').attr('id_venda', id_venda);
                     });
-          
+
         });
     });
 
     pedidos = [<?php
-    foreach ($pedidos as $pedido) {
-        echo $pedido->getDtPedidoExploded() . ',';
-    }
-    ?>
+foreach ($pedidos as $pedido) {
+    echo $pedido->getDtPedidoExploded() . ',';
+}
+?>
     ];
 </script>

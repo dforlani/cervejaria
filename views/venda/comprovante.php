@@ -10,7 +10,6 @@ use yii\widgets\ActiveForm;
 ?>
 <script>
     window.print();
-
 </script>
 
 <div style='width: 150px; margin-left: 20px; font-size:10px'>
@@ -37,7 +36,7 @@ use yii\widgets\ActiveForm;
                     Vl. Unit.
                 </td>
                 <td>
-                    Vl. Item
+                    Total Item
                 </td>
             </tr>
         </thead>

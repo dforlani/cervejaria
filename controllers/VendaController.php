@@ -63,7 +63,11 @@ class VendaController extends Controller {
     }
 
     public function actionFolha() {
-        $vendas = Venda::find()->where(['estado' => Venda::$ESTADO_ABERTA])->orderBy('nome')->joinWith(['cliente'])->all();
+        $vendas = Venda::find()
+                ->select(['*', 'IF(numero is null, 99999, numero) as numero_order', 'IF(concat(nome, nome_temp) is null, "zzzzzzzz", concat(nome, nome_temp))  as denominacao_completa'])
+                ->where(['estado' => Venda::$ESTADO_ABERTA])
+                ->orderBy('numero_order, denominacao_completa')
+                ->joinWith(['cliente','comanda'])->all();
 
         return $this->render('folha', ['vendas' => $vendas]);
     }

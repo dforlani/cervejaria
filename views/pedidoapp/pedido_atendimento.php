@@ -5,23 +5,24 @@
  * and open the template in the editor.
  */
 ?>
-<b><?= $model->status ?></b><br>    
 
-  <?php  if(!empty($model->venda->fk_comanda)){
-                        ?>
-                        <b><?= substr($model->venda->comanda->numero, 0, 25); ?></b> <br>
-                        <?php }?>
-                        
-                        <?php  if(!empty($model->cliente)){
-                        ?>
-                        <b><?= substr($model->cliente->nome, 0, 25); ?></b> <br>
-                        <?php }?>
-                        <?php  if(!empty($model->venda->nome_temp)){
-                        ?>
-                       
-                        <b><?= substr($model->venda->nome_temp, 0, 25); ?></b> <br>
-                        <?php }?>
-                        
+<h3>
+<?php if (!empty($model->venda->fk_comanda)) {
+    ?>
+    <b><?= $model->venda->comanda->numero; ?></b> <br>
+<?php } ?>
+
+<?php if (!empty($model->cliente)) {
+    ?>
+    <b><?= $model->cliente->nome ?></b> <br>
+<?php } ?>
+<?php if (!empty($model->venda->nome_temp)) {
+    ?>
+
+    <b><?= $model->venda->nome_temp; ?></b> <br>
+<?php } ?>
+</h3>
+<br>
 <form id='form-atendimento-app'>
     <input type='hidden' name='_csrf' value="<?= Yii::$app->request->csrfToken ?>"    />
     <input type='hidden' name='id_venda' value="<?= $model->fk_venda ?>"    />
@@ -38,9 +39,10 @@
             <?php
         }
     }
-    if(!empty($model->observacoes)){?>
-                        <br>
-                        
-                        <b>Observações</b>: <?= $model->observacoes ?>
-                        <?php }?>
+    if (!empty($model->observacoes)) {
+        ?>
+        <br>
+
+        <b>Observações</b>: <?= $model->observacoes ?>
+    <?php } ?>
 </form>

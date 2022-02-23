@@ -537,6 +537,9 @@ ALTER TABLE `caixa`
           "update_remove_not_null_fk_cliente_pedido_app",
           "Remove a obrigação de chave estrangeira com cliente em pedido_app");
 
+        $this->atualizaBanco("  INSERT INTO `comanda`(`numero`) VALUES (051), (052), (053), (054), (055), (056),(057),(058),(059),(060),(061),(062),(063),(064),(065),(066),(067),(068),(069),(070),(071),(072),(073),(074),(075),(076),(077),(078),(079),(080),(081),(082),(083),(084),(085),(086),(087),(088),(089),(090),(091),(092),(093),(094),(095),(096),(097),(098),(099),(100) ",
+          "update_insert_comandas_simples_51_100",
+          "Inclue os números de comandas de 51 até 100");
       
     
       
