@@ -7,9 +7,7 @@
     <?php
     $d = new DateTime('now', new DateTimeZone('America/Bahia'));
     ?>
-    <?= Yii::$app->formatter->asDatetime($model->dt_pedido); ?><br>
-    
-    <div style='text-align:center; font-size:14px'> Cervejaria Paraíso - Pedido Aplicativo</div>
+
 
     <?php if (!empty($model->venda->comanda)) { ?>
         Comanda: <?= \yii\helpers\Html::encode($model->venda->comanda->numero) ?> <br>
