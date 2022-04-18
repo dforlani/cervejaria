@@ -54,9 +54,10 @@
                         <div class="row">                          
                             <div class="col-sm-6"  style='text-align: left'>
                                 <b> 
-                                    <?= (!empty($venda->comanda) ? \yii\helpers\Html::encode($venda->comanda->numero) .'<br>' : '' ) ?>                                    
-                                    <?= (!empty($venda->cliente) ? \yii\helpers\Html::encode($venda->cliente->nome) . '<br> ' : '' ) ?>
+                                    <?= (!empty($venda->comanda) ? '<u>' . \yii\helpers\Html::encode($venda->comanda->numero) . '</u><br>' : '' ) ?>                                    
+                                    <?= (!empty($venda->cliente) ? '<i>' . \yii\helpers\Html::encode($venda->cliente->nome) . '</i><br> ' : '' ) ?>
                                     <?= (!empty($venda->nome_temp) ? \yii\helpers\Html::encode($venda->nome_temp) . '<br>' : '' ) ?>
+
 
                                     <?= (empty($venda->comanda) && empty($venda->cliente) && empty($venda->nome_temp) ? "Sem identificação" : '' ) ?>
                                 </b>
@@ -74,8 +75,13 @@
                     //faz a contagem de itens
                     $itens = [];
                     foreach ($venda->itensVenda as $item) {
-                        $itens[$item->fk_preco]['nome'] = $item->preco->produto->nome . ' ' . $item->preco->denominacao;
-                        $itens[$item->fk_preco]['qtd'] = (isset($itens[$item->fk_preco]['qtd']) ? $itens[$item->fk_preco]['qtd'] + $item->quantidade : $item->quantidade);
+                        if (!$item->is_desconto_promocional) {
+                            $itens[$item->fk_preco]['nome'] = $item->preco->produto->nome . ' ' . $item->preco->denominacao;
+                            $itens[$item->fk_preco]['qtd'] = (isset($itens[$item->fk_preco]['qtd']) ? $itens[$item->fk_preco]['qtd'] + $item->quantidade : $item->quantidade);
+                        } else {
+                            $itens[$item->fk_preco.'-1']['nome'] = '<i>Desconto - '.$item->preco->produto->nome . ' ' . $item->preco->denominacao .'</i>';
+                            $itens[$item->fk_preco.'-1']['qtd'] = (isset($itens[$item->fk_preco.'-1']['qtd']) ? $itens[$item->fk_preco.'-1']['qtd'] + $item->quantidade : $item->quantidade);
+                        }
                     }
 
                     foreach ($itens as $item) {

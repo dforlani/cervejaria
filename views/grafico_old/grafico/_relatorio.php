@@ -2,11 +2,8 @@
 
 use app\components\Somatorio;
 use app\models\VendaSearch;
-use kartik\field\FieldRange;
-use kartik\widgets\SwitchInput;
-use yii\data\ActiveDataProvider;
 use kartik\grid\GridView;
-use yii\helpers\Html;
+use yii\data\ActiveDataProvider;
 use yii\web\View;
 
 /* @var $this View */

@@ -41,6 +41,7 @@ class Venda extends ActiveRecord {
     public $nome_cliente;
     public $produto;
   public $aux_nome_cliente;
+  public $denominacao_completa;
   
   public static $FIADO = "fiado";
   public static $ESTADO_ABERTA = "aberta";
