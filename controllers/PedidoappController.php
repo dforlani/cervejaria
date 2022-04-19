@@ -403,7 +403,18 @@ class PedidoappController extends Controller {
     public function actionAppGetComandasAbertasGarcom() {
         Yii::$app->response->format = Response::FORMAT_JSON;
         $itens_array = [];
-        $vendas = Venda::find()->joinWith(['cliente', 'comanda'])->where(['estado' => 'aberta'])->andWhere('pk_cliente is not null or pk_comanda is not null or (nome_temp is not null && nome_temp != "")')->orderBy(['cliente.nome' => 'ASC', 'comanda.numero' => 'ASC'])->all();
+        $vendas = Venda::find()
+                ->select(['*', 'IF(numero is null, 99999, numero) as numero_order', 'concat(COALESCE(nome,"") , COALESCE(nome_temp,""))  as denominacao_completa'])
+                ->joinWith(['cliente', 'comanda'])
+                ->where(['estado' => 'aberta'])
+                ->andWhere('pk_cliente is not null or pk_comanda is not null or (nome_temp is not null && nome_temp != "")')
+                    ->orderBy('numero_order, denominacao_completa')
+                ->all();
+        
+            
+          
+            
+                    
         if (!empty($vendas)) {
 
             foreach ($vendas as $venda) {
