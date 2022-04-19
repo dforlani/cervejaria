@@ -372,14 +372,16 @@ class PedidoappController extends Controller {
                             $itens_array[$item->fk_preco]['preco'] = $item->preco_unitario;
                             $itens_array[$item->fk_preco]['precoTotal'] = (isset($itens_array[$item->fk_preco]['precoTotal']) ? $itens_array[$item->fk_preco]['precoTotal'] + $item->preco_final : $item->preco_final + 0 );
                         } else {
-                            $itens_array[$item->fk_preco . 'promocao']['denominacao'] = 'Desconto - ' . $item->preco->getNomeProdutoPlusDenominacaoSemBarras();
-                            $itens_array[$item->fk_preco . 'promocao']['quantidade'] = (isset($itens_array[$item->fk_preco . 'promocao']['quantidade']) ? $itens_array[$item->fk_preco . 'promocao']['quantidade'] + $item->quantidade : $item->quantidade);
-                            $itens_array[$item->fk_preco . 'promocao']['preco'] = $item->preco_unitario;
-                            $itens_array[$item->fk_preco . 'promocao']['precoTotal'] = (isset($itens_array[$item->fk_preco . 'promocao']['precoTotal']) ? $itens_array[$item->fk_preco . 'promocao']['precoTotal'] + $item->preco_final : $item->preco_final + 0 );
+                            $itens_array[$item->fk_preco * -1]['fk_preco'] = $item->fk_preco * -1;
+                            $itens_array[$item->fk_preco * -1]['denominacao'] = 'Desconto - ' . $item->preco->getNomeProdutoPlusDenominacaoSemBarras();
+                            $itens_array[$item->fk_preco * -1]['quantidade'] = (isset($itens_array[$item->fk_preco . 'promocao']['quantidade']) ? $itens_array[$item->fk_preco . 'promocao']['quantidade'] + $item->quantidade : $item->quantidade);
+                            $itens_array[$item->fk_preco * -1]['preco'] = $item->preco_unitario;
+                            $itens_array[$item->fk_preco * -1]['precoTotal'] = (isset($itens_array[$item->fk_preco . 'promocao']['precoTotal']) ? $itens_array[$item->fk_preco . 'promocao']['precoTotal'] + $item->preco_final : $item->preco_final + 0 );
                         }
                     }
                 }
 
+         
                 //formata para o padrão brasileiro de moeda
                 if (!empty($itens_array)) {
                     foreach ($itens_array as $item_array) {
