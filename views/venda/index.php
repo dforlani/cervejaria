@@ -31,8 +31,9 @@ $this->params['breadcrumbs'][] = $this->title;
             }
         },
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            //['class' => 'yii\grid\SerialColumn'],
             // 'pk_venda',
+            'comanda.numero',
             [
                 'attribute' => 'aux_nome_cliente',
                 'label' => 'Cliente'

@@ -190,7 +190,7 @@ class Venda extends ActiveRecord {
             foreach ($vendas as $venda) {
                 $identificador  = $venda->nome_temp;
                 $identificador  .= (!empty($venda->cliente) ? (!empty($identificador)? " > ":''). $venda->cliente->nome : '');
-                $identificador  .= (!empty($venda->comanda) ? (!empty($identificador)? " > ":'').$venda->comanda->getComandaComDigitoVerificador() : '');
+                $identificador  .= (!empty($venda->comanda) ? (!empty($identificador)? " > ":'').$venda->comanda->numero : '');
                 
                 $lista[$venda->pk_venda] = $identificador; 
                     

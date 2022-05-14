@@ -39,7 +39,7 @@ class Comanda extends \yii\db\ActiveRecord {
     public function attributeLabels() {
         return [
             'pk_comanda' => 'Pk Comanda',
-            'numero' => 'Código de Barras',
+            'numero' => 'Comanda',
         ];
     }
 
