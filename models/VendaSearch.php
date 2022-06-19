@@ -46,7 +46,7 @@ class VendaSearch extends Venda {
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
-            'pagination' => false,
+          //  'pagination' => false,
             'query' => $query,
             'sort' => ['defaultOrder' => ['dt_venda' => SORT_DESC, 'estado' => SORT_ASC]]
         ]);
@@ -59,7 +59,7 @@ class VendaSearch extends Venda {
         // $query->where('0=1');
         // return $dataProvider;
         // }
-        $query->select[] = "cliente.nome as aux_nome_cliente";
+        $query->select[] = "concat(cliente.nome, ' ', nome_temp) as aux_nome_cliente";
         $query->select[] = "venda.*";
         $query->joinWith(['cliente']);
 
