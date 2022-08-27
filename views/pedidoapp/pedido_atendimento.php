@@ -7,20 +7,15 @@
 ?>
 
 <h3>
-<?php if (!empty($model->venda->fk_comanda)) {
-    ?>
-    <b><?= $model->venda->comanda->numero; ?></b> <br>
-<?php } ?>
+    <?php if (!empty($model->venda->fk_comanda)) {
+        ?>
+        <b><?= $model->venda->comanda->numero; ?></b> <br>
+    <?php } ?>
 
-<?php if (!empty($model->cliente)) {
-    ?>
-    <b><?= $model->cliente->nome ?></b> <br>
-<?php } ?>
-<?php if (!empty($model->venda->nome_temp)) {
-    ?>
-
-    <b><?= $model->venda->nome_temp; ?></b> <br>
-<?php } ?>
+    <?php if ($model->venda->hasNomeCliente()) {
+        ?>
+        <b><?= $model->venda->getNomeCliente() ?></b> <br>
+    <?php } ?>
 </h3>
 <br>
 <form id='form-atendimento-app'>

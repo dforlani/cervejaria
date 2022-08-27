@@ -24,18 +24,10 @@ if (!empty($pedidos)) {
                             <b><?= $pedido->venda->comanda->numero?></b> <br>
                         <?php } ?>
 
-                        <?php if (!empty($pedido->cliente)) {
+                        <?php if ($pedido->venda->hasNomeCliente()) {
                             ?>
-                            <b><?= $pedido->cliente->nome ?></b> <br>
-                        <?php } ?>
-                        <?php if (!empty($pedido->venda->nome_temp)) {
-                            ?>
-
-                            <b><?= $pedido->venda->nome_temp ?></b> <br>
-                        <?php } ?>
-
-
-                            
+                            <b><?=  $pedido->venda->getNomeCliente() ?></b> <br>
+                        <?php } ?>                            
 
                         <b>Espera: <span id="espera<?= $pedido->pk_pedido_app ?>"></span></b><br>
                         <br>

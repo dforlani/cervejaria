@@ -40,12 +40,10 @@ class Venda extends ActiveRecord {
     public $unidade_medida;
     public $nome_cliente;
     public $produto;
-  public $aux_nome_cliente;
-  public $denominacao_completa;
-  
-  public static $FIADO = "fiado";
-  public static $ESTADO_ABERTA = "aberta";
-  
+    public $aux_nome_cliente;
+    public $denominacao_completa;
+    public static $FIADO = "fiado";
+    public static $ESTADO_ABERTA = "aberta";
 
     /**
      * {@inheritdoc}
@@ -105,8 +103,8 @@ class Venda extends ActiveRecord {
     public function getItensVenda() {
         return $this->hasMany(ItemVenda::className(), ['fk_venda' => 'pk_venda']);
     }
-	
-	   /**
+
+    /**
      * @return ActiveQuery
      */
     public function getPedidosApp() {
@@ -117,11 +115,11 @@ class Venda extends ActiveRecord {
         return $this->estado == 'paga';
     }
 
-    public function atualizaValorFinal() {       
+    public function atualizaValorFinal() {
 
         //fiz a consulta pq se buscar usando o alias ->itensVenda, não retornava todos os descontos, por estes terem sido buscados anteriormente
         //e a atualização ter sido feita depois (Lazy Loading)
-        $precos = ItemVenda::findAll(['fk_venda'=>$this->pk_venda]);
+        $precos = ItemVenda::findAll(['fk_venda' => $this->pk_venda]);
         $total = 0;
         if (!empty($precos)) {
             foreach ($precos as $preco) {
@@ -149,13 +147,13 @@ class Venda extends ActiveRecord {
             if ($item->is_desconto_promocional) {
                 $item->delete();
             } else {
-                
+
                 if ($item->preco->is_promocao_ativa) {
                     if (!isset($qtdItensPromocao[$item->preco->pk_preco])) {
                         $qtdItensPromocao[$item->preco->pk_preco]['qtd_atingida'] = $item->quantidade;
                         $qtdItensPromocao[$item->preco->pk_preco]['model'] = $item;
                     } else {
-                        $qtdItensPromocao[$item->preco->pk_preco]['qtd_atingida'] = $qtdItensPromocao[$item->preco->pk_preco]['qtd_atingida'] +  $item->quantidade;
+                        $qtdItensPromocao[$item->preco->pk_preco]['qtd_atingida'] = $qtdItensPromocao[$item->preco->pk_preco]['qtd_atingida'] + $item->quantidade;
                     }
                 }
             }
@@ -167,14 +165,14 @@ class Venda extends ActiveRecord {
             //echo (int) ($itemPromocao['qtd_atingida'] / $itemPromocao['model']->preco->promocao_quantidade_atingir);
             //exit();
             $qtd_promocao = (int) ($itemPromocao['qtd_atingida'] / $itemPromocao['model']->preco->promocao_quantidade_atingir);
-            if($qtd_promocao > 0){
+            if ($qtd_promocao > 0) {
                 $itemVenda = new ItemVenda();
                 $itemVenda->fk_preco = $pk_preco;
                 $itemVenda->fk_venda = $this->pk_venda;
                 $itemVenda->quantidade = $qtd_promocao;
                 $itemVenda->preco_unitario = 0;
                 $itemVenda->is_desconto_promocional = true;
-                $itemVenda->preco_final = $qtd_promocao  * $itemPromocao['model']->preco->promocao_desconto_aplicar;
+                $itemVenda->preco_final = $qtd_promocao * $itemPromocao['model']->preco->promocao_desconto_aplicar;
                 $itemVenda->preco_unitario = $itemPromocao['model']->preco->promocao_desconto_aplicar;
                 if (!$itemVenda->save()) {
                     exit();
@@ -188,12 +186,11 @@ class Venda extends ActiveRecord {
         $lista = [];
         if (!empty($vendas))
             foreach ($vendas as $venda) {
-                $identificador  = $venda->nome_temp;
-                $identificador  .= (!empty($venda->cliente) ? (!empty($identificador)? " > ":''). $venda->cliente->nome : '');
-                $identificador  .= (!empty($venda->comanda) ? (!empty($identificador)? " > ":'').$venda->comanda->numero : '');
-                
-                $lista[$venda->pk_venda] = $identificador; 
-                    
+                $identificador = $venda->nome_temp;
+                $identificador .= (!empty($venda->cliente) ? (!empty($identificador) ? " > " : '') . $venda->cliente->nome : '');
+                $identificador .= (!empty($venda->comanda) ? (!empty($identificador) ? " > " : '') . $venda->comanda->numero : '');
+
+                $lista[$venda->pk_venda] = $identificador;
             }
         return $lista;
     }
@@ -245,9 +242,9 @@ class Venda extends ActiveRecord {
     public function beforeValidate() {
         $this->verificaItensEmPromocao();
         $this->atualizaValorFinal();
-        
-        if($this->isPaga()){
-            $this->dt_pagamento =  new \yii\db\Expression('NOW()');
+
+        if ($this->isPaga()) {
+            $this->dt_pagamento = new \yii\db\Expression('NOW()');
         }
 
         return parent::beforeValidate();
@@ -256,8 +253,6 @@ class Venda extends ActiveRecord {
     public function beforeSave($insert) {
         $this->fk_usuario_iniciou_venda = 'dforlani';
         $this->fk_usuario_recebeu_pagamento = 'dforlani';
-
-
 
         //inclui ou atualiza um item no caixa
         if ($this->isPaga()) {
@@ -316,6 +311,17 @@ class Venda extends ActiveRecord {
         return Yii::$app->formatter->asCurrency($saldo);
     }
 
+    public function getNomeCliente() {
+        $separador = " ";
+        if (!empty($this->cliente) && !empty($this->nome_temp))
+            $separador = ' > ';
+        return !empty($this->cliente) ? $this->nome_temp . $separador . $this->cliente->nome : $this->nome_temp;
+    }
+    
+    public function hasNomeCliente(){
+        return !empty($this->cliente) || !empty($this->nome_temp);
+    }
+
     public function hasTroco() {
         return $this->getSaldo() < 0;
     }
@@ -327,14 +333,14 @@ class Venda extends ActiveRecord {
     public function getValorTotalPago() {
         return Yii::$app->formatter->asCurrency($this->valor_pago_credito + $this->valor_pago_dinheiro + $this->valor_pago_debito);
     }
-    
+
     /**
      * Verifica se o cliente tem alguma venda em fiado e a retorna se tiver
      * @param type $pk_cliente
      * @return type
      */
-     public static function getVendaFiadoDoCliente($pk_cliente){
-        return Venda::find()->where("fk_cliente like :fk_cliente AND estado like :estado")->params([':fk_cliente'=>$pk_cliente, ':estado'=>Venda::$FIADO])->one();
+    public static function getVendaFiadoDoCliente($pk_cliente) {
+        return Venda::find()->where("fk_cliente like :fk_cliente AND estado like :estado")->params([':fk_cliente' => $pk_cliente, ':estado' => Venda::$FIADO])->one();
     }
 
 }

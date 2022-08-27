@@ -55,11 +55,11 @@
                             <div class="col-sm-6"  style='text-align: left'>
                                 <b> 
                                     <?= (!empty($venda->comanda) ? '<u>' . \yii\helpers\Html::encode($venda->comanda->numero) . '</u><br>' : '' ) ?>                                    
-                                    <?= (!empty($venda->cliente) ? '<i>' . \yii\helpers\Html::encode($venda->cliente->nome) . '</i><br> ' : '' ) ?>
-                                    <?= (!empty($venda->nome_temp) ? \yii\helpers\Html::encode($venda->nome_temp) . '<br>' : '' ) ?>
+                                    <i><?= $venda->getNomeCliente() ?> </i><br>
+                                    
 
 
-                                    <?= (empty($venda->comanda) && empty($venda->cliente) && empty($venda->nome_temp) ? "Sem identificação" : '' ) ?>
+                                    <?= (empty($venda->comanda) && !$venda->hasNomeCliente() ? "Sem identificação" : '' ) ?>
                                 </b>
                                 <br>
 

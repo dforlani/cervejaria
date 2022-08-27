@@ -13,12 +13,8 @@
         Comanda: <?= \yii\helpers\Html::encode($model->venda->comanda->numero) ?> <br>
     <?php } ?>
 
-    <?php if (!empty($model->venda->cliente)) { ?>
-        Cliente: <?= \yii\helpers\Html::encode($model->venda->cliente->nome) ?> <br>
-    <?php } ?>
-
-    <?php if (!empty($model->venda->nome_temp)) { ?>
-        Cliente: <?= \yii\helpers\Html::encode($model->venda->nome_temp) ?> <br>
+    <?php if ($model->venda->hasNomeCliente()) { ?>
+        Cliente: <?=  \yii\helpers\Html::encode($model->venda->getNomeCliente()) ?> <br>
     <?php } ?>
 
     <hr>

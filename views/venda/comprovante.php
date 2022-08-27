@@ -19,7 +19,7 @@ use yii\widgets\ActiveForm;
     <?= Yii::$app->formatter->asDatetime($d); ?><br>
     <div style='text-align:center; font-size:14px'> Cervejaria Paraíso</div>
 
-    Cliente: <?= (!empty($model->cliente) ? \yii\helpers\Html::encode($model->cliente->nome) : '') ?><br>
+    Cliente: <?= $model->getNomeCliente() ?><br>
     Comanda: <?= (!empty($model->comanda) ? \yii\helpers\Html::encode($model->comanda->numero) : '') ?><br>
 
     <hr>

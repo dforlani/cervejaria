@@ -60,7 +60,7 @@ use yii\widgets\Pjax;
                 <div class="container-fluid">
 
                     <div class="row">
-                        <label style="font-size: 23px">  <?= (!empty($model->cliente) ? \yii\helpers\Html::encode($model->cliente->nome) : '') ?></label><br>    
+                        <label style="font-size: 23px">  <?=  \yii\helpers\Html::encode($model->getNomeCliente()) ?></label><br>    
                         <div class="col-sm-6"  style='text-align: right'>
 
                             <div style=";font-size: 18px">  
@@ -85,6 +85,7 @@ use yii\widgets\Pjax;
                             </div >
                             <div style=";font-size: 18px;">                              
                                 <?php
+                                
                                 if ($model->hasFalta())
                                     echo " <b><span style='color:red'> Falta: {$model->getSaldoFormatedBR()}</span></b>";
                                 elseif ($model->hasTroco())
