@@ -35,8 +35,9 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'pk_venda',
             'comanda.numero',
             [
-                'attribute' => 'aux_nome_cliente',
+                'attribute' => 'nomeCliente',
                 'label' => 'Cliente'
+                
             ],
             //'comanda.numero',
             //'fk_usuario_iniciou_venda',
