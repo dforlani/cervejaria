@@ -129,7 +129,8 @@ use yii\widgets\ActiveForm;
                                 'suffix' => '',
                                 'allowMinus' => false,
                             ],
-                            'displayOptions' => ['readonly' => true, 'tabindex' => "-1"]
+                           // 'displayOptions' => ['readonly' => true, 'tabindex' => "-1"]
+                             'displayOptions' => [ 'tabindex' => "-1"]
                         ]);
                         ?>
                     </div>
