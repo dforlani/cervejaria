@@ -71,7 +71,6 @@ class ItemVendaSearch extends ItemVenda {
 
         $this->load($params);
 
-
         $query->andFilterWhere([
             'fk_venda' => $this->fk_venda,
             'fk_preco' => $this->fk_preco,
@@ -113,7 +112,6 @@ class ItemVendaSearch extends ItemVenda {
             $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.preco_final)), 2) as pagamentos_bruto';
             $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.preco_final - preco_custo_item )), 2) as pagamentos_liquido';
 
-
             $groupBy[] = 'aux_temporizador';
             $order['dt_inclusao'] = SORT_ASC;
         } elseif ($por_dia_semana) {
@@ -133,7 +131,6 @@ class ItemVendaSearch extends ItemVenda {
             $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.preco_final)), 2) as pagamentos_bruto';
             $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.preco_final - preco_custo_item )), 2) as pagamentos_liquido';
 
-
             $select[] = 'DATE_FORMAT(`dt_inclusao`, "%m" ) AS  aux_temporizador';
             $order['MONTH(dt_inclusao)'] = SORT_ASC;
             $groupBy[] = 'MONTH(dt_inclusao)';
@@ -143,7 +140,6 @@ class ItemVendaSearch extends ItemVenda {
 
             $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.preco_final)), 2) as pagamentos_bruto';
             $select[] = 'ROUND(SUM(IF(is_desconto_promocional, 0, item_venda.preco_final - preco_custo_item )), 2) as pagamentos_liquido';
-
 
             $select[] = 'DATE_FORMAT(`dt_inclusao`, "%m/%y" ) AS  aux_temporizador';
             $order['dt_inclusao'] = SORT_ASC;
@@ -172,7 +168,6 @@ class ItemVendaSearch extends ItemVenda {
         $data_inicial_convertida = date("Y-m-d", strtotime(str_replace('/', '-', $data_inicial)));
         $data_final_convertida = date("Y-m-d", strtotime(str_replace('/', '-', $data_final)));
 
-
         $query->select($select);
 
         $query->andWhere("dt_inclusao BETWEEN  '$data_inicial_convertida' AND '$data_final_convertida 23:59:59.999'");
@@ -187,13 +182,16 @@ class ItemVendaSearch extends ItemVenda {
             $query->andWhere(['IN', 'fk_produto', $cervejas_selecionadas]);
         }
 
-        $query->groupBy($groupBy);
-        $query->orderBy($order);
         $query->joinWith(['preco' => function (ActiveQuery $query) {
                 $query->joinWith(['produto' => function (ActiveQuery $query) {
                         $query->joinWith('unidadeMedida');
                     }]);
             }, 'venda', 'venda.cliente']);
+
+        $query->andWhere(['estado' => 'paga']);
+
+        $query->groupBy($groupBy);
+        $query->orderBy($order);
 
         if ($apenas_cervejas) {
             $query->andWhere(['like', 'tipo_produto', Produto::$TIPO_CERVEJA]);
@@ -204,7 +202,6 @@ class ItemVendaSearch extends ItemVenda {
             'allModels' => $query->all(),
             'pagination' => false,
         ]);
-
 
         return $dataProvider;
     }
@@ -414,7 +411,6 @@ class ItemVendaSearch extends ItemVenda {
         $data_inicial_convertida = date("Y-m-d", strtotime(str_replace('/', '-', $data_inicial)));
         $data_final_convertida = date("Y-m-d", strtotime(str_replace('/', '-', $data_final)));
 
-
         $query->select($select);
 
         $query->andWhere("dt_inclusao BETWEEN  '$data_inicial_convertida' AND '$data_final_convertida 23:59:59.999'");
@@ -440,7 +436,6 @@ class ItemVendaSearch extends ItemVenda {
                         $query->joinWith('unidadeMedida');
                     }]);
             }, 'venda', 'venda.cliente']);
-
 
         //monta o array de resultado por produto, por cliente ou total  
         if ($por_produto || $por_forma_venda) {

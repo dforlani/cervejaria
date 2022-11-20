@@ -77,7 +77,7 @@ GridView::widget([
     'panelBeforeTemplate' => "                               
                                <div class='btn-toolbar kv-grid-toolbar ' role='toolbar'>
                                 {export}
-                                <b>&nbsp; É considerado para afeito de cálculo a data do fechamento do pagamento</b><br>
+                                <b>&nbsp; É considerado para efeito de cálculo a data do fechamento do pagamento</b><br>
                                 " . '<b>'
     . '<span style="color:red">&nbsp;&nbsp;' . ( $itens_problema > 0 ? $itens_problema . ' itens nesta página não possuem preço de custo da produção/compra' : '') . '</span></b></div>',
     'panel' => [
