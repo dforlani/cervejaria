@@ -106,7 +106,8 @@ class ItemVenda extends ActiveRecord {
     }
 
     public function beforeValidate() {
-      //  $this->preco_final = $this->preco_unitario * $this->quantidade;
+        if(empty($this->preco_final))
+          $this->preco_final = $this->preco_unitario * $this->quantidade;
         if (!empty($this->preco) && !empty($this->preco->produto)) {
             if (!$this->is_desconto_promocional) {
                 $this->preco_custo_item = $this->preco->produto->custo_compra_producao * $this->preco->quantidade * $this->quantidade;
