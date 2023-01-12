@@ -19,8 +19,10 @@ use yii\widgets\ActiveForm;
     });
 
     function calculaValorFinal() {
+        
         if (($('#itemvenda-quantidade').val() != '') && ($('#itemvenda-preco_unitario').val() != '')) {
-            $('#itemvenda-preco_final-disp').val(parseFloat($('#itemvenda-quantidade').val()) * parseFloat($('#itemvenda-preco_unitario').val()));
+            console.log(parseFloat($('#itemvenda-quantidade').val()) * parseFloat($('#itemvenda-preco_unitario').val()));
+            $('#itemvenda-preco_final-disp').val(Math.round(parseFloat($('#itemvenda-quantidade').val()) * parseFloat($('#itemvenda-preco_unitario').val())*100)/100);
             $('#itemvenda-preco_final-disp').blur();
         } else {
             $('#itemvenda-preco_final-disp').val('');
