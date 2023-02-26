@@ -84,10 +84,6 @@ class ItemVenda extends ActiveRecord {
         $produto->estoque_vendido = $produto->estoque_vendido + $this->quantidade * $this->preco->quantidade;
         $produto->save();
 
-
-//        if ($produto->estoque_minimo >= ( $produto->getEstoqueTotal() - $produto->estoque_vendido)) {
-//            Yii::$app->session->setFlash('error', "Estoque mínimo para o produto {$produto->nome} atingido.");
-//        }
         //FIM DO TODO DE REMOÇÃO POR COMPATIBILIDADE
         //Substituição pelo sistema antigo de controle, obtem a entrada que está ativa, pra adicionar o vendido
         if (!empty($produto)) {
@@ -106,8 +102,11 @@ class ItemVenda extends ActiveRecord {
     }
 
     public function beforeValidate() {
-        if(empty($this->preco_final))
-          $this->preco_final = $this->preco_unitario * $this->quantidade;
+     
+        if(empty($this->preco_final)){
+          $this->preco_final = $this->preco_unitario * $this->quantidade;          
+        }
+        
         if (!empty($this->preco) && !empty($this->preco->produto)) {
             if (!$this->is_desconto_promocional) {
                 $this->preco_custo_item = $this->preco->produto->custo_compra_producao * $this->preco->quantidade * $this->quantidade;

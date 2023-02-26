@@ -16,16 +16,34 @@ use yii\widgets\ActiveForm;
             calculaValorFinal();
         });
 
+        $('#itemvenda-preco_final-disp').change(function () {
+            calculaValorUnitario();
+        });
+
     });
 
     function calculaValorFinal() {
-        
+
         if (($('#itemvenda-quantidade').val() != '') && ($('#itemvenda-preco_unitario').val() != '')) {
             console.log(parseFloat($('#itemvenda-quantidade').val()) * parseFloat($('#itemvenda-preco_unitario').val()));
-            $('#itemvenda-preco_final-disp').val(Math.round(parseFloat($('#itemvenda-quantidade').val()) * parseFloat($('#itemvenda-preco_unitario').val())*100)/100);
+            $('#itemvenda-preco_final-disp').val(Math.round(parseFloat($('#itemvenda-quantidade').val()) * parseFloat($('#itemvenda-preco_unitario').val()) * 100) / 100);
             $('#itemvenda-preco_final-disp').blur();
         } else {
             $('#itemvenda-preco_final-disp').val('');
+
+        }
+    }
+
+    function calculaValorUnitario() {
+
+        if (($('#itemvenda-quantidade').val() != '') && ($('#itemvenda-preco_final').val() != '')) {
+            console.log('oi');
+            console.log(Math.round(parseFloat($('#itemvenda-preco_final').val()) / parseFloat($('#itemvenda-quantidade').val()) * 100) / 100);
+            $('#itemvenda-preco_unitario-disp').val(Math.round(parseFloat($('#itemvenda-preco_final').val()) / parseFloat($('#itemvenda-quantidade').val()) * 100) / 100);
+            $('#itemvenda-preco_unitario').val(Math.round(parseFloat($('#itemvenda-preco_final').val()) / parseFloat($('#itemvenda-quantidade').val()) * 100) / 100);
+            $('#itemvenda-preco_final-disp').blur();
+        } else {
+           // $('#itemvenda-preco_final-disp').val('');
 
         }
     }
@@ -131,8 +149,8 @@ use yii\widgets\ActiveForm;
                                 'suffix' => '',
                                 'allowMinus' => false,
                             ],
-                           // 'displayOptions' => ['readonly' => true, 'tabindex' => "-1"]
-                             'displayOptions' => [ 'tabindex' => "-1"]
+                            // 'displayOptions' => ['readonly' => true, 'tabindex' => "-1"]
+                            'displayOptions' => ['tabindex' => "-1"]
                         ]);
                         ?>
                     </div>
@@ -166,11 +184,11 @@ use yii\widgets\ActiveForm;
             'columns' => [
                 [
                     'label' => 'Produto',
-                    'value' => function($model) {
+                    'value' => function ($model) {
                         $texto = '';
                         if ($model->is_venda_app == 1)
                             $texto = '<span class="glyphicon glyphicon-phone"></span> ';
-                        $texto =  $model->is_desconto_promocional ? "Desconto - " : $texto;
+                        $texto = $model->is_desconto_promocional ? "Desconto - " : $texto;
                         return $texto . $model->preco->getNomeProdutoPlusDenominacaoSemBarras();
                     },
                     'format' => 'raw',
@@ -179,7 +197,7 @@ use yii\widgets\ActiveForm;
                 ],
                 [
                     'attribute' => 'quantidade',
-                    'value' => function($model) {
+                    'value' => function ($model) {
                         return Yii::$app->formatter->asDecimal($model->quantidade, 3);
                     },
                     'contentOptions' => ['style' => 'text-align:right;font-size:12px;'],
@@ -206,13 +224,13 @@ use yii\widgets\ActiveForm;
                     'headerOptions' => ['style' => 'color:#337ab7'],
                     'template' => '{delete}',
                     'buttons' => [
-                        'delete' => function($url, $model) {
+                        'delete' => function ($url, $model) {
                             return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['delete-item', 'id' => $model->pk_item_venda], [
-                                        'class' => '',
-                                        'data' => [
-                                            'confirm' => 'Tem certeza que deseja remover este item?',
-                                            'method' => 'post',
-                                        ],
+                                'class' => '',
+                                'data' => [
+                                    'confirm' => 'Tem certeza que deseja remover este item?',
+                                    'method' => 'post',
+                                ],
                             ]);
                         }
                     ],
