@@ -8,12 +8,14 @@
 $total_dinheiro = 0;
 $total_credito = 0;
 $total_debito = 0;
+$total_pix = 0;
 $total_despesa = 0;
 $total_sangria = 0;
 $total_abertura = 0;
 
 foreach ($itens as $item) {
     if ($item->isEntrada()) {
+        $total_pix += $item->valor_pix;
         $total_dinheiro += $item->valor_dinheiro;
         $total_credito += $item->valor_credito;
         $total_debito += $item->valor_debito;
@@ -35,19 +37,20 @@ foreach ($itens as $item) {
         <div class="panel-body" style="text-align: right">
             <b>Abertura:</b> <?= Yii::$app->formatter->asCurrency($total_abertura) ?><br><br>
             <span style="color:blue">
-            <b> Entrada - Recebimento de Pagamentos</b>
-            <b>Dinheiro:</b> <?=  Yii::$app->formatter->asCurrency($total_dinheiro) ?><br>
-            <b>Débito:</b> <?=  Yii::$app->formatter->asCurrency($total_debito) ?><br>
-            <b>Crédito:</b> <?=  Yii::$app->formatter->asCurrency($total_credito) ?><br>
-            <b>Total:</b> <?=  Yii::$app->formatter->asCurrency($total_dinheiro + $total_credito + $total_debito) ?><br></span>
+                <b> Entrada - Recebimento de Pagamentos</b>
+                <b>Dinheiro:</b> <?= Yii::$app->formatter->asCurrency($total_dinheiro) ?><br>
+                <b>Débito:</b> <?= Yii::$app->formatter->asCurrency($total_debito) ?><br>
+                <b>Crédito:</b> <?= Yii::$app->formatter->asCurrency($total_credito) ?><br>
+                <b>PIX:</b> <?= Yii::$app->formatter->asCurrency($total_pix) ?><br>
+                <b>Total:</b> <?= Yii::$app->formatter->asCurrency($total_dinheiro + $total_credito + $total_debito + $total_pix) ?><br></span>
             <br>
             <span style='color:red'>
-            <b>Saídas - Pagamento de Despesas:</b> <?=  Yii::$app->formatter->asCurrency($total_despesa) ?><br><br>
-            <b>Sangrias:</b> <?=  Yii::$app->formatter->asCurrency($total_sangria) ?><br>
+                <b>Saídas - Pagamento de Despesas:</b> <?= Yii::$app->formatter->asCurrency($total_despesa) ?><br><br>
+                <b>Sangrias:</b> <?= Yii::$app->formatter->asCurrency($total_sangria) ?><br>
             </span><br>
-             <span style=''>
-                 
-            <b>Caixa com Valor em Dinheiro de:</b> <?=  Yii::$app->formatter->asCurrency( $total_abertura +$total_despesa + $total_sangria + $total_dinheiro) ?><br><br>            
+            <span style=''>
+
+                <b>Caixa com Valor em Dinheiro de:</b> <?= Yii::$app->formatter->asCurrency($total_abertura + $total_despesa + $total_sangria + $total_dinheiro) ?><br><br>            
             </span>
         </div>
     </div>

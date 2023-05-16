@@ -30,7 +30,7 @@ use yii\widgets\Pjax;
         ]);
         echo GridView::widget([
             'dataProvider' => $dataProvider,
-            'showFooter' => true,           
+            'showFooter' => true,
             'options' => ['style' => 'font-size:12px;'],
             'footerRowOptions' => ['style' => 'font-weight:bold;text-align:right;text-decoration: underline;'],
             //muda a cor da linha conforme o tipo de movimento
@@ -46,7 +46,7 @@ use yii\widgets\Pjax;
                 [
                     'label' => 'Tipo',
                     'footer' => 'Total da Página',
-                    'value' => function($model) {
+                    'value' => function ($model) {
                         if ($model->isPgtoDespesa()) {
                             return "$model->tipo ($model->categoria)";
                         } else
@@ -73,12 +73,18 @@ use yii\widgets\Pjax;
                     'contentOptions' => ['style' => 'text-align:right'],
                 ],
                 [
+                    'attribute' => 'valor_pix',
+                    'format' => 'currency',
+                    'footer' => Yii::$app->formatter->asCurrency(Somatorio::getTotal($dataProvider->models, 'valor_pix')),
+                    'contentOptions' => ['style' => 'text-align:right'],
+                ],
+                [
                     'label' => 'Resultado',
                     'format' => 'currency',
-                    'value' => function($model) {
-                        return $model->valor_credito + $model->valor_debito + $model->valor_dinheiro;
+                    'value' => function ($model) {
+                        return $model->valor_credito + $model->valor_debito + $model->valor_dinheiro + $model->valor_pix;
                     },
-                    'footer' => Yii::$app->formatter->asCurrency(Somatorio::getTotal($dataProvider->models, ['valor_debito', 'valor_dinheiro', 'valor_credito'])),
+                    'footer' => Yii::$app->formatter->asCurrency(Somatorio::getTotal($dataProvider->models, ['valor_debito', 'valor_dinheiro', 'valor_credito', 'valor_pix'])),
                     'contentOptions' => ['style' => 'text-align:right'],
                 ],
                 [
@@ -92,17 +98,17 @@ use yii\widgets\Pjax;
                     'buttons' => [
                         'update' => function ($url, $model) {
                             return Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['update', 'id' => $model->pk_item_caixa], [
-                                        'class' => 'update',
-                                        'title' => 'Atualizar',
+                                'class' => 'update',
+                                'title' => 'Atualizar',
                             ]);
                         },
                     ],
                     'visibleButtons' =>
                     [
-                        'update' => function($model) {
+                        'update' => function ($model) {
                             return !$model->isEntrada();
                         },
-                        'delete' => function($model) {
+                        'delete' => function ($model) {
                             return !$model->isEntrada();
                         }
                     ]

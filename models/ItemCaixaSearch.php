@@ -17,7 +17,7 @@ class ItemCaixaSearch extends ItemCaixa {
     public function rules() {
         return [
             [['fk_caixa', 'pk_item_caixa', 'fk_venda'], 'integer'],
-            [['valor_dinheiro', 'valor_debito', 'valor_credito'], 'number'],
+            [['valor_dinheiro', 'valor_debito', 'valor_credito', 'valor_pix'], 'number'],
             [['tipo'], 'safe'],
         ];
     }
@@ -62,6 +62,7 @@ class ItemCaixaSearch extends ItemCaixa {
             'fk_venda' => $this->fk_venda,
             'valor_debito' => $this->valor_debito,
             'valor_credito' => $this->valor_credito,
+            'valor_pix' => $this->valor_pix,
             'valor_dinheiro' => $this->valor_dinheiro,
         ]);
 
@@ -72,3 +73,4 @@ class ItemCaixaSearch extends ItemCaixa {
     }
 
 }
+

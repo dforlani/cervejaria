@@ -19,6 +19,7 @@ use yii\db\ActiveRecord;
  * @property string $desconto
  * @property string $valor_final
  * @property string $valor_pago_credito
+ * @property string $valor_pago_pix
  * @property string $valor_pago_debito
  * @property string $valor_pago_dinheiro
  * @property string $estado
@@ -58,9 +59,9 @@ class Venda extends ActiveRecord {
     public function rules() {
         return [
             [['pk_venda', 'fk_cliente', 'fk_comanda'], 'integer'],
-            [['valor_total', 'desconto', 'valor_final', 'valor_pago_debito', 'valor_pago_credito', 'valor_pago_dinheiro',], 'number', 'min' => 0],
+            [['valor_total', 'desconto', 'valor_final', 'valor_pago_debito', 'valor_pago_credito', 'valor_pago_pix', 'valor_pago_dinheiro',], 'number', 'min' => 0],
             [['troco'], 'number', 'max' => 0],
-            [['valor_total', 'desconto', 'valor_final', 'valor_pago_debito', 'valor_pago_credito', 'valor_pago_dinheiro', 'troco'], 'default', 'value' => 0],
+            [['valor_total', 'desconto', 'valor_final', 'valor_pago_debito', 'valor_pago_credito', 'valor_pago_pix', 'valor_pago_dinheiro', 'troco'], 'default', 'value' => 0],
             [['estado', 'nome_temp'], 'string'],
             [['dt_venda', 'dt_pagamento'], 'safe'],
             [['fk_usuario_iniciou_venda', 'fk_usuario_recebeu_pagamento'], 'string', 'max' => 20],
@@ -89,6 +90,7 @@ class Venda extends ActiveRecord {
             'valor_final' => 'Valor Final',
             'valor_pago_debito' => 'Pago em Débito',
             'valor_pago_credito' => 'Pago em Crédito',
+            'valor_pago_pix' => 'Pago em PIX',
             'valor_pago_dinheiro' => 'Pago em Dinheiro',
             'estado' => 'Estado',
             'dt_venda' => 'Data Venda',
@@ -268,6 +270,7 @@ class Venda extends ActiveRecord {
             }
 
             $item_caixa->valor_credito = $this->valor_pago_credito;
+            $item_caixa->valor_pix = $this->valor_pago_pix;
             $item_caixa->valor_debito = $this->valor_pago_debito;
             $item_caixa->valor_dinheiro = $this->valor_pago_dinheiro + $this->troco;
 
@@ -298,11 +301,12 @@ class Venda extends ActiveRecord {
     public function getSaldo() {
         $valor_total = is_numeric($this->valor_total) ? $this->valor_total : 0;
         $valor_pago_credito = is_numeric($this->valor_pago_credito) ? $this->valor_pago_credito : 0;
+        $valor_pago_pix = is_numeric($this->valor_pago_pix) ? $this->valor_pago_pix : 0;
         $valor_pago_dinheiro = is_numeric($this->valor_pago_dinheiro) ? $this->valor_pago_dinheiro : 0;
         $valor_pago_debito = is_numeric($this->valor_pago_debito) ? $this->valor_pago_debito : 0;
         $desconto = is_numeric($this->desconto) ? $this->desconto : 0;
 
-        return $valor_total - ($valor_pago_credito + $valor_pago_dinheiro + $valor_pago_debito + $desconto);
+        return $valor_total - ($valor_pago_credito + $valor_pago_dinheiro + $valor_pago_pix+ $valor_pago_debito + $desconto);
     }
 
     public function getSaldoFormatedBR() {
@@ -331,7 +335,7 @@ class Venda extends ActiveRecord {
     }
 
     public function getValorTotalPago() {
-        return Yii::$app->formatter->asCurrency($this->valor_pago_credito + $this->valor_pago_dinheiro + $this->valor_pago_debito);
+        return Yii::$app->formatter->asCurrency($this->valor_pago_credito + $this->valor_pago_dinheiro + $this->valor_pago_pix + $this->valor_pago_debito);
     }
 
     /**

@@ -13,6 +13,7 @@ use Yii;
  * @property string $valor_dinheiro
  * @property string $valor_debito
  * @property string $valor_credito
+ * @property string $valor_pix
  * @property string $tipo
  *
  * @property Venda $fkVenda
@@ -32,7 +33,7 @@ class ItemCaixa extends \yii\db\ActiveRecord {
     public function rules() {
         return [
             [['fk_venda'], 'integer'],
-            [['valor_dinheiro', 'valor_credito', 'valor_debito'], 'number'],
+            [['valor_dinheiro', 'valor_credito', 'valor_debito', 'valor_pix'], 'number'],
             [['tipo', 'categoria'], 'string'],
             [['observacao'], 'string', 'max' => 900],
             [['tipo', 'fk_caixa'], 'required'],
@@ -69,6 +70,7 @@ class ItemCaixa extends \yii\db\ActiveRecord {
             'valor_dinheiro' => 'Dinheiro',
             'valor_debito' => 'Débito',
             'valor_credito' => 'Crédito',
+            'valor_pix' => 'PIX',
             'tipo' => 'Tipo',
             'dt_movimento'=>'Data',
             'observacao' => 'Observação'

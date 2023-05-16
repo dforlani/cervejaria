@@ -160,7 +160,7 @@
 <div class="notasVersaoStyle">
     <a href="#" id="v120" class="notasVersao"><img src="images/mais_grid.png" /> Versão 1.2.0 (11/09/2019)</a>
     <ul id="nv120" style="display:none;">
-        <li><b>Venda:</b>Inclusão da colunas valor_pagamento_dinheiro, valor_pagamento_credito, valor_pagamento_debito na tabela Venda e inclusão de modal em Vendas para utilizá-las;</li>            
+        <li><b>Venda:</b>Inclusão da colunas valor_pagamento_dinheiro, valor_pagamento_credito, valor_pagamento_pix, valor_pagamento_debito na tabela Venda e inclusão de modal em Vendas para utilizá-las;</li>            
         <li>Inclusão de ordenadores padrão em todas as telas de listagem</li>
         <li>Bloqueio de geração de PDF de produtos que não tem código de barras</li>
         <li>Inclusão de Configuração pra gerar PDF automaticamente em cada venda</li>

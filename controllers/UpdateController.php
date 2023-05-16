@@ -541,8 +541,15 @@ ALTER TABLE `caixa`
           "update_insert_comandas_simples_51_100",
           "Inclue os números de comandas de 51 até 100");
       
+        $this->atualizaBanco("        ALTER TABLE `item_caixa` ADD `valor_pix` DECIMAL(10,2) NULL AFTER `valor_credito`;",
+          "update_item_caixa_valor_pix",
+          "Inclui valor_pix ");
     
-      
+          $this->atualizaBanco("      ALTER TABLE `venda` ADD `valor_pago_pix` DECIMAL(10,2) NULL AFTER `valor_pago_dinheiro`;",
+          "update_venda_valor_pago_pix",
+          "Inclui valor_pagamento_pix ");
+    
+          
         echo '<br><br>ATUALIZAÇÃO DO BANCO ENCERRADA<br>';
     }
 

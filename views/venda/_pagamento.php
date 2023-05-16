@@ -53,7 +53,7 @@ use yii\web\View;
             }
         });
 
-        $('#venda-valor_pago_dinheiro-disp').change(function () {  
+        $('#venda-valor_pago_dinheiro-disp').change(function () {
 
             atualizaTrocoEFaltando();
         });
@@ -62,6 +62,10 @@ use yii\web\View;
             atualizaTrocoEFaltando();
         });
         $('#venda-valor_pago_credito-disp').change(function () {
+
+            atualizaTrocoEFaltando();
+        });
+        $('#venda-valor_pago_pix-disp').change(function () {
 
             atualizaTrocoEFaltando();
         });
@@ -78,6 +82,7 @@ use yii\web\View;
             dinheiro = 0;
             credito = 0;
             debito = 0;
+            pix = 0;
             if ($('#venda-valor_pago_dinheiro').val() != '') {
                 dinheiro = parseFloat($('#venda-valor_pago_dinheiro').val());
             }
@@ -86,11 +91,15 @@ use yii\web\View;
                 credito = parseFloat($('#venda-valor_pago_credito').val());
             }
 
+            if ($('#venda-valor_pago_pix').val() != '') {
+                pix = parseFloat($('#venda-valor_pago_pix').val());
+            }
+
             if ($('#venda-valor_pago_debito').val() != '') {
                 debito = parseFloat($('#venda-valor_pago_debito').val());
             }
 
-            if ((dinheiro + debito + credito) < valor_final) {
+            if ((dinheiro + debito + credito + pix) < valor_final) {
                 if (!confirm('Tem certeza que deseja fechar a venda com valor de pagamento menor que o valor final?')) {
                     evt.preventDefault();
                 }
@@ -120,6 +129,7 @@ use yii\web\View;
             dinheiro = 0;
             credito = 0;
             debito = 0;
+            pix = 0;
             if ($('#venda-valor_pago_dinheiro').val() != '') {
                 dinheiro = parseFloat($('#venda-valor_pago_dinheiro').val());
             }
@@ -128,11 +138,15 @@ use yii\web\View;
                 credito = parseFloat($('#venda-valor_pago_credito').val());
             }
 
+            if ($('#venda-valor_pago_pix').val() != '') {
+                pix = parseFloat($('#venda-valor_pago_pix').val());
+            }
+
             if ($('#venda-valor_pago_debito').val() != '') {
                 debito = parseFloat($('#venda-valor_pago_debito').val());
             }
 
-            saldo = valor_final - (dinheiro + credito + debito);
+            saldo = valor_final - (dinheiro + credito + debito + pix);
             return saldo;
         }
 
@@ -241,11 +255,27 @@ use yii\web\View;
                         ?>
                     </div>
                 </div>
-                
+                <div class="row">
+                    <div class="col-sm-6" style="text-align: right"> 
+                    </div>
+                    <div class="col-sm-6" > 
+                        <?php
+                        echo $form->field($model, 'valor_pago_pix')->widget(NumberControl::classname(), [
+                            'maskedInputOptions' => [
+                                'prefix' => '',
+                                'suffix' => '',
+                                'allowMinus' => false,
+                            ],
+                            'displayOptions' => ['autofocus' => '', 'tabindex' => 3]
+                        ]);
+                        ?>
+                    </div>
+                </div>
+
             </div>
 
             <div class="col-sm-5"  style='text-align: right'>
-                
+
                 <div class="row">
                     <h2> Valor Total: <span id='valor_final'><?= Yii::$app->formatter->asCurrency($model->valor_total) ?></span></h2>
                 </div>
