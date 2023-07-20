@@ -35,9 +35,10 @@ if (!empty($pedidos)) {
 
                         <?php
                         if (!empty($pedido->itensPedidoApp)) {
-                            foreach ($pedido->itensPedidoApp as $item) {
-                                ?>
-                                <?= $item->quantidade . ' - ' . $item->preco->getNomeProdutoPlusDenominacaoSemBarras() ?><br>    
+                            foreach ($pedido->itensPedidoApp as $item) {                          ?>
+                                <b><?php echo $item->preco->produto->nome ?></b><br>
+                                <?php echo $item->quantidade .' - ' .$item->preco->denominacao ?><br>
+
                                 <?php
                             }
                         }

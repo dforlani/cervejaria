@@ -93,6 +93,7 @@ class VendaController extends Controller {
     public function actionCreate() {
         $model = new Venda();
 
+     
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->pk_venda]);
         }
@@ -125,15 +126,11 @@ class VendaController extends Controller {
 
         $tapListProvider = $precoModelItem->search(['PrecoSearch' => ['tipo_cardapio' => Preco::$TIPO_CARDAPIO_TAP_LIST]], true, true, true, true);
 
-
+       
         if (empty($id)) { //venda não iniciada
             $model = new Venda();
-            $model->estado = Venda::$ESTADO_ABERTA;
-            $model->valor_final = 0;
-            $model->desconto = 0;
-            $model->valor_total = 0;
+      
             $modelItem = null;
-
             $dataProviderItem = null;
             $searchModelItem = null;
         } else {//adicionando novo item

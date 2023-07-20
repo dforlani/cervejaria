@@ -39,7 +39,9 @@ class PedidoappController extends Controller {
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['pedidos-esperando', 'app-get-cardapio', 'app-get-comanda-aberta', 'app-get-tap-list', 'app-pedir', 'app-requisita-pedidos-comanda-aberta', 'app-verificar-status-pedido']
+                        'actions' => ['pedidos-esperando', 'app-get-cardapio', 
+                        'app-get-comanda-aberta', 'app-get-tap-list', 'app-pedir', 'app-requisita-pedidos-comanda-aberta', 
+                        'app-verificar-status-pedido', 'app-abre-nova-comanda']
                     ],
                     [
                         'allow' => true,
@@ -107,6 +109,44 @@ class PedidoappController extends Controller {
                 $itens_venda = $produto->precos;
                 foreach ($itens_venda as $item) {
                     $retorno[] = ['fk_preco' => $item->pk_preco,
+                        'denominacao' => $item->denominacao,
+                        'nome' => $item->produto->nome,
+                        'quantidade' => 0,
+                        'preco' => $item->preco
+                    ];
+                }
+            }
+        }
+
+        return $retorno;
+    }
+
+    public function actionAppAbreNovaComandaGarcom($nomeComanda) {
+        $venda = new Venda();
+        $venda->nome_temp = $nomeComanda;
+        $venda->save();
+    }
+        /**
+     * Retorna o cardápio do tipo cardapio agrupado para o App do Garçom
+     * @return type
+     */
+    public function actionAppGetCardapioAgrupadoGarcom($tipo_produto = null) {
+        if (empty($tipo_produto)) {
+            $tipo_produto = Preco::$TIPO_CARDAPIO_CARDAPIO;
+        }
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $produtos = Produto::find()
+                ->where("tipo_produto like :tipo_produto AND is_vendavel = 1", [':tipo_produto' => $tipo_produto])
+                ->orderBy('nome')
+                ->all();
+
+        $retorno = [];
+        if (!empty($produtos)) {
+            foreach ($produtos as $produto) {
+                $itens_venda = $produto->precos;
+                foreach ($itens_venda as $item) {
+                    $retorno[$item->produto->nome][$item->denominacao] = ['fk_preco' => $item->pk_preco,
                         'denominacao' => $item->denominacao,
                         'nome' => $item->produto->nome,
                         'quantidade' => 0,

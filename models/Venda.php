@@ -53,6 +53,14 @@ class Venda extends ActiveRecord {
         return 'venda';
     }
 
+    function __construct() {
+        parent::__construct();
+        $this->estado = Venda::$ESTADO_ABERTA;
+        $this->valor_final = 0;
+        $this->desconto = 0;
+        $this->valor_total = 0;
+        }
+
     /**
      * {@inheritdoc}
      */
